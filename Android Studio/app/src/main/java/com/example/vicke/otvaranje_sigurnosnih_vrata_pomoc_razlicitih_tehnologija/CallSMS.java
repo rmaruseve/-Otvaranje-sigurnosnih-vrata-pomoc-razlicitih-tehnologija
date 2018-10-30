@@ -17,10 +17,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class CallSMS extends AppCompatActivity {
-
-
-    private int MY_PERMISSIONS_REQUEST_CALL_PHONE = 1;
-    private int MY_PERMISSIONS_REQUEST_SEND_SMS = 2;
     EditText txtNumber;
 
     @Override
