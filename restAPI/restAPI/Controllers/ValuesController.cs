@@ -26,8 +26,11 @@ namespace restAPI.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<string> Post([FromBody] string value)
         {
+            Console.WriteLine("tu sam");
+            Console.WriteLine(value);
+            return "Test123";
         }
 
         // PUT api/values/5

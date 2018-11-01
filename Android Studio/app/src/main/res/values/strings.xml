@@ -1,9 +1,11 @@
 <resources>
-    <string name="app_name">Application name</string>
-    <string name="home">Home</string>
-    <string name="test">Test</string>
-    <string name="log">Log</string>
-    <string name="turnOn">Turn on</string>
-    <string name="turnOff">Turn off</string>
-    <string name="phoneNumber">0911527964</string>
+    <string name="app_name">HOTLINE</string>
+    <string name="phoneNumber">+385918127132</string>
+    <string name="title_activity_main">Home</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">MOBILISIS</string>
+    <string name="nav_header_subtitle">info@mobilisis.hr</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
 </resources>
