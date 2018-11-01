@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.Linq;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -27,20 +26,5 @@ namespace restAPI.mydb
         public ICollection<Access> Access { get; set; }
         public ICollection<EventLog> EventLog { get; set; }
         public ICollection<Trigger> Trigger { get; set; }
-
-        public User getUserByTriggerType(string value, string type)
-        {
-            using (var ctx = new mydbContext())
-            {
-                User user = (
-                    from us in ctx.User
-                    join trg in ctx.Trigger on us.UsrId equals trg.TrgUsrId
-                    join trgt in ctx.TriggerType on trg.TrgCatId equals trgt.TrtId
-                    where trg.TrgValue == value && trgt.TrtName == type
-                    select us
-                ).Single();
-                return user;
-            }
-        }
     }
 }
