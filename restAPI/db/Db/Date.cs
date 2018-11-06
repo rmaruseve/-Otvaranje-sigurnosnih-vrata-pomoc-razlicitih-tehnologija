@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace restAPI.mydb
+namespace db.Db
 {
     public partial class Date
     {
         public int DatId { get; set; }
-        public DateTime DatDate { get; set; }
+        public DateTime DatDateFrom { get; set; }
+        public DateTime DatDateTo { get; set; }
         public byte DatEnabled { get; set; }
         public int DatProId { get; set; }
-        public int? DatTimId { get; set; }
 
         public Profil DatPro { get; set; }
-        public TimePeriod DatTim { get; set; }
     }
 }

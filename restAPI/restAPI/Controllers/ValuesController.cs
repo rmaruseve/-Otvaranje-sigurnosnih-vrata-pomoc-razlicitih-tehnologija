@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using restAPI.json;
-using restAPI.mydb;
+using data.Json;
+using db.Db;
 
 namespace restAPI.Controllers
 {
@@ -29,7 +29,7 @@ namespace restAPI.Controllers
 
         // POST api/values
         [HttpPost]
-        public ActionResult<string> Post([FromBody] openRequest req)
+        public ActionResult<string> Post([FromBody] TriggerAccess req)
         {
             int hasAccess = 0;
             List<string> objectsHasAcces = new List<string>();
@@ -42,10 +42,10 @@ namespace restAPI.Controllers
             {
                 Console.WriteLine("Not found");
             }
-            List<mydb.Object> objects = this.getObjectsByTrigger(req.TriggerTypeName, req.Text);
+            List<db.Db.Object> objects = this.getObjectsByTrigger(req.TriggerTypeName, req.Text);
             if (objects.Count > 0)
             {
-                foreach (mydb.Object currentObject in objects)
+                foreach (db.Db.Object currentObject in objects)
                 {
                     objectsHasAcces.Add(currentObject.ObjAction);
                 }
@@ -88,11 +88,11 @@ namespace restAPI.Controllers
             }
         }
 
-        public List<mydb.Object> getObjectsByTrigger(string type, string objectName)
+        public List<db.Db.Object> getObjectsByTrigger(string type, string objectName)
         {
             using (var ctx = new mydbContext())
             {
-                List<mydb.Object> objects = (
+                List<db.Db.Object> objects = (
                     from obj in ctx.Object
                     join ohs in ctx.ObjectHasTriggerType on obj.ObjId equals ohs.OhtObjId
                     join trgt in ctx.TriggerType on ohs.OhtTrtId equals trgt.TrtId

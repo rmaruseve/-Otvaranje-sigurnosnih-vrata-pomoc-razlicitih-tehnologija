@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace restAPI.mydb
+namespace db.Db
 {
     public partial class EventStatus
     {
@@ -12,6 +12,7 @@ namespace restAPI.mydb
 
         public int EvsId { get; set; }
         public string EvsName { get; set; }
+        public string EvsDescription { get; set; }
 
         public ICollection<EventLog> EventLog { get; set; }
     }

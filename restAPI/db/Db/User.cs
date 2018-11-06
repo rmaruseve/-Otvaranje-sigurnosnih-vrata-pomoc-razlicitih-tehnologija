@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 
-namespace restAPI.mydb
+namespace db.Db
 {
     public partial class User
     {

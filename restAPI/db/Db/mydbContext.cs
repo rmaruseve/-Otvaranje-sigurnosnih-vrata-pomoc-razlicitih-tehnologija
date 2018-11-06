@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace restAPI.mydb
+namespace db.Db
 {
     public partial class mydbContext : DbContext
     {
@@ -27,7 +27,6 @@ namespace restAPI.mydb
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<Schedule> Schedule { get; set; }
         public virtual DbSet<SystemLog> SystemLog { get; set; }
-        public virtual DbSet<TimePeriod> TimePeriod { get; set; }
         public virtual DbSet<Trigger> Trigger { get; set; }
         public virtual DbSet<TriggerType> TriggerType { get; set; }
         public virtual DbSet<User> User { get; set; }
@@ -37,7 +36,7 @@ namespace restAPI.mydb
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySQL("Server=192.168.1.1;Port=3306;Database=mydb;Uid=root;Pwd=test123;");
+                optionsBuilder.UseMySQL("server=192.168.1.1;port=3306;user=root;password=test123;database=mydb");
             }
         }
 
@@ -45,7 +44,7 @@ namespace restAPI.mydb
         {
             modelBuilder.Entity<Access>(entity =>
             {
-                entity.HasKey(e => e.AcsId);
+                entity.HasKey(e => new { e.AcsId, e.AcsValidFrom, e.AcsValidTo });
 
                 entity.ToTable("access", "mydb");
 
@@ -61,7 +60,11 @@ namespace restAPI.mydb
                 entity.Property(e => e.AcsId)
                     .HasColumnName("acs_id")
                     .HasColumnType("int(11)")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.AcsValidFrom).HasColumnName("acs_valid_from");
+
+                entity.Property(e => e.AcsValidTo).HasColumnName("acs_valid_to");
 
                 entity.Property(e => e.AcsObjId)
                     .HasColumnName("acs_obj_id")
@@ -78,10 +81,6 @@ namespace restAPI.mydb
                 entity.Property(e => e.AcsUsrId)
                     .HasColumnName("acs_usr_id")
                     .HasColumnType("int(11)");
-
-                entity.Property(e => e.AcsValidFrom).HasColumnName("acs_valid_from");
-
-                entity.Property(e => e.AcsValidTo).HasColumnName("acs_valid_to");
 
                 entity.HasOne(d => d.AcsObj)
                     .WithMany(p => p.Access)
@@ -108,17 +107,13 @@ namespace restAPI.mydb
                 entity.HasIndex(e => e.DatProId)
                     .HasName("fk_date_profil1_idx");
 
-                entity.HasIndex(e => e.DatTimId)
-                    .HasName("fk_date_time_period1_idx");
-
                 entity.Property(e => e.DatId)
                     .HasColumnName("dat_id")
-                    .HasColumnType("int(11)")
-                    .ValueGeneratedNever();
+                    .HasColumnType("int(11)");
 
-                entity.Property(e => e.DatDate)
-                    .HasColumnName("dat_date")
-                    .HasColumnType("date");
+                entity.Property(e => e.DatDateFrom).HasColumnName("dat_date_from");
+
+                entity.Property(e => e.DatDateTo).HasColumnName("dat_date_to");
 
                 entity.Property(e => e.DatEnabled)
                     .HasColumnName("dat_enabled")
@@ -128,20 +123,11 @@ namespace restAPI.mydb
                     .HasColumnName("dat_pro_id")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.DatTimId)
-                    .HasColumnName("dat_tim_id")
-                    .HasColumnType("int(11)");
-
                 entity.HasOne(d => d.DatPro)
                     .WithMany(p => p.Date)
                     .HasForeignKey(d => d.DatProId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_date_profil1");
-
-                entity.HasOne(d => d.DatTim)
-                    .WithMany(p => p.Date)
-                    .HasForeignKey(d => d.DatTimId)
-                    .HasConstraintName("fk_date_time_period1");
             });
 
             modelBuilder.Entity<Day>(entity =>
@@ -150,8 +136,7 @@ namespace restAPI.mydb
 
                 entity.Property(e => e.DayId)
                     .HasColumnName("day_id")
-                    .HasColumnType("int(11)")
-                    .ValueGeneratedNever();
+                    .HasColumnType("int(11)");
 
                 entity.Property(e => e.DayName)
                     .IsRequired()
@@ -180,8 +165,7 @@ namespace restAPI.mydb
 
                 entity.Property(e => e.EvlId)
                     .HasColumnName("evl_id")
-                    .HasColumnType("int(11)")
-                    .ValueGeneratedNever();
+                    .HasColumnType("int(11)");
 
                 entity.Property(e => e.EvlDate).HasColumnName("evl_date");
 
@@ -238,8 +222,12 @@ namespace restAPI.mydb
 
                 entity.Property(e => e.EvsId)
                     .HasColumnName("evs_id")
-                    .HasColumnType("int(11)")
-                    .ValueGeneratedNever();
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.EvsDescription)
+                    .HasColumnName("evs_description")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EvsName)
                     .IsRequired()
@@ -259,8 +247,7 @@ namespace restAPI.mydb
 
                 entity.Property(e => e.ObjId)
                     .HasColumnName("obj_id")
-                    .HasColumnType("int(11)")
-                    .ValueGeneratedNever();
+                    .HasColumnType("int(11)");
 
                 entity.Property(e => e.ObjAction)
                     .IsRequired()
@@ -350,8 +337,7 @@ namespace restAPI.mydb
 
                 entity.Property(e => e.ObtId)
                     .HasColumnName("obt_id")
-                    .HasColumnType("int(11)")
-                    .ValueGeneratedNever();
+                    .HasColumnType("int(11)");
 
                 entity.Property(e => e.ObtIn)
                     .HasColumnName("obt_in")
@@ -376,8 +362,7 @@ namespace restAPI.mydb
 
                 entity.Property(e => e.ProId)
                     .HasColumnName("pro_id")
-                    .HasColumnType("int(11)")
-                    .ValueGeneratedNever();
+                    .HasColumnType("int(11)");
 
                 entity.Property(e => e.ProActivity)
                     .HasColumnName("pro_activity")
@@ -398,8 +383,7 @@ namespace restAPI.mydb
 
                 entity.Property(e => e.RolId)
                     .HasColumnName("rol_id")
-                    .HasColumnType("int(11)")
-                    .ValueGeneratedNever();
+                    .HasColumnType("int(11)");
 
                 entity.Property(e => e.RolCompany)
                     .HasColumnName("rol_company")
@@ -415,7 +399,7 @@ namespace restAPI.mydb
 
             modelBuilder.Entity<Schedule>(entity =>
             {
-                entity.HasKey(e => new { e.SchProId, e.SchTimId, e.SchDayId });
+                entity.HasKey(e => new { e.SchProId, e.SchDayId });
 
                 entity.ToTable("schedule", "mydb");
 
@@ -425,16 +409,8 @@ namespace restAPI.mydb
                 entity.HasIndex(e => e.SchProId)
                     .HasName("fk_schedule_profil1_idx");
 
-                entity.HasIndex(e => e.SchTimId)
-                    .HasName("fk_schedule_time_period1_idx");
-
                 entity.Property(e => e.SchProId)
                     .HasColumnName("sch_pro_id")
-                    .HasColumnType("int(11)")
-                    .HasDefaultValueSql("0");
-
-                entity.Property(e => e.SchTimId)
-                    .HasColumnName("sch_tim_id")
                     .HasColumnType("int(11)")
                     .HasDefaultValueSql("0");
 
@@ -442,6 +418,10 @@ namespace restAPI.mydb
                     .HasColumnName("sch_day_id")
                     .HasColumnType("int(11)")
                     .HasDefaultValueSql("0");
+
+                entity.Property(e => e.SchTimeFrom).HasColumnName("sch_time_from");
+
+                entity.Property(e => e.SchTimeTo).HasColumnName("sch_time_to");
 
                 entity.HasOne(d => d.SchDay)
                     .WithMany(p => p.Schedule)
@@ -454,12 +434,6 @@ namespace restAPI.mydb
                     .HasForeignKey(d => d.SchProId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_schedule_profil1");
-
-                entity.HasOne(d => d.SchTim)
-                    .WithMany(p => p.Schedule)
-                    .HasForeignKey(d => d.SchTimId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_schedule_time_period1");
             });
 
             modelBuilder.Entity<SystemLog>(entity =>
@@ -470,8 +444,7 @@ namespace restAPI.mydb
 
                 entity.Property(e => e.SysId)
                     .HasColumnName("sys_id")
-                    .HasColumnType("int(11)")
-                    .ValueGeneratedNever();
+                    .HasColumnType("int(11)");
 
                 entity.Property(e => e.SysAction)
                     .IsRequired()
@@ -487,22 +460,6 @@ namespace restAPI.mydb
                 entity.Property(e => e.SysUsrId)
                     .HasColumnName("sys_usr_id")
                     .HasColumnType("int(11)");
-            });
-
-            modelBuilder.Entity<TimePeriod>(entity =>
-            {
-                entity.HasKey(e => e.TimId);
-
-                entity.ToTable("time_period", "mydb");
-
-                entity.Property(e => e.TimId)
-                    .HasColumnName("tim_id")
-                    .HasColumnType("int(11)")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.TimOf).HasColumnName("tim_of");
-
-                entity.Property(e => e.TimTo).HasColumnName("tim_to");
             });
 
             modelBuilder.Entity<Trigger>(entity =>
@@ -558,8 +515,7 @@ namespace restAPI.mydb
 
                 entity.Property(e => e.TrtId)
                     .HasColumnName("trt_id")
-                    .HasColumnType("int(11)")
-                    .ValueGeneratedNever();
+                    .HasColumnType("int(11)");
 
                 entity.Property(e => e.TrtName)
                     .IsRequired()

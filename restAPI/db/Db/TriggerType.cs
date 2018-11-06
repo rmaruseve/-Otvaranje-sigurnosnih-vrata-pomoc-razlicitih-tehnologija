@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace restAPI.mydb
+namespace db.Db
 {
     public partial class TriggerType
     {
