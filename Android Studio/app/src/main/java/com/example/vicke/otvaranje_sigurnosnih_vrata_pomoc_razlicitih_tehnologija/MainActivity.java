@@ -1,18 +1,19 @@
 package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija;
 
+import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-
-import android.support.v7.app.AlertDialog;
-
-import android.support.v7.view.ContextThemeWrapper;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,12 +21,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.PopupWindow;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    boolean internet = false;
+    Fragment objectListShow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,41 +38,25 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.objectListShow, ObjectListShow.newInstance())
+                .commit();
+
+        int Permission_All = 1;
+
+        String[] Permissions = {Manifest.permission.CALL_PHONE, Manifest.permission.SEND_SMS};
+        if (!hasPremission(this, Permissions)){
+            ActivityCompat.requestPermissions(this, Permissions, Permission_All);
+        }
+
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.CustomDialogTheme);
-                builder.setCancelable(true);
-                builder.setTitle("Open this object");
-
-                if (internet)
-                {
-                    builder.setMessage("Press the button to open the object");
-                    builder.setPositiveButton("Open", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //TODO: open the door
-                        }
-                    });
-                }
-                else
-                {
-                    builder.setMessage("Choose the method you want to use to open the selected object");
-                    builder.setPositiveButton("CALL", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //TODO: call number
-                        }
-                    });
-                    builder.setNegativeButton("SMS", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //TODO: send SMS
-                        }
-                    });
-                }
-                builder.show();
+                String phoneNumber = getResources().getString(R.string.phoneNumber);
+                dialNumber(String.valueOf(phoneNumber));
             }
         });
 
@@ -81,6 +69,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -114,7 +104,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -122,7 +111,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home)
         {
-            // Handle the camera action
+
         }
         else if (id == R.id.nav_profile)
         {
@@ -141,4 +130,29 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public static boolean hasPremission(Context context, String... premissions){
+
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M && context != null && premissions != null)
+        {
+            for(String premission:premissions)
+            {
+                if(ActivityCompat.checkSelfPermission(context, premission) != PackageManager.PERMISSION_GRANTED)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private void dialNumber(String phoneNumber) {
+        //startActivity(new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", phoneNumber, null)));
+
+        Intent intent = new Intent(Intent.ACTION_CALL);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setData(Uri.parse("tel:"+phoneNumber));
+        this.startActivity(intent);
+    }
+
 }
