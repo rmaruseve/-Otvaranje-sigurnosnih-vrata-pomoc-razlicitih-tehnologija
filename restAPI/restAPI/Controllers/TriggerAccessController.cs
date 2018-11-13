@@ -11,8 +11,16 @@ namespace restAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class TriggerAccessController : ControllerBase
     {
+
+        private readonly mydbContext _context;
+
+        public TriggerAccessController(mydbContext context)
+        {
+            _context = context;
+        }
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
@@ -75,32 +83,26 @@ namespace restAPI.Controllers
 
         public User getUserByTriggerType(string value, string type)
         {
-            using (var ctx = new mydbContext())
-            {
-                User user = (
-                    from us in ctx.User
-                    join trg in ctx.Trigger on us.UsrId equals trg.TrgUsrId
-                    join trgt in ctx.TriggerType on trg.TrgCatId equals trgt.TrtId
-                    where trg.TrgValue == value && trgt.TrtName == type
-                    select us
-                ).SingleOrDefault();
-                return user;
-            }
+            User user = (
+                from us in _context.User
+                join trg in _context.Trigger on us.UsrId equals trg.TrgUsrId
+                join trgt in _context.TriggerType on trg.TrgCatId equals trgt.TrtId
+                where trg.TrgValue == value && trgt.TrtName == type
+                select us
+            ).SingleOrDefault();
+            return user;
         }
 
         public List<db.Db.Object> getObjectsByTrigger(string type, string objectName)
         {
-            using (var ctx = new mydbContext())
-            {
-                List<db.Db.Object> objects = (
-                    from obj in ctx.Object
-                    join ohs in ctx.ObjectHasTriggerType on obj.ObjId equals ohs.OhtObjId
-                    join trgt in ctx.TriggerType on ohs.OhtTrtId equals trgt.TrtId
-                    where trgt.TrtName == type && obj.ObjName == objectName
-                    select obj
-                ).ToList();
-                return objects;
-            }
+            List<db.Db.Object> objects = (
+                from obj in _context.Object
+                join ohs in _context.ObjectHasTriggerType on obj.ObjId equals ohs.OhtObjId
+                join trgt in _context.TriggerType on ohs.OhtTrtId equals trgt.TrtId
+                where trgt.TrtName == type && obj.ObjName == objectName
+                select obj
+            ).ToList();
+            return objects;
         }
     }
 }
