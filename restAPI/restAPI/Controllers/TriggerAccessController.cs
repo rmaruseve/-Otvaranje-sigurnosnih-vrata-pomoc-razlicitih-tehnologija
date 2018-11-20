@@ -23,9 +23,36 @@ namespace restAPI.Controllers
 
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<string> Get()
         {
-            return new string[] { "value1", "value2" };
+            List<AcUser> korisnici;
+            List<string> proba = new List<string>();
+            try
+            {
+                Console.WriteLine("[INF] Start --------------------");
+                korisnici = new List<AcUser>();
+                korisnici = this.getAllUsers();
+                foreach (AcUser currentObject in korisnici)
+                {
+                    proba.Add(currentObject.UsrName);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("ex -> " + e);
+                throw;
+            }
+
+            //return JsonConvert.SerializeObject(new
+            //{
+            //    id = 
+            //    access = hasAccess,
+            //    objectAccess = objectsHasAcces
+            //});
+            return JsonConvert.SerializeObject(new
+            {
+                ime = proba
+            });
         }
 
         // GET api/values/5
@@ -81,6 +108,15 @@ namespace restAPI.Controllers
         {
         }
 
+        public List<AcUser> getAllUsers()
+        {
+            List<AcUser> users = (
+                from obj in _context.AcUser
+                select obj
+            ).ToList();
+            return users;
+        }
+
         public AcUser getUserByTriggerType(string value, string type)
         {
             AcUser user = (
@@ -92,6 +128,8 @@ namespace restAPI.Controllers
             ).SingleOrDefault();
             return user;
         }
+
+        
 
         public List<AcObject> getObjectsByTrigger(string type, string objectName)
         {

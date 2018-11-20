@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -19,10 +20,17 @@ using Microsoft.IdentityModel.Tokens;
 namespace restAPI.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class UsersController : ControllerBase
     {
+        private readonly mydbContext _context;
+
+        public UsersController(mydbContext context)
+        {
+            _context = context;
+        }
+
         private IUserService _userService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
@@ -92,12 +100,44 @@ namespace restAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        //public IQueryable<UserDto> GetUsers()
+        //{
+        //    var users = from u in _context.AcUser
+        //        select new UserDto()
+        //        {
+        //            UsrName = u.UsrName,
+        //            UsrId = u.UsrId
+        //        };
+
+        //    return users;
+        //}
+        //public IActionResult GetAll()
+        //{
+        //    var users = _userService.GetAll();
+        //    var userDtos = _mapper.Map<IList<UserDto>>(users);
+        //    return Ok(userDtos);
+        //}
+        [Route("api/users")]
+        public ActionResult<List<AcUser>> GetAll()
         {
-            var users = _userService.GetAll();
-            var userDtos = _mapper.Map<IList<UserDto>>(users);
-            return Ok(userDtos);
+            List<AcUser> korisnici;
+            try
+            {
+                Console.WriteLine("Start");
+                korisnici = new List<AcUser>();
+                korisnici = _context.AcUser.ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("ex -> " + e);
+                throw;
+            }
+           
+            return korisnici;
         }
+
+
+
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
