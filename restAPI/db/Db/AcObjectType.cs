@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace db.Db
 {
-    public partial class ObjectType
+    public partial class AcObjectType
     {
-        public ObjectType()
+        public AcObjectType()
         {
-            Object = new HashSet<Object>();
+            AcObject = new HashSet<AcObject>();
         }
 
         public int ObtId { get; set; }
@@ -15,6 +15,6 @@ namespace db.Db
         public byte? ObtIn { get; set; }
         public byte? ObtOut { get; set; }
 
-        public ICollection<Object> Object { get; set; }
+        public ICollection<AcObject> AcObject { get; set; }
     }
 }

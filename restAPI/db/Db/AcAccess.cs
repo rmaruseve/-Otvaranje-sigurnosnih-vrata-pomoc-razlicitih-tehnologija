@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace db.Db
 {
-    public partial class Access
+    public partial class AcAccess
     {
         public int AcsId { get; set; }
         public DateTime AcsValidFrom { get; set; }
@@ -13,8 +13,8 @@ namespace db.Db
         public int? AcsProId { get; set; }
         public int? AcsObjId { get; set; }
 
-        public Object AcsObj { get; set; }
-        public Profil AcsPro { get; set; }
-        public User AcsUsr { get; set; }
+        public AcObject AcsObj { get; set; }
+        public AcProfil AcsPro { get; set; }
+        public AcUser AcsUsr { get; set; }
     }
 }

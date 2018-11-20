@@ -15,21 +15,21 @@ namespace db.Db
         {
         }
 
-        public virtual DbSet<Access> Access { get; set; }
-        public virtual DbSet<Date> Date { get; set; }
-        public virtual DbSet<Day> Day { get; set; }
-        public virtual DbSet<EventLog> EventLog { get; set; }
-        public virtual DbSet<EventStatus> EventStatus { get; set; }
-        public virtual DbSet<Object> Object { get; set; }
-        public virtual DbSet<ObjectHasTriggerType> ObjectHasTriggerType { get; set; }
-        public virtual DbSet<ObjectType> ObjectType { get; set; }
-        public virtual DbSet<Profil> Profil { get; set; }
-        public virtual DbSet<Role> Role { get; set; }
-        public virtual DbSet<Schedule> Schedule { get; set; }
-        public virtual DbSet<SystemLog> SystemLog { get; set; }
-        public virtual DbSet<Trigger> Trigger { get; set; }
-        public virtual DbSet<TriggerType> TriggerType { get; set; }
-        public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<AcAccess> AcAccess { get; set; }
+        public virtual DbSet<AcDate> AcDate { get; set; }
+        public virtual DbSet<AcDay> AcDay { get; set; }
+        public virtual DbSet<AcEventLog> AcEventLog { get; set; }
+        public virtual DbSet<AcEventStatus> AcEventStatus { get; set; }
+        public virtual DbSet<AcObject> AcObject { get; set; }
+        public virtual DbSet<AcObjectHasTriggerType> AcObjectHasTriggerType { get; set; }
+        public virtual DbSet<AcObjectType> AcObjectType { get; set; }
+        public virtual DbSet<AcProfil> AcProfil { get; set; }
+        public virtual DbSet<AcRole> AcRole { get; set; }
+        public virtual DbSet<AcSchedule> AcSchedule { get; set; }
+        public virtual DbSet<AcSystemLog> AcSystemLog { get; set; }
+        public virtual DbSet<AcTrigger> AcTrigger { get; set; }
+        public virtual DbSet<AcTriggerType> AcTriggerType { get; set; }
+        public virtual DbSet<AcUser> AcUser { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -42,11 +42,11 @@ namespace db.Db
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Access>(entity =>
+            modelBuilder.Entity<AcAccess>(entity =>
             {
                 entity.HasKey(e => new { e.AcsId, e.AcsValidFrom, e.AcsValidTo });
 
-                entity.ToTable("access", "mydb");
+                entity.ToTable("ac_access", "mydb");
 
                 entity.HasIndex(e => e.AcsObjId)
                     .HasName("fk_access_object1_idx");
@@ -83,26 +83,26 @@ namespace db.Db
                     .HasColumnType("int(11)");
 
                 entity.HasOne(d => d.AcsObj)
-                    .WithMany(p => p.Access)
+                    .WithMany(p => p.AcAccess)
                     .HasForeignKey(d => d.AcsObjId)
                     .HasConstraintName("fk_access_object1");
 
                 entity.HasOne(d => d.AcsPro)
-                    .WithMany(p => p.Access)
+                    .WithMany(p => p.AcAccess)
                     .HasForeignKey(d => d.AcsProId)
                     .HasConstraintName("fk_access_profiles1");
 
                 entity.HasOne(d => d.AcsUsr)
-                    .WithMany(p => p.Access)
+                    .WithMany(p => p.AcAccess)
                     .HasForeignKey(d => d.AcsUsrId)
                     .HasConstraintName("fk_access_user1");
             });
 
-            modelBuilder.Entity<Date>(entity =>
+            modelBuilder.Entity<AcDate>(entity =>
             {
                 entity.HasKey(e => e.DatId);
 
-                entity.ToTable("date", "mydb");
+                entity.ToTable("ac_date", "mydb");
 
                 entity.HasIndex(e => e.DatProId)
                     .HasName("fk_date_profil1_idx");
@@ -124,15 +124,17 @@ namespace db.Db
                     .HasColumnType("int(11)");
 
                 entity.HasOne(d => d.DatPro)
-                    .WithMany(p => p.Date)
+                    .WithMany(p => p.AcDate)
                     .HasForeignKey(d => d.DatProId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_date_profil1");
             });
 
-            modelBuilder.Entity<Day>(entity =>
+            modelBuilder.Entity<AcDay>(entity =>
             {
-                entity.ToTable("day", "mydb");
+                entity.HasKey(e => e.DayId);
+
+                entity.ToTable("ac_day", "mydb");
 
                 entity.Property(e => e.DayId)
                     .HasColumnName("day_id")
@@ -145,11 +147,11 @@ namespace db.Db
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<EventLog>(entity =>
+            modelBuilder.Entity<AcEventLog>(entity =>
             {
                 entity.HasKey(e => e.EvlId);
 
-                entity.ToTable("event_log", "mydb");
+                entity.ToTable("ac_event_log", "mydb");
 
                 entity.HasIndex(e => e.EvlEvsId)
                     .HasName("fk_event_log_event_type1_idx");
@@ -192,33 +194,33 @@ namespace db.Db
                     .HasColumnType("int(11)");
 
                 entity.HasOne(d => d.EvlEvs)
-                    .WithMany(p => p.EventLog)
+                    .WithMany(p => p.AcEventLog)
                     .HasForeignKey(d => d.EvlEvsId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_event_log_event_type1");
 
                 entity.HasOne(d => d.EvlObj)
-                    .WithMany(p => p.EventLog)
+                    .WithMany(p => p.AcEventLog)
                     .HasForeignKey(d => d.EvlObjId)
                     .HasConstraintName("fk_event_log_object1");
 
                 entity.HasOne(d => d.EvlTrt)
-                    .WithMany(p => p.EventLog)
+                    .WithMany(p => p.AcEventLog)
                     .HasForeignKey(d => d.EvlTrtId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_event_log_trigger_type1");
 
                 entity.HasOne(d => d.EvlUsr)
-                    .WithMany(p => p.EventLog)
+                    .WithMany(p => p.AcEventLog)
                     .HasForeignKey(d => d.EvlUsrId)
                     .HasConstraintName("fk_event_log_user1");
             });
 
-            modelBuilder.Entity<EventStatus>(entity =>
+            modelBuilder.Entity<AcEventStatus>(entity =>
             {
                 entity.HasKey(e => e.EvsId);
 
-                entity.ToTable("event_status", "mydb");
+                entity.ToTable("ac_event_status", "mydb");
 
                 entity.Property(e => e.EvsId)
                     .HasColumnName("evs_id")
@@ -236,11 +238,11 @@ namespace db.Db
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Object>(entity =>
+            modelBuilder.Entity<AcObject>(entity =>
             {
                 entity.HasKey(e => e.ObjId);
 
-                entity.ToTable("object", "mydb");
+                entity.ToTable("ac_object", "mydb");
 
                 entity.HasIndex(e => e.ObjObtTypeId)
                     .HasName("fk_objects_object_type1_idx");
@@ -284,17 +286,17 @@ namespace db.Db
                     .HasColumnType("tinyint(4)");
 
                 entity.HasOne(d => d.ObjObtType)
-                    .WithMany(p => p.Object)
+                    .WithMany(p => p.AcObject)
                     .HasForeignKey(d => d.ObjObtTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_objects_object_type1");
             });
 
-            modelBuilder.Entity<ObjectHasTriggerType>(entity =>
+            modelBuilder.Entity<AcObjectHasTriggerType>(entity =>
             {
                 entity.HasKey(e => new { e.OhtTrtId, e.OhtObjId });
 
-                entity.ToTable("object_has_trigger_type", "mydb");
+                entity.ToTable("ac_object_has_trigger_type", "mydb");
 
                 entity.HasIndex(e => e.OhtObjId)
                     .HasName("fk_trigger_type_has_object_object1_idx");
@@ -317,23 +319,23 @@ namespace db.Db
                     .HasColumnType("tinyint(4)");
 
                 entity.HasOne(d => d.OhtObj)
-                    .WithMany(p => p.ObjectHasTriggerType)
+                    .WithMany(p => p.AcObjectHasTriggerType)
                     .HasForeignKey(d => d.OhtObjId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_trigger_type_has_object_object1");
 
                 entity.HasOne(d => d.OhtTrt)
-                    .WithMany(p => p.ObjectHasTriggerType)
+                    .WithMany(p => p.AcObjectHasTriggerType)
                     .HasForeignKey(d => d.OhtTrtId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_trigger_type_has_object_trigger_type1");
             });
 
-            modelBuilder.Entity<ObjectType>(entity =>
+            modelBuilder.Entity<AcObjectType>(entity =>
             {
                 entity.HasKey(e => e.ObtId);
 
-                entity.ToTable("object_type", "mydb");
+                entity.ToTable("ac_object_type", "mydb");
 
                 entity.Property(e => e.ObtId)
                     .HasColumnName("obt_id")
@@ -354,11 +356,11 @@ namespace db.Db
                     .HasColumnType("tinyint(4)");
             });
 
-            modelBuilder.Entity<Profil>(entity =>
+            modelBuilder.Entity<AcProfil>(entity =>
             {
                 entity.HasKey(e => e.ProId);
 
-                entity.ToTable("profil", "mydb");
+                entity.ToTable("ac_profil", "mydb");
 
                 entity.Property(e => e.ProId)
                     .HasColumnName("pro_id")
@@ -375,11 +377,11 @@ namespace db.Db
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Role>(entity =>
+            modelBuilder.Entity<AcRole>(entity =>
             {
                 entity.HasKey(e => e.RolId);
 
-                entity.ToTable("role", "mydb");
+                entity.ToTable("ac_role", "mydb");
 
                 entity.Property(e => e.RolId)
                     .HasColumnName("rol_id")
@@ -397,11 +399,11 @@ namespace db.Db
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Schedule>(entity =>
+            modelBuilder.Entity<AcSchedule>(entity =>
             {
                 entity.HasKey(e => new { e.SchProId, e.SchDayId });
 
-                entity.ToTable("schedule", "mydb");
+                entity.ToTable("ac_schedule", "mydb");
 
                 entity.HasIndex(e => e.SchDayId)
                     .HasName("fk_schedule_day1_idx");
@@ -424,23 +426,23 @@ namespace db.Db
                 entity.Property(e => e.SchTimeTo).HasColumnName("sch_time_to");
 
                 entity.HasOne(d => d.SchDay)
-                    .WithMany(p => p.Schedule)
+                    .WithMany(p => p.AcSchedule)
                     .HasForeignKey(d => d.SchDayId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_schedule_day1");
 
                 entity.HasOne(d => d.SchPro)
-                    .WithMany(p => p.Schedule)
+                    .WithMany(p => p.AcSchedule)
                     .HasForeignKey(d => d.SchProId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_schedule_profil1");
             });
 
-            modelBuilder.Entity<SystemLog>(entity =>
+            modelBuilder.Entity<AcSystemLog>(entity =>
             {
                 entity.HasKey(e => e.SysId);
 
-                entity.ToTable("system_log", "mydb");
+                entity.ToTable("ac_system_log", "mydb");
 
                 entity.Property(e => e.SysId)
                     .HasColumnName("sys_id")
@@ -462,13 +464,13 @@ namespace db.Db
                     .HasColumnType("int(11)");
             });
 
-            modelBuilder.Entity<Trigger>(entity =>
+            modelBuilder.Entity<AcTrigger>(entity =>
             {
-                entity.HasKey(e => new { e.TrgUsrId, e.TrgCatId });
+                entity.HasKey(e => new { e.TrgUsrId, e.TrgTrtId });
 
-                entity.ToTable("trigger", "mydb");
+                entity.ToTable("ac_trigger", "mydb");
 
-                entity.HasIndex(e => e.TrgCatId)
+                entity.HasIndex(e => e.TrgTrtId)
                     .HasName("fk_user_has_category_category1_idx");
 
                 entity.HasIndex(e => e.TrgUsrId)
@@ -479,8 +481,8 @@ namespace db.Db
                     .HasColumnType("int(11)")
                     .HasDefaultValueSql("0");
 
-                entity.Property(e => e.TrgCatId)
-                    .HasColumnName("trg_cat_id")
+                entity.Property(e => e.TrgTrtId)
+                    .HasColumnName("trg_trt_id")
                     .HasColumnType("int(11)")
                     .HasDefaultValueSql("0");
 
@@ -494,24 +496,24 @@ namespace db.Db
                     .HasMaxLength(1000)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.TrgCat)
-                    .WithMany(p => p.Trigger)
-                    .HasForeignKey(d => d.TrgCatId)
+                entity.HasOne(d => d.TrgTrt)
+                    .WithMany(p => p.AcTrigger)
+                    .HasForeignKey(d => d.TrgTrtId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_user_has_category_category1");
 
                 entity.HasOne(d => d.TrgUsr)
-                    .WithMany(p => p.Trigger)
+                    .WithMany(p => p.AcTrigger)
                     .HasForeignKey(d => d.TrgUsrId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_user_has_category_user1");
             });
 
-            modelBuilder.Entity<TriggerType>(entity =>
+            modelBuilder.Entity<AcTriggerType>(entity =>
             {
                 entity.HasKey(e => e.TrtId);
 
-                entity.ToTable("trigger_type", "mydb");
+                entity.ToTable("ac_trigger_type", "mydb");
 
                 entity.Property(e => e.TrtId)
                     .HasColumnName("trt_id")
@@ -524,11 +526,11 @@ namespace db.Db
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<User>(entity =>
+            modelBuilder.Entity<AcUser>(entity =>
             {
                 entity.HasKey(e => e.UsrId);
 
-                entity.ToTable("user", "mydb");
+                entity.ToTable("ac_user", "mydb");
 
                 entity.HasIndex(e => e.UsrRolId)
                     .HasName("fk_user_user_type_idx");
@@ -572,7 +574,7 @@ namespace db.Db
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.UsrRol)
-                    .WithMany(p => p.User)
+                    .WithMany(p => p.AcUser)
                     .HasForeignKey(d => d.UsrRolId)
                     .HasConstraintName("fk_user_user_type");
             });

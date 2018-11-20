@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace db.Db
 {
-    public partial class EventStatus
+    public partial class AcEventStatus
     {
-        public EventStatus()
+        public AcEventStatus()
         {
-            EventLog = new HashSet<EventLog>();
+            AcEventLog = new HashSet<AcEventLog>();
         }
 
         public int EvsId { get; set; }
         public string EvsName { get; set; }
         public string EvsDescription { get; set; }
 
-        public ICollection<EventLog> EventLog { get; set; }
+        public ICollection<AcEventLog> AcEventLog { get; set; }
     }
 }

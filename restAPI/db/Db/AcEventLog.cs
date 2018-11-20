@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace db.Db
 {
-    public partial class EventLog
+    public partial class AcEventLog
     {
         public int EvlId { get; set; }
         public DateTime EvlDate { get; set; }
@@ -13,9 +13,9 @@ namespace db.Db
         public int? EvlUsrId { get; set; }
         public int EvlTrtId { get; set; }
 
-        public EventStatus EvlEvs { get; set; }
-        public Object EvlObj { get; set; }
-        public TriggerType EvlTrt { get; set; }
-        public User EvlUsr { get; set; }
+        public AcEventStatus EvlEvs { get; set; }
+        public AcObject EvlObj { get; set; }
+        public AcTriggerType EvlTrt { get; set; }
+        public AcUser EvlUsr { get; set; }
     }
 }

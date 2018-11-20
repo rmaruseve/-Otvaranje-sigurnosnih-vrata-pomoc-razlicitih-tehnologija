@@ -41,7 +41,7 @@ namespace restAPI.Controllers
         {
             int hasAccess = 0;
             List<string> objectsHasAcces = new List<string>();
-            User user = this.getUserByTriggerType(req.Value, req.TriggerTypeName);
+            AcUser user = this.getUserByTriggerType(req.Value, req.TriggerTypeName);
             if (user != null)
             {
                 Console.WriteLine(user.UsrName);
@@ -50,10 +50,10 @@ namespace restAPI.Controllers
             {
                 Console.WriteLine("Not found");
             }
-            List<db.Db.Object> objects = this.getObjectsByTrigger(req.TriggerTypeName, req.Text);
+            List<AcObject> objects = this.getObjectsByTrigger(req.TriggerTypeName, req.Text);
             if (objects.Count > 0)
             {
-                foreach (db.Db.Object currentObject in objects)
+                foreach (AcObject currentObject in objects)
                 {
                     objectsHasAcces.Add(currentObject.ObjAction);
                 }
@@ -81,24 +81,24 @@ namespace restAPI.Controllers
         {
         }
 
-        public User getUserByTriggerType(string value, string type)
+        public AcUser getUserByTriggerType(string value, string type)
         {
-            User user = (
-                from us in _context.User
-                join trg in _context.Trigger on us.UsrId equals trg.TrgUsrId
-                join trgt in _context.TriggerType on trg.TrgCatId equals trgt.TrtId
+            AcUser user = (
+                from us in _context.AcUser
+                join trg in _context.AcTrigger on us.UsrId equals trg.TrgUsrId
+                join trgt in _context.AcTriggerType on trg.TrgTrtId equals trgt.TrtId
                 where trg.TrgValue == value && trgt.TrtName == type
                 select us
             ).SingleOrDefault();
             return user;
         }
 
-        public List<db.Db.Object> getObjectsByTrigger(string type, string objectName)
+        public List<AcObject> getObjectsByTrigger(string type, string objectName)
         {
-            List<db.Db.Object> objects = (
-                from obj in _context.Object
-                join ohs in _context.ObjectHasTriggerType on obj.ObjId equals ohs.OhtObjId
-                join trgt in _context.TriggerType on ohs.OhtTrtId equals trgt.TrtId
+            List<AcObject> objects = (
+                from obj in _context.AcObject
+                join ohs in _context.AcObjectHasTriggerType on obj.ObjId equals ohs.OhtObjId
+                join trgt in _context.AcTriggerType on ohs.OhtTrtId equals trgt.TrtId
                 where trgt.TrtName == type && obj.ObjName == objectName
                 select obj
             ).ToList();

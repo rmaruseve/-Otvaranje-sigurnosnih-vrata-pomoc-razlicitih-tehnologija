@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace db.Db
 {
-    public partial class SystemLog
+    public partial class AcSystemLog
     {
         public int SysId { get; set; }
         public int SysUsrId { get; set; }

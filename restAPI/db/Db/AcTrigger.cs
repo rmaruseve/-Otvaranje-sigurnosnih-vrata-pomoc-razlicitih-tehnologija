@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace db.Db
 {
-    public partial class Trigger
+    public partial class AcTrigger
     {
         public int TrgUsrId { get; set; }
-        public int TrgCatId { get; set; }
+        public int TrgTrtId { get; set; }
         public string TrgValue { get; set; }
         public byte TrgActivity { get; set; }
 
-        public TriggerType TrgCat { get; set; }
-        public User TrgUsr { get; set; }
+        public AcTriggerType TrgTrt { get; set; }
+        public AcUser TrgUsr { get; set; }
     }
 }

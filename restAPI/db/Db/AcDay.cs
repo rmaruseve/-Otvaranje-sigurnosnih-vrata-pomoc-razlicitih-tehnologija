@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace db.Db
 {
-    public partial class Day
+    public partial class AcDay
     {
-        public Day()
+        public AcDay()
         {
-            Schedule = new HashSet<Schedule>();
+            AcSchedule = new HashSet<AcSchedule>();
         }
 
         public int DayId { get; set; }
         public string DayName { get; set; }
 
-        public ICollection<Schedule> Schedule { get; set; }
+        public ICollection<AcSchedule> AcSchedule { get; set; }
     }
 }

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace db.Db
 {
-    public partial class ObjectHasTriggerType
+    public partial class AcObjectHasTriggerType
     {
         public int OhtTrtId { get; set; }
         public int OhtObjId { get; set; }
         public byte OhtActivity { get; set; }
 
-        public Object OhtObj { get; set; }
-        public TriggerType OhtTrt { get; set; }
+        public AcObject OhtObj { get; set; }
+        public AcTriggerType OhtTrt { get; set; }
     }
 }

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace db.Db
 {
-    public partial class User
+    public partial class AcUser
     {
-        public User()
+        public AcUser()
         {
-            Access = new HashSet<Access>();
-            EventLog = new HashSet<EventLog>();
-            Trigger = new HashSet<Trigger>();
+            AcAccess = new HashSet<AcAccess>();
+            AcEventLog = new HashSet<AcEventLog>();
+            AcTrigger = new HashSet<AcTrigger>();
         }
 
         public int UsrId { get; set; }
@@ -21,9 +21,9 @@ namespace db.Db
         public string UsrCryptedPassword { get; set; }
         public int? UsrRolId { get; set; }
 
-        public Role UsrRol { get; set; }
-        public ICollection<Access> Access { get; set; }
-        public ICollection<EventLog> EventLog { get; set; }
-        public ICollection<Trigger> Trigger { get; set; }
+        public AcRole UsrRol { get; set; }
+        public ICollection<AcAccess> AcAccess { get; set; }
+        public ICollection<AcEventLog> AcEventLog { get; set; }
+        public ICollection<AcTrigger> AcTrigger { get; set; }
     }
 }

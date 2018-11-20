@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace db.Db
 {
-    public partial class Date
+    public partial class AcDate
     {
         public int DatId { get; set; }
         public DateTime DatDateFrom { get; set; }
@@ -11,6 +11,6 @@ namespace db.Db
         public byte DatEnabled { get; set; }
         public int DatProId { get; set; }
 
-        public Profil DatPro { get; set; }
+        public AcProfil DatPro { get; set; }
     }
 }
