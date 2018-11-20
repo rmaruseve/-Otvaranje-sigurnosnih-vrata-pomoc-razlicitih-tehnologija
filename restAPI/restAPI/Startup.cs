@@ -17,6 +17,8 @@ using Newtonsoft.Json;
 using Microsoft.IdentityModel.Tokens;
 using restAPI.Helpers;
 using restAPI.Services;
+using db.Db;
+using Microsoft.EntityFrameworkCore;
 
 namespace restAPI
 {
@@ -33,6 +35,8 @@ namespace restAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper();
+
+            services.AddDbContext<mydbContext>(x => x.UseInMemoryDatabase("mydb"));
             services.AddMvc(options =>
             {
                 options.RespectBrowserAcceptHeader = true; // false by default
@@ -45,7 +49,7 @@ namespace restAPI
             services.Configure<AppSettings>(appSettingsSection);
 
             var appSettings = appSettingsSection.Get<AppSettings>();
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            var key = Encoding.ASCII.GetBytes("JWTSTRING");
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -78,7 +82,7 @@ namespace restAPI
                     ValidateAudience = false
                 };
             });
-
+            services.AddScoped<IUserService, UserService>();
 
             services.AddCors(options =>
             {

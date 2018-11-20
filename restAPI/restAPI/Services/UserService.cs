@@ -67,8 +67,10 @@ namespace restAPI.Services
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
+
             user.UsrCryptedPassword = System.Text.Encoding.UTF8.GetString(passwordHash);
             user.UsrPassword = System.Text.Encoding.UTF8.GetString(passwordSalt);
+            user.UsrActivity = 1;
 
             _context.AcUser.Add(user);
             _context.SaveChanges();
