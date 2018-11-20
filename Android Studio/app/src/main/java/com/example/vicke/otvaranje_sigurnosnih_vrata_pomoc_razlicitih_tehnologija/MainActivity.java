@@ -29,7 +29,7 @@ import android.widget.ScrollView;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    Fragment objectListShow;
+    Fragment objectListShowFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity
                 .beginTransaction()
                 .add(R.id.objectListShow, ObjectListShow.newInstance())
                 .commit();
+
+
 
         int Permission_All = 1;
 
