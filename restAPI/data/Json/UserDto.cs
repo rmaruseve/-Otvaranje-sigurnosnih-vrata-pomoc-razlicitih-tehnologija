@@ -4,7 +4,14 @@ using System.Text;
 
 namespace data.Json
 {
-    class UserDto
+    public class UserDto
     {
+        public int UsrId { get; set; }
+        public string UsrName { get; set; }
+        public string UsrSurname { get; set; }
+        public string UsrEmail { get; set; }
+        public byte UsrActivity { get; set; }
+        public string UsrPassword { get; set; }
+        public string UsrRolName { get; set; }
     }
 }
