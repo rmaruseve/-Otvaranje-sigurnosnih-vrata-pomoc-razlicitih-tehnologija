@@ -131,6 +131,8 @@ namespace restAPI
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "TDCEapi");
             });
 
+            app.UseHsts();
+            app.UseHttpsRedirection();
             app.UseCors();
             app.UseAuthentication();
             app.UseMvc();

@@ -25,7 +25,7 @@ namespace restAPI
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseUrls("http://0.0.0.0:5000/")
+                .UseUrls("https://0.0.0.0:5000/")
                 .Build();
     }
     #pragma warning restore CS1591
