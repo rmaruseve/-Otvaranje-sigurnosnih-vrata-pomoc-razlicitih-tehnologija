@@ -19,6 +19,7 @@ using restAPI.Helpers;
 using restAPI.Services;
 using db.Db;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace restAPI
 {
@@ -36,20 +37,34 @@ namespace restAPI
         {
             services.AddAutoMapper();
 
-            services.AddDbContext<mydbContext>(x => x.UseInMemoryDatabase("mydb"));
+            var connection = "server=192.168.1.1;port=3306;user=root;password=test123;database=mydb";
+            services.AddDbContext<mydbContext>(options => options.UseMySQL(connection));
             services.AddMvc(options =>
             {
                 options.RespectBrowserAcceptHeader = true; // false by default
             }).AddJsonOptions(options => {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-           
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder =>
+                    {
+                        builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                    });
+            });
+
+            services.AddOptions();
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
             var appSettings = appSettingsSection.Get<AppSettings>();
-            var key = Encoding.ASCII.GetBytes("JWTSTRING");
+            var key = Encoding.ASCII.GetBytes("JWTSTRINGJWTSTRINGJWTSTRINGJWTSTRING");
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -69,6 +84,8 @@ namespace restAPI
                             // return unauthorized if user no longer exists
                             context.Fail("Unauthorized");
                         }
+                        ClaimsIdentity identity = context.Principal.Identity as ClaimsIdentity;
+                        identity.AddClaim(new Claim("current_user_id", context.Principal.Identity.Name));
                         return Task.CompletedTask;
                     }
                 };
@@ -83,19 +100,6 @@ namespace restAPI
                 };
             });
             services.AddScoped<IUserService, UserService>();
-
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll",
-                    builder =>
-                    {
-                        builder
-                        .AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials();
-                    });
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -106,6 +110,9 @@ namespace restAPI
                 app.UseDeveloperExceptionPage();
             }
 
+
+            app.UseCors();
+            app.UseAuthentication();
             app.UseMvc();
         }
     }

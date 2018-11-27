@@ -17,8 +17,8 @@ namespace db.Db
         public string UsrSurname { get; set; }
         public string UsrEmail { get; set; }
         public byte UsrActivity { get; set; }
-        public string UsrPassword { get; set; }
-        public string UsrCryptedPassword { get; set; }
+        public byte[] UsrPassword { get; set; }
+        public byte[] UsrCryptedPassword { get; set; }
         public int? UsrRolId { get; set; }
 
         public AcRole UsrRol { get; set; }

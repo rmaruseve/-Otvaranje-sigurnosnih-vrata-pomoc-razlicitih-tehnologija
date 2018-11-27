@@ -20,17 +20,11 @@ using Microsoft.IdentityModel.Tokens;
 namespace restAPI.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     [ApiController]
     public class UsersController : ControllerBase
     {
         private readonly mydbContext _context;
-
-        public UsersController(mydbContext context)
-        {
-            _context = context;
-        }
-
         private IUserService _userService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
@@ -38,8 +32,10 @@ namespace restAPI.Controllers
         public UsersController(
             IUserService userService,
             IMapper mapper,
+            mydbContext context,
             IOptions<AppSettings> appSettings)
         {
+            _context = context;
             _userService = userService;
             _mapper = mapper;
             _appSettings = appSettings.Value;
@@ -49,13 +45,13 @@ namespace restAPI.Controllers
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody]UserDto userDto)
         {
-            var user = _userService.Authenticate(userDto.UsrEmail, userDto.UsrPassword);
+            var user = _userService.Authenticate(userDto.UsrEmail, userDto.LoginPassword);
 
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var key = Encoding.ASCII.GetBytes("JWTSTRINGJWTSTRINGJWTSTRINGJWTSTRING");
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -72,7 +68,7 @@ namespace restAPI.Controllers
             return Ok(new
             {
                 Id = user.UsrId,
-                Username = user.UsrEmail,
+                Email = user.UsrEmail,
                 FirstName = user.UsrName,
                 LastName = user.UsrSurname,
                 Token = tokenString
@@ -85,11 +81,10 @@ namespace restAPI.Controllers
         {
             // map dto to entity
             var user = _mapper.Map<AcUser>(userDto);
-
             try
             {
                 // save 
-                _userService.Create(user, userDto.UsrPassword);
+                _userService.Create(user, userDto.LoginPassword);
                 return Ok();
             }
             catch (AppException ex)
@@ -100,44 +95,21 @@ namespace restAPI.Controllers
         }
 
         [HttpGet]
-        //public IQueryable<UserDto> GetUsers()
-        //{
-        //    var users = from u in _context.AcUser
-        //        select new UserDto()
-        //        {
-        //            UsrName = u.UsrName,
-        //            UsrId = u.UsrId
-        //        };
-
-        //    return users;
-        //}
-        //public IActionResult GetAll()
-        //{
-        //    var users = _userService.GetAll();
-        //    var userDtos = _mapper.Map<IList<UserDto>>(users);
-        //    return Ok(userDtos);
-        //}
-        [Route("api/users")]
-        public ActionResult<List<AcUser>> GetAll()
+        public IActionResult GetAll()
         {
-            List<AcUser> korisnici;
-            try
-            {
-                Console.WriteLine("Start");
-                korisnici = new List<AcUser>();
-                korisnici = _context.AcUser.ToList();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("ex -> " + e);
-                throw;
-            }
-           
-            return korisnici;
+            var users = _userService.GetAll();
+            var userDtos = _mapper.Map<IList<UserDto>>(users);
+            return Ok(userDtos);
         }
 
-
-
+        [HttpGet("currentUser")]
+        public IActionResult GetCurrentUser()
+        {
+            var userId = int.Parse(User.FindFirst("current_user_id")?.Value);
+            var user = _userService.GetById(userId);
+            var userDto = _mapper.Map<UserDto>(user);
+            return Ok(userDto);
+        }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
@@ -157,7 +129,7 @@ namespace restAPI.Controllers
             try
             {
                 // save 
-                _userService.Update(user, userDto.UsrPassword);
+                _userService.Update(user, userDto.LoginPassword);
                 return Ok();
             }
             catch (AppException ex)

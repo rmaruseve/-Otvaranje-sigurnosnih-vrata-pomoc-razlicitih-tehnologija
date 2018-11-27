@@ -38,7 +38,7 @@ namespace restAPI.Services
                 return null;
 
             // check if password is correct
-            if (!VerifyPasswordHash(password, System.Text.Encoding.UTF8.GetBytes(user.UsrCryptedPassword), System.Text.Encoding.UTF8.GetBytes(user.UsrPassword)))
+            if (!VerifyPasswordHash(password, user.UsrCryptedPassword, user.UsrPassword))
                 return null;
 
             // authentication successful
@@ -61,15 +61,21 @@ namespace restAPI.Services
             if (string.IsNullOrWhiteSpace(password))
                 throw new AppException("Password is required");
 
-            if (_context.AcUser.Any(x => x.UsrEmail == user.UsrEmail))
-                throw new AppException("Username \"" + user.UsrEmail + "\" is already taken");
+            Console.WriteLine(user.UsrEmail);
+
+            var order = _context.AcUser.FirstOrDefault(x => x.UsrEmail == user.UsrEmail);
+            if(order != null)
+            {
+                throw new AppException("Email already taken");
+            }
 
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
+            
 
+            user.UsrCryptedPassword = passwordHash;
+            user.UsrPassword = passwordSalt;
 
-            user.UsrCryptedPassword = System.Text.Encoding.UTF8.GetString(passwordHash);
-            user.UsrPassword = System.Text.Encoding.UTF8.GetString(passwordSalt);
             user.UsrActivity = 1;
 
             _context.AcUser.Add(user);
@@ -103,8 +109,8 @@ namespace restAPI.Services
                 byte[] passwordHash, passwordSalt;
                 CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
-                user.UsrCryptedPassword = System.Text.Encoding.UTF8.GetString(passwordHash);
-                user.UsrPassword = System.Text.Encoding.UTF8.GetString(passwordSalt);
+                user.UsrCryptedPassword = passwordHash;
+                user.UsrPassword = passwordSalt;
             }
 
             _context.AcUser.Update(user);
@@ -128,8 +134,8 @@ namespace restAPI.Services
             if (password == null) throw new ArgumentNullException("password");
             if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
 
-            using (var hmac = new System.Security.Cryptography.HMACSHA512())
-            {
+            using (var hmac = new System.Security.Cryptography.HMACSHA256())
+            { 
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
@@ -139,10 +145,10 @@ namespace restAPI.Services
         {
             if (password == null) throw new ArgumentNullException("password");
             if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
-            if (storedHash.Length != 64) throw new ArgumentException("Invalid length of password hash (64 bytes expected).", "passwordHash");
-            if (storedSalt.Length != 128) throw new ArgumentException("Invalid length of password salt (128 bytes expected).", "passwordHash");
+            if (storedHash.Length != 32) throw new ArgumentException("Invalid length of password hash (64 bytes expected).", "passwordHash");
+            if (storedSalt.Length != 64) throw new ArgumentException("Invalid length of password salt (128 bytes expected).", "passwordHash");
 
-            using (var hmac = new System.Security.Cryptography.HMACSHA512(storedSalt))
+            using (var hmac = new System.Security.Cryptography.HMACSHA256(storedSalt))
             {
                 var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
                 for (int i = 0; i < computedHash.Length; i++)
