@@ -11,7 +11,7 @@ INSERT INTO `ac_trigger_type` (`trt_id`,`trt_name`) VALUES (2,'App');
 INSERT INTO `ac_trigger_type` (`trt_id`,`trt_name`) VALUES (3,'Phone');
 
 INSERT INTO `ac_trigger` (`trg_usr_id`,`trg_trt_id`,`trg_value`,`trg_activity`) VALUES (1,1,'385911527964',1);
-INSERT INTO `ac_trigger` (`trg_usr_id`,`trg_trt_id`,`trg_value`,`trg_activity`) VALUES (1,2,'385911527964',1);
+INSERT INTO `ac_trigger` (`trg_usr_id`,`trg_trt_id`,`trg_value`,`trg_activity`) VALUES (1,2,'nhorvat@mobilisis.com',1);
 INSERT INTO `ac_trigger` (`trg_usr_id`,`trg_trt_id`,`trg_value`,`trg_activity`) VALUES (1,3,'385911527964',1);
 
 

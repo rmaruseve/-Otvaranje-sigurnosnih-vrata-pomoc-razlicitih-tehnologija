@@ -6,15 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using data.Json;
 using db.Db;
+using Microsoft.AspNetCore.Authorization;
 
 namespace restAPI.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class TriggerAccessController : ControllerBase
     {
 
         private readonly mydbContext _context;
+        //private IUserService _userService;
+        //private IMapper _mapper;
+        //private readonly AppSettings _appSettings;
 
         public TriggerAccessController(mydbContext context)
         {
