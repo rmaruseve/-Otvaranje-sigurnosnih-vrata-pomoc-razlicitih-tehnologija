@@ -38,7 +38,7 @@ namespace restAPI.Services
                 return null;
 
             // check if password is correct
-            if (!VerifyPasswordHash(password, user.UsrCryptedPassword, user.UsrPassword))
+            if (!VerifyPasswordHash(password, user.UsrCryptedPassword, user.UsrPasswordSalt))
                 return null;
 
             // authentication successful
@@ -74,7 +74,7 @@ namespace restAPI.Services
             
 
             user.UsrCryptedPassword = passwordHash;
-            user.UsrPassword = passwordSalt;
+            user.UsrPasswordSalt = passwordSalt;
 
             user.UsrActivity = 1;
 
@@ -110,7 +110,7 @@ namespace restAPI.Services
                 CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
                 user.UsrCryptedPassword = passwordHash;
-                user.UsrPassword = passwordSalt;
+                user.UsrPasswordSalt = passwordSalt;
             }
 
             _context.AcUser.Update(user);

@@ -558,7 +558,7 @@ namespace db.Db
                     .HasMaxLength(45)
                     .IsUnicode(false);
 
-                entity.Property(e => e.UsrPassword)
+                entity.Property(e => e.UsrPasswordSalt)
                     .IsRequired()
                     .HasColumnName("usr_password")
                     .HasMaxLength(45)
