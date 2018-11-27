@@ -1,4 +1,4 @@
-package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija;
+package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -8,24 +8,47 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.ObjectOpen;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.ObjectOpenResponse;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.facilityObject;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.service.ApiInterface;
 
 import java.util.HashMap;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class objectListAdapter extends BaseExpandableListAdapter {
 
     private List<String> header_titles;
     private HashMap<String, List<Button>> child_titles;
     private Context ctx;
+    private String token;
+    private List<facilityObject> objectDataList;
 
-    objectListAdapter(Context ctx, List<String> header_titles, HashMap<String, List<Button>> child_titles)
+    Retrofit.Builder builder = new Retrofit.Builder()
+            .baseUrl(ApiInterface.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create());
+
+    Retrofit retrofit = builder.build();
+
+    ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+
+
+    objectListAdapter(Context ctx, List<String> header_titles, HashMap<String, List<Button>> child_titles, String token, List<facilityObject> objectDataList)
     {
         this.ctx = ctx;
         this.child_titles = child_titles;
         this.header_titles = header_titles;
-
+        this.token = token;
+        this.objectDataList = objectDataList;
     }
 
     @Override
@@ -35,10 +58,8 @@ public class objectListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        //header_titles.size();
         return 1;
-        //return value.size();
-        //return child_titles.get(header_titles.get(groupPosition));
+
     }
 
     @Override
@@ -73,19 +94,28 @@ public class objectListAdapter extends BaseExpandableListAdapter {
         {
             LayoutInflater layoutInflater = (LayoutInflater) this.ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.parent_layout, null);
+            for(facilityObject fO: objectDataList)
+            {
+                if (fO.isAvailable())
+                {
+                    convertView.setBackgroundResource(R.color.colorPrimary);
+                }
+            }
         }
 
 
-        TextView textView = (TextView) convertView.findViewById(R.id.heading_item);
+        TextView textView = convertView.findViewById(R.id.heading_item);
         textView.setTypeface(null, Typeface.BOLD);
         textView.setText(title);
+
+
+
 
         return convertView;
     }
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        //Button title = (Button) this.getChild(groupPosition, childPosition);
         if (convertView == null)
         {
             LayoutInflater layoutInflater = (LayoutInflater) this.ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -93,26 +123,48 @@ public class objectListAdapter extends BaseExpandableListAdapter {
         }
 
         List<Button> value = child_titles.get(header_titles.get(groupPosition));
-        //((LinearLayout)convertView).addView(value.get(0));
-        Button btn1 = (Button) convertView.findViewById(R.id.child_item1);
+               Button btn1 = convertView.findViewById(R.id.child_item1);
         String buttonText = header_titles.get(groupPosition);
-        Log.d("Clicked", "text:  " + buttonText);
         btn1.setText(value.get(0).getText());
         btn1.setTag(buttonText);
 
-        //test
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("click", "tag: " + v.getTag());
+                ObjectOpen objectOpen = new ObjectOpen(v.getTag().toString());
+                Call<ObjectOpenResponse> call = apiInterface.openObject(objectOpen);
+
+                call.enqueue(new Callback<ObjectOpenResponse>() {
+                    @Override
+                    public void onResponse(Call<ObjectOpenResponse> call, Response<ObjectOpenResponse> response) {
+                        if (response.body().isExecuted())
+                            Log.d("Response: ", "open");
+                        else
+                        {
+                            Log.d("Response: ", "not open");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ObjectOpenResponse> call, Throwable t) {
+                        Log.d("Response: ", "cannot connect to API");
+                    }
+                });
             }
         });
 
-        Button btn2 = (Button) convertView.findViewById(R.id.child_item2);
-        //String buttonText = header_titles.get(groupPosition);
-        Log.d("Clicked", "text:  " + buttonText);
+        Button btn2 = convertView.findViewById(R.id.child_item2);
         btn2.setText(value.get(1).getText());
         btn2.setTag(buttonText);
+
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("click", "tag: " + v.getTag());
+                //TODO: open with sms
+            }
+        });
 
         return convertView;
     }
@@ -121,4 +173,5 @@ public class objectListAdapter extends BaseExpandableListAdapter {
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
+
 }

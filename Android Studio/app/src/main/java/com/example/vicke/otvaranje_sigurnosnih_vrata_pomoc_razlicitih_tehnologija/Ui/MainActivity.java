@@ -1,17 +1,10 @@
-package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija;
+package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -22,36 +15,36 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
+
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    Fragment objectListShowFragment;
+    String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            token = extras.getString("token");
+        }
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.objectListShow, ObjectListShow.newInstance())
-                .commit();
 
-
-
-        int Permission_All = 1;
-
-        String[] Permissions = {Manifest.permission.CALL_PHONE, Manifest.permission.SEND_SMS};
-        if (!hasPremission(this, Permissions)){
-            ActivityCompat.requestPermissions(this, Permissions, Permission_All);
-        }
-
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction t = fragmentManager.beginTransaction();
+        ObjectListShow objectListShow = new ObjectListShow();
+        Bundle bundle = new Bundle();
+        bundle.putString("token", token);
+        objectListShow.setArguments(bundle);
+        t.add(R.id.objectListShowFrame, objectListShow);
+        t.commit();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +93,13 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            //TODO: open setting
+            return true;
+        }
+        if (id == R.id.action_refresh) {
+            //TODO: refresh object list
+            finish();
+            startActivity(getIntent());
             return true;
         }
 
@@ -125,31 +125,17 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_admin_options)
         {
-
+            //TODO: hide admin meni from normal users
         }
+
+        //TODO: add logout
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    public static boolean hasPremission(Context context, String... premissions){
-
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M && context != null && premissions != null)
-        {
-            for(String premission:premissions)
-            {
-                if(ActivityCompat.checkSelfPermission(context, premission) != PackageManager.PERMISSION_GRANTED)
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     private void dialNumber(String phoneNumber) {
-        //startActivity(new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", phoneNumber, null)));
 
         Intent intent = new Intent(Intent.ACTION_CALL);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

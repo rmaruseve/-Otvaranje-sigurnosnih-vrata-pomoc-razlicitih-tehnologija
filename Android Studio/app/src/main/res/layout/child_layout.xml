@@ -11,10 +11,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/child_item1"
         android:layout_weight="1"
+        android:drawableLeft="@drawable/ic_menu_gallery"
+        android:drawablePadding="5dp"
         />
     <Button
         android:id="@+id/child_item2"
         android:layout_weight="1"
         android:layout_width="0dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_menu_gallery"
+        android:drawablePadding="5dp"/>
 </LinearLayout>
