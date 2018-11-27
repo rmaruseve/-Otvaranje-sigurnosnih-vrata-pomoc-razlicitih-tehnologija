@@ -139,6 +139,10 @@ namespace restAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes a specific User.
+        /// </summary>
+        /// <param name="id"></param>  
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

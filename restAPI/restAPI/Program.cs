@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace restAPI
 {
+    #pragma warning disable CS1591
     public class Program
     {
         public static void Main(string[] args)
@@ -27,5 +28,6 @@ namespace restAPI
                 .UseUrls("http://0.0.0.0:5000/")
                 .Build();
     }
+    #pragma warning restore CS1591
 }
 

@@ -31,7 +31,6 @@ namespace restAPI.Controllers
             {
                 Console.WriteLine("[INF] Start --------------------");
                 korisnici = new List<AcUser>();
-                korisnici = this.getAllUsers();
                 foreach (AcUser currentObject in korisnici)
                 {
                     proba.Add(currentObject.UsrName);
@@ -63,7 +62,7 @@ namespace restAPI.Controllers
         }
 
         // POST api/values
-        [HttpPost]
+        /*[HttpPost]
         public ActionResult<string> Post([FromBody] TriggerAccess req)
         {
             int hasAccess = 0;
@@ -94,7 +93,7 @@ namespace restAPI.Controllers
                 access = hasAccess,
                 objectAccess = objectsHasAcces
             });
-        }
+        }*/
 
         // PUT api/values/5
         [HttpPut("{id}")]
@@ -106,41 +105,6 @@ namespace restAPI.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-        }
-
-        public List<AcUser> getAllUsers()
-        {
-            List<AcUser> users = (
-                from obj in _context.AcUser
-                select obj
-            ).ToList();
-            return users;
-        }
-
-        public AcUser getUserByTriggerType(string value, string type)
-        {
-            AcUser user = (
-                from us in _context.AcUser
-                join trg in _context.AcTrigger on us.UsrId equals trg.TrgUsrId
-                join trgt in _context.AcTriggerType on trg.TrgTrtId equals trgt.TrtId
-                where trg.TrgValue == value && trgt.TrtName == type
-                select us
-            ).SingleOrDefault();
-            return user;
-        }
-
-        
-
-        public List<AcObject> getObjectsByTrigger(string type, string objectName)
-        {
-            List<AcObject> objects = (
-                from obj in _context.AcObject
-                join ohs in _context.AcObjectHasTriggerType on obj.ObjId equals ohs.OhtObjId
-                join trgt in _context.AcTriggerType on ohs.OhtTrtId equals trgt.TrtId
-                where trgt.TrtName == type && obj.ObjName == objectName
-                select obj
-            ).ToList();
-            return objects;
         }
     }
 }
