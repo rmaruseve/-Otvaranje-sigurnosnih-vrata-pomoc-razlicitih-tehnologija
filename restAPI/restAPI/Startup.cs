@@ -99,6 +99,7 @@ namespace restAPI
             });
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IObjectService, ObjectService>();
+            services.AddScoped<IAccessService, AccessService>();
 
             services.AddSwaggerGen(c =>
             {
