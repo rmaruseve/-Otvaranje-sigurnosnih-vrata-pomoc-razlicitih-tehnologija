@@ -23,6 +23,7 @@ namespace restAPI.Controllers
         private readonly mydbContext _context;
         private IObjectService _objectService;
         private IUserService _userService;
+        private ILoggerService _loggerService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
@@ -48,7 +49,7 @@ namespace restAPI.Controllers
             int userId;
             try
             {
-                userId = _userService.getUserByTriggerType(req.Value, req.TriggerTypeName);
+                userId = _userService.getUserByTriggerType(req.Value, req.TriggerTypeName, req.ObjectName);
             }
             catch (AppException ex)
             {
