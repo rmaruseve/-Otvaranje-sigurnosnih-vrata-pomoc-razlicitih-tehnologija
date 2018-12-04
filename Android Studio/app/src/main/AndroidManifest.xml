@@ -27,8 +27,8 @@
         </activity>
         <activity
             android:name=".Ui.MainActivity"
-            android:label="@string/title_activity_main">
-        </activity>
+            android:label="@string/title_activity_main" />
+        <activity android:name=".Ui.AdminMenu"></activity>
     </application>
 
 </manifest>

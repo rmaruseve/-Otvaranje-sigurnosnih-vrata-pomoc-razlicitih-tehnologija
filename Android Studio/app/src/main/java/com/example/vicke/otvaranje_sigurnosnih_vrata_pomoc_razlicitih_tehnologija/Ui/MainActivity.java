@@ -17,11 +17,13 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     String token;
+    User currentUser = new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +33,16 @@ public class MainActivity extends AppCompatActivity
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             token = extras.getString("token");
+            currentUser = (User) extras.getSerializable("currentUser");
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        /*if (!currentUser.isAdmin)
+        {
+           //TODO: hide admin menu
+        }*/
 
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -125,7 +133,10 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_admin_options)
         {
-            //TODO: hide admin meni from normal users
+            Intent i = new Intent(MainActivity.this, AdminMenu.class);
+            i.putExtra("token",token);
+            i.putExtra("currentUser",currentUser);
+            startActivity(i);
         }
 
         //TODO: add logout

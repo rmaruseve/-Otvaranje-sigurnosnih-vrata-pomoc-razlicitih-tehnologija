@@ -1,30 +1,32 @@
 package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model;
 
-public class User {
+import java.io.Serializable;
 
-    private int id;
-    private String email;
-    private String firstName;
-    private String lastName;
-    private String token;
+public class User implements Serializable {
+
+    private int Id;
+    private String Email;
+    private String FirstName;
+    private String LastName;
+    private String Token;
 
     public int getId() {
-        return id;
+        return Id;
     }
 
     public String getEmail() {
-        return email;
+        return Email;
     }
 
     public String getFirstName() {
-        return firstName;
+        return FirstName;
     }
 
     public String getLastName() {
-        return lastName;
+        return LastName;
     }
 
     public String getToken() {
-        return token;
+        return Token;
     }
 }

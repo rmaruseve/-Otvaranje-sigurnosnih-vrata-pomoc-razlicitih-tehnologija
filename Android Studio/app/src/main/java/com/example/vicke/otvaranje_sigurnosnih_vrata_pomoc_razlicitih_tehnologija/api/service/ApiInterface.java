@@ -17,7 +17,7 @@ import retrofit2.http.POST;
 
 public interface ApiInterface {
 
-    String BASE_URL = "https://172.16.0.88:5000";
+    String BASE_URL = "http://172.16.0.84:5000";
 
     @GET("/api/")
     Call<List<facilityObject>> getObjects(@Header("Authorization") String authToken);
@@ -27,8 +27,8 @@ public interface ApiInterface {
     @POST("/api/Users/authenticate")
     Call<User> login(@Body Login login);
 
-    @GET("/api/")
-    Call<ResponseBody> getData(@Header("Authorization") String authToken);
+    @GET("/api/Users")
+    Call<ResponseBody> getUsers(@Header("Authorization") String authToken);
 
 
 
