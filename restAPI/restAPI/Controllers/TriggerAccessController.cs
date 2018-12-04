@@ -49,6 +49,8 @@ namespace restAPI.Controllers
         [AllowAnonymous]
         public ActionResult<string> Get([FromBody] TriggerAccessDto req)
         {
+
+            //TODO move all logic into AccessControl
             try
             {
                 var loggedUserId = User.FindFirst("current_user_id")?.Value;

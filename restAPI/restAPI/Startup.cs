@@ -97,6 +97,8 @@ namespace restAPI
                     ValidateAudience = false
                 };
             });
+            services.AddSingleton<IAccessControl, AccessControl>();
+
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IObjectService, ObjectService>();
             services.AddScoped<IAccessService, AccessService>();
