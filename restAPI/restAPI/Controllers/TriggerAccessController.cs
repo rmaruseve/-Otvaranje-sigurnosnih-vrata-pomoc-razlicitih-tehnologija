@@ -24,12 +24,14 @@ namespace restAPI.Controllers
         private IObjectService _objectService;
         private IUserService _userService;
         private ILoggerService _loggerService;
+        private IAccessService _accessService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public TriggerAccessController(
             IUserService userService,
             IObjectService objectService,
+            IAccessService accessService,
             IMapper mapper,
             mydbContext context,
             IOptions<AppSettings> appSettings)
@@ -38,6 +40,7 @@ namespace restAPI.Controllers
             _userService = userService;
             _objectService = objectService;
             _mapper = mapper;
+            _accessService = accessService;
             _appSettings = appSettings.Value;
         }
 
@@ -46,20 +49,35 @@ namespace restAPI.Controllers
         [AllowAnonymous]
         public ActionResult<string> Get([FromBody] TriggerAccessDto req)
         {
-            int userId;
             try
             {
-                userId = _userService.getUserByTriggerType(req.Value, req.TriggerTypeName, req.ObjectName);
-            }
-            catch (AppException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+                var loggedUserId = User.FindFirst("current_user_id")?.Value;
+                int userId;
+                if (loggedUserId == null)
+                {
+                    userId = _userService.getUserByTriggerType(req.Value, req.TriggerTypeName);
+                }
+                else
+                {
+                    userId = int.Parse(loggedUserId);
+                }
 
-            return JsonConvert.SerializeObject(new
+                AcObject obj = _objectService.getObject(req.TriggerTypeName, req.ObjectName);
+                AcAccess acs = _accessService.checkAccess(userId, obj.ObjId);
+
+                return JsonConvert.SerializeObject(new
+                {
+                    access = 1,
+                    objectAccess = obj.ObjAction
+                });
+            } catch (AppException ex)
             {
-                UsrId = userId
-            });
+                return JsonConvert.SerializeObject(new
+                {
+                    access = 0,
+                    objectAccess = ""
+                });
+            }
         }
 
         // POST api/values

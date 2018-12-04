@@ -1,4 +1,5 @@
 ﻿using db.Db;
+using restAPI.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace restAPI.Services
 {
     public interface IAccessService
     {
-        AcAccess checkAccess(AcUser user, AcObject obj);
+        AcAccess checkAccess(int userId, int objId);
     }
 
     public class AccessService : IAccessService
@@ -20,13 +21,17 @@ namespace restAPI.Services
             _context = context;
         }
 
-        public AcAccess checkAccess(AcUser user, AcObject obj)
+        public AcAccess checkAccess(int userId, int objId)
         {
             AcAccess access = (
                 from acs in _context.AcAccess
-                where acs.AcsUsr.UsrId == user.UsrId && acs.AcsObj.ObjId == obj.ObjId && acs.AcsValidFrom <= DateTime.Now && acs.AcsValidTo >= DateTime.Now
+                where acs.AcsUsr.UsrId == userId && acs.AcsObj.ObjId == objId && acs.AcsValidFrom <= DateTime.Now && acs.AcsValidTo >= DateTime.Now
                 select acs
             ).SingleOrDefault();
+            if(access == null)
+            {
+                throw new AppException("User has no access.");
+            }
             return access;
         }
     }
