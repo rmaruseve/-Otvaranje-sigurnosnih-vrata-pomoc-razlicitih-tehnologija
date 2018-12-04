@@ -12,14 +12,10 @@ import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologij
 
 public class CrudUser extends Fragment {
 
-    User user = new User();
+    //TODO: declare all xml objects
 
-    public CrudUser newInstance() {
-        return new CrudUser();
-    }
 
-    public CrudUser newInstance(User user) {
-        this.user = user;
+    public static CrudUser newInstance() {
         return new CrudUser();
     }
 
@@ -32,6 +28,16 @@ public class CrudUser extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
 
+        Bundle bundle = getArguments();
+        if (!bundle.isEmpty())
+        {
+            User passedUser = (User) bundle.getSerializable("selectedUser");
+            //TODO: set values to xml objects if bundle is not empty
+        }
+        else
+        {
+            //its a new user, everything is empty
+        }
 
 
     }

@@ -3,6 +3,7 @@ package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologi
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,11 +41,10 @@ public class ObjectListShow extends Fragment {
     ApiInterface apiInterface = retrofit.create(ApiInterface.class);
 
 
-
-
     public static ObjectListShow newInstance() {
         return new ObjectListShow();
     }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
 
@@ -63,6 +63,71 @@ public class ObjectListShow extends Fragment {
                 List<facilityObject> facilityObjects = response.body();
                 
                 objectDataList = new ArrayList<>(facilityObjects);
+                Log.d("TEST-------------------", "OVO JE NEKI TEKST -----------------------------------------------");
+
+                expandableListView = getView().findViewById(R.id.expendableList);
+
+                List<String> Headings = new ArrayList<>();
+                Headings = addHeaderName(Headings, objectDataList);
+
+                HashMap<String, SlideToActView> ChildList = new HashMap<>();
+
+                for (int i = 0; i<Headings.size(); i++)
+                {
+                    SlideToActView slideToActView = new SlideToActView(getContext());
+                    ChildList.put(Headings.get(i),slideToActView);
+                }
+
+
+                objectListAdapter MyAdapter = new objectListAdapter(getContext(), Headings, ChildList, token, objectDataList);
+                expandableListView.setAdapter(MyAdapter);
+
+                for (int i = 0; i < objectDataList.size(); i++)
+                {
+                    if (objectDataList.get(i).getObjActivity() == 0)
+                    {
+                        expandableListView.setBackgroundColor(getContext().getResources().getColor(R.color.colorPrimary));
+                    }
+                }
+
+                //TODO: popraviti expanding i contracting
+                expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+                    boolean open = false;
+                    long parentId = -1;
+                    @Override
+                    public boolean onGroupClick(ExpandableListView parent, View v,
+                                                int groupPosition, long id) {
+
+                        if (open = false && objectDataList.get(groupPosition).getObjActivity()==1)
+                        {
+                            parentId = id;
+                            open = true;
+                        }
+                        else
+                        {
+                            if (objectDataList.get(groupPosition).getObjActivity()==1)
+                            {
+                                parent.collapseGroup((int)parentId);
+                                if (parentId == id)
+                                {
+                                    parentId = -1;
+                                    open = false;
+                                }
+                                else
+                                {
+                                    parentId = id;
+                                    open = true;
+                                }
+
+                            }
+                        }
+
+                        if (objectDataList.get(groupPosition).getObjActivity() == 0)
+                            return true;
+
+                        return false;
+                    }
+                });
             }
 
             @Override
@@ -71,69 +136,15 @@ public class ObjectListShow extends Fragment {
             }
         });
 
-            expandableListView = getView().findViewById(R.id.expendableList);
 
-            List<String> Headings = new ArrayList<>();
-            Headings = addHeaderName(Headings, objectDataList);
-
-            //List<Button> ChildElements;
-            HashMap<String, SlideToActView> ChildList = new HashMap<>();
-
-            for (int i = 0; i<Headings.size(); i++)
-            {
-                //ChildElements = new ArrayList<>();
-                //ChildElements = addButtonAttribute(ChildElements);
-                //ChildList.put(Headings.get(i),ChildElements);
-                SlideToActView slideToActView = new SlideToActView(getContext());
-                ChildList.put(Headings.get(i),slideToActView);
-            }
-
-
-            objectListAdapter MyAdapter = new objectListAdapter(getContext(), Headings, ChildList, token, objectDataList);
-            expandableListView.setAdapter(MyAdapter);
-
-            expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-                boolean open = false;
-                long parentId = -1;
-                @Override
-                public boolean onGroupClick(ExpandableListView parent, View v,
-                                            int groupPosition, long id) {
-
-                    if (open = false && objectDataList.get(groupPosition).isAvailable())
-                    {
-                        parentId = id;
-                        open = true;
-                    }
-                    else
-                    {
-                        if (parentId == id && objectDataList.get(groupPosition).isAvailable())
-                        {
-                            parent.collapseGroup((int)parentId);
-                            parentId = -1;
-                            open = false;
-                        }
-                        if(parentId != id && objectDataList.get(groupPosition).isAvailable())
-                        {
-                            parent.collapseGroup((int)parentId);
-                            parentId = id;
-                            open = true;
-                        }
-                    }
-
-                    if (!objectDataList.get(groupPosition).isAvailable())
-                        return true;
-
-                    return false;
-                }
-            });
     }
 
     private List<String> addHeaderName(List<String> headerList, List<facilityObject> nameList)
     {
         
-        for (int i=0; i<10; i++)
+        for (int i=0; i<nameList.size(); i++)
         {
-            headerList.add(nameList.get(i).getName());
+            headerList.add(nameList.get(i).getObjName());
         }
 
         return headerList;
