@@ -6,59 +6,60 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using data.Json;
 using db.Db;
+using Microsoft.AspNetCore.Authorization;
+using restAPI.Services;
+using AutoMapper;
+using restAPI.Helpers;
+using Microsoft.Extensions.Options;
 
 namespace restAPI.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class TriggerAccessController : ControllerBase
     {
 
         private readonly mydbContext _context;
+        private IObjectService _objectService;
+        private IUserService _userService;
+        private ILoggerService _loggerService;
+        private IMapper _mapper;
+        private readonly AppSettings _appSettings;
 
-        public TriggerAccessController(mydbContext context)
+        public TriggerAccessController(
+            IUserService userService,
+            IObjectService objectService,
+            IMapper mapper,
+            mydbContext context,
+            IOptions<AppSettings> appSettings)
         {
             _context = context;
+            _userService = userService;
+            _objectService = objectService;
+            _mapper = mapper;
+            _appSettings = appSettings.Value;
         }
 
         // GET api/values
-        [HttpGet]
-        public ActionResult<string> Get()
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult<string> Get([FromBody] TriggerAccessDto req)
         {
-            List<AcUser> korisnici;
-            List<string> proba = new List<string>();
+            int userId;
             try
             {
-                Console.WriteLine("[INF] Start --------------------");
-                korisnici = new List<AcUser>();
-                foreach (AcUser currentObject in korisnici)
-                {
-                    proba.Add(currentObject.UsrName);
-                }
+                userId = _userService.getUserByTriggerType(req.Value, req.TriggerTypeName, req.ObjectName);
             }
-            catch (Exception e)
+            catch (AppException ex)
             {
-                Console.WriteLine("ex -> " + e);
-                throw;
+                return BadRequest(new { message = ex.Message });
             }
 
-            //return JsonConvert.SerializeObject(new
-            //{
-            //    id = 
-            //    access = hasAccess,
-            //    objectAccess = objectsHasAcces
-            //});
             return JsonConvert.SerializeObject(new
             {
-                ime = proba
+                UsrId = userId
             });
-        }
-
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
-        {
-            return "value";
         }
 
         // POST api/values
@@ -94,17 +95,5 @@ namespace restAPI.Controllers
                 objectAccess = objectsHasAcces
             });
         }*/
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

@@ -35,7 +35,7 @@ namespace restAPI
         {
             services.AddAutoMapper();
 
-            var connection = "server=192.168.1.1;port=3306;user=root;password=test123;database=mydb";
+            var connection = "server=192.168.0.1;port=3306;user=root;password=test123;database=mydb";
             services.AddDbContext<mydbContext>(options => options.UseMySQL(connection));
             services.AddMvc(options =>
             {
@@ -98,6 +98,8 @@ namespace restAPI
                 };
             });
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IObjectService, ObjectService>();
+            services.AddScoped<IAccessService, AccessService>();
 
             services.AddSwaggerGen(c =>
             {
@@ -131,8 +133,8 @@ namespace restAPI
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "TDCEapi");
             });
 
-            app.UseHsts();
-            app.UseHttpsRedirection();
+            //app.UseHsts();
+            //app.UseHttpsRedirection();
             app.UseCors();
             app.UseAuthentication();
             app.UseMvc();
