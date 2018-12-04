@@ -1,4 +1,5 @@
 ﻿using db.Db;
+using restAPI.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace restAPI.Services
 {
     public interface IObjectService
     {
-        IEnumerable<AcObject> getObjects(string type, string objectName, int userId);
+        AcObject getObject(string type, string objectName, int userId);
     }
 
     public class ObjectService : IObjectService
@@ -20,16 +21,45 @@ namespace restAPI.Services
             _context = context;
         }
 
-        public IEnumerable<AcObject> getObjects(string type, string objectName, int userId)
+        public AcObject getObject(string type, string objectName, int userId)
         {
-            List<AcObject> objects = (
+            AcObject acObject = (
                 from obj in _context.AcObject
                 join ohs in _context.AcObjectHasTriggerType on obj.ObjId equals ohs.OhtObjId
                 join trgt in _context.AcTriggerType on ohs.OhtTrtId equals trgt.TrtId
                 where trgt.TrtName == type && obj.ObjName == objectName
                 select obj
-            ).ToList();
-            return objects;
+            ).SingleOrDefault();
+
+            if(acObject == null)
+            {
+                throw new AppException("Object not found.");
+            }
+            else if(acObject.ObjActivity == 0)
+            {
+                throw new AppException("Object not found.");
+            }
+            else if(acObject.ObjAuto == 0)
+            {
+                throw new AppException("Can't open object.");
+            }
+            else if (acObject.ObjOpen == 1)
+            {
+                throw new AppException("Object already open.");
+            }
+
+            AcAccess access = (
+                from acs in _context.AcAccess
+                where acs.AcsUsr.UsrId == userId && acs.AcsObj.ObjId == acObject.ObjId && acs.AcsValidFrom <= DateTime.Now && acs.AcsValidTo >= DateTime.Now
+                select acs
+            ).SingleOrDefault();
+
+            if(access == null)
+            {
+                throw new AppException("User has no access.");
+            }
+
+            return acObject;
         }
     }
 }
