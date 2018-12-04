@@ -39,32 +39,34 @@ namespace restAPI.Services
 
         public void InsertEventLog(string value, int trtId, int objId, int evsId)
         {
-            
-                AcEventLog eventLog = new AcEventLog();
-                eventLog.EvlDate = DateTime.Now();
-                eventLog.EvlTrgValue = value;
-                eventLog.EvlTrtId = trtId;
-                eventLog.EvlObjId = objId;
-                eventLog.EvlEvsId = evsId;
-                _context.AcEventLog.InsertOnSubmit(eventLog);
-                _context.SubmitChanges();
+
+            AcEventLog eventLog = new AcEventLog
+            {
+                EvlDate = DateTime.Now,
+                EvlTrgValue = value,
+                EvlTrtId = trtId,
+                EvlObjId = objId,
+                EvlEvsId = evsId
+            };
+            _context.AcEventLog.Add(eventLog);
+            _context.SaveChanges();
             
         }
         public void InsertEventLog(string value, int trtId, int objId, int evsId, int usrId)
         {
-            using (db objDataContext = new db())
-            {
-                AcEventLog eventLog = new AcEventLog();
-                eventLog.EvlDate = DateTime.Now();
-                eventLog.EvlTrgValue = value;
-                eventLog.EvlTrtId = trtId;
-                eventLog.EvlObjId = objId;
-                eventLog.EvlEvsId = evsId;
-                eventLog.EvlUsrId = usrId;
-                objDataContext.AcEventLog.InsertOnSubmit(eventLog);
-                objDataContext.SubmitChanges();
-            }
 
+            AcEventLog eventLog = new AcEventLog
+            {
+                EvlDate = DateTime.Now,
+                EvlTrgValue = value,
+                EvlTrtId = trtId,
+                EvlObjId = objId,
+                EvlEvsId = evsId,
+                EvlUsrId = usrId
+        };
+            _context.AcEventLog.Add(eventLog);
+            _context.SaveChanges();
+            
         }
 
     }
