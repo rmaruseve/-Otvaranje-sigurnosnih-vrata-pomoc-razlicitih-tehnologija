@@ -5,9 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +19,9 @@ import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologij
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.service.ApiInterface;
 
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,9 +30,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginScreen extends AppCompatActivity {
 
+    private static final String TAG = LoginScreen.class.getSimpleName();
     EditText email;
     EditText password;
     Button login;
+
 
     Retrofit.Builder builder = new Retrofit.Builder()
             .baseUrl(ApiInterface.BASE_URL)
@@ -43,6 +49,10 @@ public class LoginScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_screen);
 
+        OkHttpClient.Builder client = new OkHttpClient.Builder();
+        //client.interceptors().add(httpLoggingInterceptor);
+        client.readTimeout(180, TimeUnit.SECONDS);
+        client.connectTimeout(180, TimeUnit.SECONDS);
 
             int Permission_All = 1;
 
@@ -58,18 +68,16 @@ public class LoginScreen extends AppCompatActivity {
             login.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String emailUser = email.getText().toString();
-                    String passwordUser = password.getText().toString();
-                    Login(emailUser, passwordUser);
+                    String usrEmail = email.getText().toString();
+                    String loginPassword = password.getText().toString();
+                    Login(usrEmail, loginPassword);
                 }
             });
-
-
         }
 
-        private void Login(String emailUser, String passwordUser)
+        private void Login(String usrEmail, String loginPassword)
         {
-            Login login = new Login(emailUser, passwordUser);
+            Login login = new Login(usrEmail, loginPassword);
             Call<User> call = apiInterface.login(login);
 
             call.enqueue(new Callback<User>() {
@@ -77,9 +85,10 @@ public class LoginScreen extends AppCompatActivity {
                 public void onResponse(Call<User> call, Response<User> response) {
                     if (response.isSuccessful())
                     {
-                        Toast.makeText(LoginScreen.this, "JEJ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginScreen.this, response.body().getToken(), Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(LoginScreen.this, MainActivity.class);
                         i.putExtra("token",response.body().getToken());
+                        i.putExtra("currentUser", response.body());
                         startActivity(i);
                     }
                     else
@@ -90,10 +99,8 @@ public class LoginScreen extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<User> call, Throwable t) {
-                    //Toast.makeText(LoginScreen.this, "Failed connection", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(LoginScreen.this, MainActivity.class);
-                    i.putExtra("token","test");
-                    startActivity(i);
+                    Log.d(TAG, "exception: " + t.getMessage());
+                    Toast.makeText(LoginScreen.this, "Failed connection", Toast.LENGTH_SHORT).show();
                 }
             });
         }
