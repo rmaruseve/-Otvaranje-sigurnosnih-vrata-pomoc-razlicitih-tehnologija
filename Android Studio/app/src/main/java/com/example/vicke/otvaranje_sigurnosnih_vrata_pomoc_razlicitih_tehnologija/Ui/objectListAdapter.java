@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
@@ -15,6 +14,9 @@ import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologij
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.ObjectOpenResponse;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.facilityObject;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.service.ApiInterface;
+import com.ncorti.slidetoact.SlideToActView;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class objectListAdapter extends BaseExpandableListAdapter {
 
     private List<String> header_titles;
-    private HashMap<String, List<Button>> child_titles;
+    private HashMap<String, SlideToActView> child_titles;
     private Context ctx;
     private String token;
     private List<facilityObject> objectDataList;
@@ -42,7 +44,7 @@ public class objectListAdapter extends BaseExpandableListAdapter {
     ApiInterface apiInterface = retrofit.create(ApiInterface.class);
 
 
-    objectListAdapter(Context ctx, List<String> header_titles, HashMap<String, List<Button>> child_titles, String token, List<facilityObject> objectDataList)
+    objectListAdapter(Context ctx, List<String> header_titles, HashMap<String, SlideToActView> child_titles, String token, List<facilityObject> objectDataList)
     {
         this.ctx = ctx;
         this.child_titles = child_titles;
@@ -69,7 +71,7 @@ public class objectListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return child_titles.get(header_titles.get(groupPosition)).get(childPosition);
+        return child_titles;
     }
 
     @Override
@@ -103,7 +105,6 @@ public class objectListAdapter extends BaseExpandableListAdapter {
             }
         }
 
-
         TextView textView = convertView.findViewById(R.id.heading_item);
         textView.setTypeface(null, Typeface.BOLD);
         textView.setText(title);
@@ -122,24 +123,25 @@ public class objectListAdapter extends BaseExpandableListAdapter {
             convertView = layoutInflater.inflate(R.layout.child_layout, null);
         }
 
-        List<Button> value = child_titles.get(header_titles.get(groupPosition));
-               Button btn1 = convertView.findViewById(R.id.child_item1);
-        String buttonText = header_titles.get(groupPosition);
-        btn1.setText(value.get(0).getText());
-        btn1.setTag(buttonText);
+        final SlideToActView value = child_titles.get(header_titles.get(groupPosition)); //object name
 
-        btn1.setOnClickListener(new View.OnClickListener() {
+        SlideToActView slideToActView = convertView.findViewById(R.id.slide_to_open);
+
+        slideToActView.setOnSlideCompleteListener(new SlideToActView.OnSlideCompleteListener() {
             @Override
-            public void onClick(View v) {
-                Log.d("click", "tag: " + v.getTag());
-                ObjectOpen objectOpen = new ObjectOpen(v.getTag().toString());
-                Call<ObjectOpenResponse> call = apiInterface.openObject(objectOpen);
+            public void onSlideComplete(@NotNull SlideToActView slideToActView) {
 
+                Log.d("click", "tag: " + value.toString());
+                ObjectOpen objectOpen = new ObjectOpen(value.toString());
+
+                Call<ObjectOpenResponse> call = apiInterface.openObject(objectOpen);
                 call.enqueue(new Callback<ObjectOpenResponse>() {
                     @Override
                     public void onResponse(Call<ObjectOpenResponse> call, Response<ObjectOpenResponse> response) {
                         if (response.body().isExecuted())
+                        {
                             Log.d("Response: ", "open");
+                        }
                         else
                         {
                             Log.d("Response: ", "not open");
@@ -151,18 +153,8 @@ public class objectListAdapter extends BaseExpandableListAdapter {
                         Log.d("Response: ", "cannot connect to API");
                     }
                 });
-            }
-        });
 
-        Button btn2 = convertView.findViewById(R.id.child_item2);
-        btn2.setText(value.get(1).getText());
-        btn2.setTag(buttonText);
-
-        btn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("click", "tag: " + v.getTag());
-                //TODO: open with sms
+                slideToActView.resetSlider();
             }
         });
 

@@ -31,6 +31,11 @@ namespace restAPI.Services
                 select obj
             ).SingleOrDefault();
 
+            if(returnObj == null)
+            {
+                throw new AppException("Object not found.");
+
+            }
             return returnObj;
         }
     }

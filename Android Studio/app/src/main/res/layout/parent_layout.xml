@@ -5,8 +5,10 @@
     android:layout_height="100dp">
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="100dp"
         android:id="@+id/heading_item"
         android:drawableLeft="@drawable/ic_menu_gallery"
-        android:drawablePadding="5dp" />
+        android:drawablePadding="5dp"
+        android:layout_marginLeft="10dp"
+        />
 </LinearLayout>

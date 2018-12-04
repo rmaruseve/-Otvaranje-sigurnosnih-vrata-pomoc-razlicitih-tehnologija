@@ -16,7 +16,7 @@ namespace restAPI.Services
         AcUser Create(AcUser user, string password);
         void Update(AcUser user, string password = null);
         void Delete(int id);
-        int getUserByTriggerType(string value, string type, string objName);
+        int getUserByTriggerType(string value, string type);
     }
 
     public class UserService : IUserService
@@ -162,36 +162,36 @@ namespace restAPI.Services
             return true;
         }
 
-        public int getUserByTriggerType(string value, string type, string objectName)
+        public int getUserByTriggerType(string value, string type)
         {
-            AcTrigger trigger = (
+            UserTrigger trigger = (
                 from trg in _context.AcTrigger
                 join trgt in _context.AcTriggerType on trg.TrgTrtId equals trgt.TrtId
+                join us in _context.AcUser on trg.TrgUsrId equals us.UsrId
                 where trg.TrgValue == value && trgt.TrtName == type
-                select trg
+                select new UserTrigger
+                {
+                    UsrId = us.UsrId,
+                    TrgActivity = trg.TrgActivity,
+                    UsrActivity = us.UsrActivity
+                }
             ).SingleOrDefault();
 
-            AcObject acObject = (
-                from obj in _context.AcObject
-                where obj.ObjName == objectName
-                select obj
-            ).SingleOrDefault();
            // TODO: event log
             if(trigger == null)
             {
                 throw new AppException("Trigger not found.");
-
+            }
+            else if(trigger.UsrActivity == 0)
+            {
+                throw new AppException("Trigger not found.");
             }
             else if(trigger.TrgActivity == 0)
             {
                 throw new AppException("Trigger not found.");
             }
-            else if(trigger.TrgUsr.UsrActivity == 0)
-            {
-                throw new AppException("Trigger not found.");
-            } 
             
-            return trigger.TrgUsr.UsrId;
+            return trigger.UsrId;
         }
     }
 }

@@ -3,18 +3,16 @@ package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologi
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ExpandableListView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.facilityObject;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.service.ApiInterface;
+import com.ncorti.slidetoact.SlideToActView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +28,6 @@ public class ObjectListShow extends Fragment {
 
 
     String token;
-    boolean available;
 
     private ExpandableListView expandableListView;
     private List<facilityObject> objectDataList;
@@ -79,16 +76,19 @@ public class ObjectListShow extends Fragment {
             List<String> Headings = new ArrayList<>();
             Headings = addHeaderName(Headings, objectDataList);
 
-            List<Button> ChildElements;
-            HashMap<String, List<Button>> ChildList = new HashMap<>();
+            //List<Button> ChildElements;
+            HashMap<String, SlideToActView> ChildList = new HashMap<>();
 
             for (int i = 0; i<Headings.size(); i++)
             {
-                ChildElements = new ArrayList<>();
-                ChildElements = addButtonAttribute(ChildElements);
-                ChildList.put(Headings.get(i),ChildElements);
-
+                //ChildElements = new ArrayList<>();
+                //ChildElements = addButtonAttribute(ChildElements);
+                //ChildList.put(Headings.get(i),ChildElements);
+                SlideToActView slideToActView = new SlideToActView(getContext());
+                ChildList.put(Headings.get(i),slideToActView);
             }
+
+
             objectListAdapter MyAdapter = new objectListAdapter(getContext(), Headings, ChildList, token, objectDataList);
             expandableListView.setAdapter(MyAdapter);
 
@@ -137,24 +137,5 @@ public class ObjectListShow extends Fragment {
         }
 
         return headerList;
-    }
-
-    private List<Button> addButtonAttribute(List<Button> buttonList)
-    {
-
-            Button btn1 = new Button(getContext());
-            btn1.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT/2, LinearLayout.LayoutParams.MATCH_PARENT));
-            btn1.setText("OPEN");
-            btn1.setFocusable(false); //VAŽNO
-
-            Button btn2 = new Button(getContext());
-            btn2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT/2, LinearLayout.LayoutParams.MATCH_PARENT));
-            btn2.setText("SMS");
-            btn2.setFocusable(false); //VAŽNO
-
-            buttonList.add(btn1);
-            buttonList.add(btn2);
-
-        return buttonList;
     }
 }
