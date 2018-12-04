@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
@@ -96,13 +97,6 @@ public class objectListAdapter extends BaseExpandableListAdapter {
         {
             LayoutInflater layoutInflater = (LayoutInflater) this.ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.parent_layout, null);
-            for(facilityObject fO: objectDataList)
-            {
-                if (fO.isAvailable())
-                {
-                    convertView.setBackgroundResource(R.color.colorPrimary);
-                }
-            }
         }
 
         TextView textView = convertView.findViewById(R.id.heading_item);

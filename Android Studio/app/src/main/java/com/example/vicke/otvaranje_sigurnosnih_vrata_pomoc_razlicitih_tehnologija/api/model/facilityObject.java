@@ -2,38 +2,58 @@ package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologi
 
 public class facilityObject {
 
-    private  int id;
-    private String name;
-    private String objectType;
-    private String gpsCoordinate;
-    private boolean Available;
+    private  int objId;
+    private String objName;
+    private byte objOpen;
+    private byte objAuto;
+    private byte objActivity;
+    private String objGps;
+    private String objAction;
+    private String objObtTypeId;
 
 
-    public facilityObject(int id, String name, String objectType, String gpsCoordinate, boolean available) {
-        this.id = id;
-        this.name = name;
-        this.objectType = objectType;
-        this.gpsCoordinate = gpsCoordinate;
-        this.Available = available;
+
+
+    public facilityObject(int ObjId, String ObjName, byte ObjOpen, byte ObjAuto, byte ObjActivity, String ObjGps, String ObjAction, String ObjObtTypeId) {
+        this.objId = ObjId;
+        this.objName = ObjName;
+        this.objOpen = ObjOpen;
+        this.objAuto = ObjAuto;
+        this.objActivity = ObjActivity;
+        this.objGps = ObjGps;
+        this.objAction = ObjAction;
+        this.objObtTypeId = ObjObtTypeId;
     }
 
-    public int getId() {
-        return id;
+    public int getObjId() {
+        return objId;
     }
 
-    public String getName() {
-        return name;
+    public String getObjName() {
+        return objName;
     }
 
-    public String getObjectType() {
-        return objectType;
+    public byte getObjOpen() {
+        return objOpen;
     }
 
-    public String getGPScoordinate() {
-        return gpsCoordinate;
+    public byte getObjAuto() {
+        return objAuto;
     }
 
-    public boolean isAvailable() {
-        return Available;
+    public byte getObjActivity() {
+        return objActivity;
+    }
+
+    public String getObjGps() {
+        return objGps;
+    }
+
+    public String getObjAction() {
+        return objAction;
+    }
+
+    public String getObjObtTypeId() {
+        return objObtTypeId;
     }
 }

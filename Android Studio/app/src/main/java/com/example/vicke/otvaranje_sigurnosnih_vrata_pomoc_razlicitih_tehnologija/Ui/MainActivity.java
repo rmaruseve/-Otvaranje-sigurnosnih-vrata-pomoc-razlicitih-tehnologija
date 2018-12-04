@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
         if (id == R.id.action_refresh) {
-            //TODO: refresh object list
             finish();
             startActivity(getIntent());
             return true;

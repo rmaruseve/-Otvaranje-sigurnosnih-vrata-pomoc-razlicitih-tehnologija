@@ -26,8 +26,8 @@ public class AdminMenuFragmentAdapter extends FragmentStatePagerAdapter {
                 UserFragment userFragment = new UserFragment();
                 return userFragment;
             case 2:
-                GuestFragment guestFragment = new GuestFragment();
-                return guestFragment;
+                ProfileFragment profileFragment = new ProfileFragment();
+                return profileFragment;
             default:
                 return null;
         }

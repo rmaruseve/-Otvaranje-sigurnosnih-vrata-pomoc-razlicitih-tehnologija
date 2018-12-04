@@ -85,7 +85,6 @@ public class LoginScreen extends AppCompatActivity {
                 public void onResponse(Call<User> call, Response<User> response) {
                     if (response.isSuccessful())
                     {
-                        Toast.makeText(LoginScreen.this, response.body().getToken(), Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(LoginScreen.this, MainActivity.class);
                         i.putExtra("token",response.body().getToken());
                         i.putExtra("currentUser", response.body());

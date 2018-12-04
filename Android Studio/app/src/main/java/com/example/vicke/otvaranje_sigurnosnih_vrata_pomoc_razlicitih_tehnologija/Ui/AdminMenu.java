@@ -5,12 +5,11 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
 
-public class AdminMenu extends AppCompatActivity implements LogFragment.OnFragmentInteractionListener, UserFragment.OnFragmentInteractionListener, GuestFragment.OnFragmentInteractionListener {
+public class AdminMenu extends AppCompatActivity implements LogFragment.OnFragmentInteractionListener, UserFragment.OnFragmentInteractionListener, ProfileFragment.OnFragmentInteractionListener {
 
     String token;
     User currentUser = new User();
@@ -29,7 +28,7 @@ public class AdminMenu extends AppCompatActivity implements LogFragment.OnFragme
         TabLayout tabLayout = findViewById(R.id.adminMenuTabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("Log"));
         tabLayout.addTab(tabLayout.newTab().setText("Users"));
-        tabLayout.addTab(tabLayout.newTab().setText("Guests"));
+        tabLayout.addTab(tabLayout.newTab().setText("Profiles"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = findViewById(R.id.adminMenuViewPager);

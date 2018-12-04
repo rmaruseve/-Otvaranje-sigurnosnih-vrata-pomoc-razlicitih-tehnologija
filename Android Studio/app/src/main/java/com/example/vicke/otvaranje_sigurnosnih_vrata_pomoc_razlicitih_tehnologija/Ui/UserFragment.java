@@ -9,9 +9,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,7 +33,6 @@ public class UserFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     public UserFragment() {
-        // Required empty public constructor
     }
 
     public static UserFragment newInstance() {
@@ -39,10 +45,16 @@ public class UserFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View v = inflater.inflate(R.layout.fragment_user, container, false);
+
+        final List<User> listOfUsers = new ArrayList<>(); //TODO: fill with users -- Retrofit get request
+        final ListView listView = v.findViewById(R.id.adminUserList);
+
+        ArrayAdapter<User> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.admin_user_list_item, R.id.adminUserListItem, listOfUsers);
+        listView.setAdapter(arrayAdapter);
+
 
         Button button = v.findViewById(R.id.addNewUser);
         button.setOnClickListener(new View.OnClickListener() {
@@ -57,18 +69,23 @@ public class UserFragment extends Fragment {
         });
 
 
-
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                User clickedUser = listOfUsers.get(position);
+                CrudUser crudUser = new CrudUser();
+                FragmentManager manager = getFragmentManager();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("selectedUser", clickedUser);
+                crudUser.setArguments(bundle);
+                manager.beginTransaction()
+                        .replace(R.id.adminMenuLayout, crudUser)
+                        .commit();
+            }
+        });
 
             return v;
     }
-
-    // idk
-    /*public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }*/
 
     @Override
     public void onAttach(Context context) {
