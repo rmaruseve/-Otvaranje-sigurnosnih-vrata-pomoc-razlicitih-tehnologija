@@ -164,33 +164,27 @@ namespace restAPI.Services
 
         public int getUserByTriggerType(string value, string type)
         {
-            UserTrigger userTrigger = (
+            AcTrigger trigger = (
                 from trg in _context.AcTrigger
-                join us in _context.AcUser on trg.TrgUsrId equals us.UsrId
                 join trgt in _context.AcTriggerType on trg.TrgTrtId equals trgt.TrtId
                 where trg.TrgValue == value && trgt.TrtName == type
-                select new UserTrigger{
-                    UsrId = us.UsrId,
-                    TrgActivity = trg.TrgActivity,
-                    UsrActivity = us.UsrActivity
-                }
+                select trg
             ).SingleOrDefault();
             // TODO: event log
-            if(userTrigger == null)
+            if(trigger == null)
             {
                 throw new AppException("Trigger not found.");
             }
-            else if(userTrigger.UsrActivity == 0)
-            {
-                throw new AppException("User not found.");
-            }
-            else if(userTrigger.TrgActivity == 0)
+            else if(trigger.TrgActivity == 0)
             {
                 throw new AppException("Trigger not found.");
-
+            }
+            else if(trigger.TrgUsr.UsrActivity == 0)
+            {
+                throw new AppException("Trigger not found.");
             } 
             
-            return userTrigger.UsrId;
+            return trigger.TrgUsr.UsrId;
         }
     }
 }
