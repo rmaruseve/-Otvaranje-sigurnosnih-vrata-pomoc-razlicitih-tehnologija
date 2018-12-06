@@ -21,26 +21,19 @@ namespace restAPI.Controllers
     {
 
         private readonly mydbContext _context;
-        private IObjectService _objectService;
-        private IUserService _userService;
-        private ILoggerService _loggerService;
-        private IAccessService _accessService;
+        private IAccessControl _accessControl;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public TriggerAccessController(
-            IUserService userService,
-            IObjectService objectService,
-            IAccessService accessService,
+            IAccessControl accessControl,
             IMapper mapper,
             mydbContext context,
             IOptions<AppSettings> appSettings)
         {
             _context = context;
-            _userService = userService;
-            _objectService = objectService;
             _mapper = mapper;
-            _accessService = accessService;
+            _accessControl = accessControl;
             _appSettings = appSettings.Value;
         }
 
@@ -49,36 +42,18 @@ namespace restAPI.Controllers
         [AllowAnonymous]
         public ActionResult<string> Get([FromBody] TriggerAccessDto req)
         {
-
-            //TODO move all logic into AccessControl
             try
             {
-                var loggedUserId = User.FindFirst("current_user_id")?.Value;
-                int userId;
-                if (loggedUserId == null)
-                {
-                    userId = _userService.getUserByTriggerType(req.Value, req.TriggerTypeName);
-                }
-                else
-                {
-                    userId = int.Parse(loggedUserId);
-                }
-
-                AcObject obj = _objectService.getObject(req.TriggerTypeName, req.ObjectName);
-                AcAccess acs = _accessService.checkAccess(userId, obj.ObjId);
-
-                return JsonConvert.SerializeObject(new
-                {
-                    access = 1,
-                    objectAccess = obj.ObjAction
-                });
+                List<string> objs = _accessControl.objectIO(req);
+                return Ok(
+                    JsonConvert.SerializeObject(new
+                    {
+                        objectAccess = objs
+                    })
+                );
             } catch (AppException ex)
             {
-                return JsonConvert.SerializeObject(new
-                {
-                    access = 0,
-                    objectAccess = ""
-                });
+                return BadRequest(new { message = ex.Message });
             }
         }
 

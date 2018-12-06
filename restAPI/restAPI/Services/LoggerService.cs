@@ -8,10 +8,11 @@ namespace restAPI.Services
 {
    public interface ILoggerService
     {
-        IEnumerable<AcEventLog> InsertEventLog();
+        void InsertEventLog(string value, int trtId, int objId, int evsId);
+        void InsertEventLog(string value, int trtId, int objId, int evsId, int usrId);
     }
 
-    public class LoggerService
+    public class LoggerService : ILoggerService
     {
         private static LoggerService _logger;
         private LoggerService() { }

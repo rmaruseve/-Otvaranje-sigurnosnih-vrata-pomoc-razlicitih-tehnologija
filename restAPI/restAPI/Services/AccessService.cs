@@ -9,7 +9,7 @@ namespace restAPI.Services
 {
     public interface IAccessService
     {
-        AcAccess checkAccess(int userId, int objId);
+        List<AcAccess> checkAccess(int userId, int objId);
     }
 
     public class AccessService : IAccessService
@@ -21,17 +21,14 @@ namespace restAPI.Services
             _context = context;
         }
 
-        public AcAccess checkAccess(int userId, int objId)
+        public List<AcAccess> checkAccess(int userId, int objId)
         {
-            AcAccess access = (
+            List<AcAccess> access = (
                 from acs in _context.AcAccess
                 where acs.AcsUsr.UsrId == userId && acs.AcsObj.ObjId == objId && acs.AcsValidFrom <= DateTime.Now && acs.AcsValidTo >= DateTime.Now
                 select acs
-            ).SingleOrDefault();
-            if(access == null)
-            {
-                throw new AppException("User has no access.");
-            }
+            ).ToList();
+
             return access;
         }
     }

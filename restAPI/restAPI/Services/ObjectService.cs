@@ -9,7 +9,7 @@ namespace restAPI.Services
 {
     public interface IObjectService
     {
-        AcObject getObject(string type, string objectName);
+        List<AcObject> getObjects(string type, string objectName);
     }
 
     public class ObjectService : IObjectService
@@ -21,22 +21,19 @@ namespace restAPI.Services
             _context = context;
         }
 
-        public AcObject getObject(string type, string objectName)
+        public List<AcObject> getObjects(string type, string objectName)
         {
-            AcObject returnObj = (
+            List<AcObject> objs = new List<AcObject>();
+            AcObject sObj = (
                 from obj in _context.AcObject
                 join ohs in _context.AcObjectHasTriggerType on obj.ObjId equals ohs.OhtObjId
                 join trgt in _context.AcTriggerType on ohs.OhtTrtId equals trgt.TrtId
                 where trgt.TrtName == type && obj.ObjName == objectName
                 select obj
             ).SingleOrDefault();
+            objs.Add(sObj);
 
-            if(returnObj == null)
-            {
-                throw new AppException("Object not found.");
-
-            }
-            return returnObj;
+            return objs;
         }
     }
 }

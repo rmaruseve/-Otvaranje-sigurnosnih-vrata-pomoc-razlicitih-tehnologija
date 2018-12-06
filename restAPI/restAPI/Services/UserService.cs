@@ -16,7 +16,7 @@ namespace restAPI.Services
         AcUser Create(AcUser user, string password);
         void Update(AcUser user, string password = null);
         void Delete(int id);
-        int getUserByTriggerType(string value, string type);
+        UserTrigger getUserByTriggerType(string value, string type);
     }
 
     public class UserService : IUserService
@@ -162,9 +162,9 @@ namespace restAPI.Services
             return true;
         }
 
-        public int getUserByTriggerType(string value, string type)
+        public UserTrigger getUserByTriggerType(string value, string type)
         {
-            UserTrigger trigger = (
+            UserTrigger userTrigger = (
                 from trg in _context.AcTrigger
                 join trgt in _context.AcTriggerType on trg.TrgTrtId equals trgt.TrtId
                 join us in _context.AcUser on trg.TrgUsrId equals us.UsrId
@@ -176,22 +176,8 @@ namespace restAPI.Services
                     UsrActivity = us.UsrActivity
                 }
             ).SingleOrDefault();
-
-           // TODO: event log
-            if(trigger == null)
-            {
-                throw new AppException("Trigger not found.");
-            }
-            else if(trigger.UsrActivity == 0)
-            {
-                throw new AppException("Trigger not found.");
-            }
-            else if(trigger.TrgActivity == 0)
-            {
-                throw new AppException("Trigger not found.");
-            }
             
-            return trigger.UsrId;
+            return userTrigger;
         }
     }
 }
