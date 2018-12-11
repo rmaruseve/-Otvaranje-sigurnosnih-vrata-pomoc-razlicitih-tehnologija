@@ -7,13 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.ObjectOpen;
-import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.ObjectOpenResponse;
-import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.facilityObject;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.service.ApiInterface;
 import com.ncorti.slidetoact.SlideToActView;
 
@@ -22,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,7 +33,7 @@ public class objectListAdapter extends BaseExpandableListAdapter {
     private HashMap<String, SlideToActView> child_titles;
     private Context ctx;
     private String token;
-    private List<facilityObject> objectDataList;
+    private User activeUser;
 
     Retrofit.Builder builder = new Retrofit.Builder()
             .baseUrl(ApiInterface.BASE_URL)
@@ -45,13 +44,13 @@ public class objectListAdapter extends BaseExpandableListAdapter {
     ApiInterface apiInterface = retrofit.create(ApiInterface.class);
 
 
-    objectListAdapter(Context ctx, List<String> header_titles, HashMap<String, SlideToActView> child_titles, String token, List<facilityObject> objectDataList)
+    objectListAdapter(Context ctx, List<String> header_titles, HashMap<String, SlideToActView> child_titles, String token, User user)
     {
         this.ctx = ctx;
         this.child_titles = child_titles;
         this.header_titles = header_titles;
         this.token = token;
-        this.objectDataList = objectDataList;
+        this.activeUser = user;
     }
 
     @Override
@@ -110,14 +109,12 @@ public class objectListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, final ViewGroup parent) {
         if (convertView == null)
         {
             LayoutInflater layoutInflater = (LayoutInflater) this.ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.child_layout, null);
         }
-
-        final SlideToActView value = child_titles.get(header_titles.get(groupPosition)); //object name
 
         SlideToActView slideToActView = convertView.findViewById(R.id.slide_to_open);
 
@@ -125,25 +122,17 @@ public class objectListAdapter extends BaseExpandableListAdapter {
             @Override
             public void onSlideComplete(@NotNull SlideToActView slideToActView) {
 
-                Log.d("click", "tag: " + value.toString());
-                ObjectOpen objectOpen = new ObjectOpen(value.toString());
+                ObjectOpen objectOpen = new ObjectOpen(activeUser.getEmail(), header_titles.get(groupPosition));
 
-                Call<ObjectOpenResponse> call = apiInterface.openObject(objectOpen);
-                call.enqueue(new Callback<ObjectOpenResponse>() {
+                Call<ResponseBody> call = apiInterface.openObject(token,objectOpen);
+                call.enqueue(new Callback<ResponseBody>() {
                     @Override
-                    public void onResponse(Call<ObjectOpenResponse> call, Response<ObjectOpenResponse> response) {
-                        if (response.body().isExecuted())
-                        {
-                            Log.d("Response: ", "open");
-                        }
-                        else
-                        {
-                            Log.d("Response: ", "not open");
-                        }
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
                     }
 
                     @Override
-                    public void onFailure(Call<ObjectOpenResponse> call, Throwable t) {
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
                         Log.d("Response: ", "cannot connect to API");
                     }
                 });

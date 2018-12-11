@@ -15,10 +15,15 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.Role;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +34,9 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class UserFragment extends Fragment {
+
+
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -49,12 +57,23 @@ public class UserFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_user, container, false);
 
-        final List<User> listOfUsers = new ArrayList<>(); //TODO: fill with users -- Retrofit get request
+        ArrayList<User> listOfUsers = new ArrayList<>();
+        ArrayList<Role> listOfRoles = new ArrayList<>();
         final ListView listView = v.findViewById(R.id.adminUserList);
+
+        Bundle bundle = this.getArguments();
+
+        if(bundle != null){
+            listOfUsers = (ArrayList)bundle.getSerializable("listOfUsers");
+            listOfRoles = (ArrayList)bundle.getSerializable("listOfROles");
+        }
 
         ArrayAdapter<User> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.admin_user_list_item, R.id.adminUserListItem, listOfUsers);
         listView.setAdapter(arrayAdapter);
 
+
+        final ArrayList<User> finalListOfUsers = listOfUsers;
+        final ArrayList<Role> finalListOfRoles = listOfRoles;
 
         Button button = v.findViewById(R.id.addNewUser);
         button.setOnClickListener(new View.OnClickListener() {
@@ -62,21 +81,24 @@ public class UserFragment extends Fragment {
             public void onClick(View v) {
                 CrudUser crudUser = new CrudUser();
                 FragmentManager manager = getFragmentManager();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("userRoles", finalListOfRoles);
+                crudUser.setArguments(bundle);
                 manager.beginTransaction()
                         .replace(R.id.adminMenuLayout, crudUser)
                         .commit();
             }
         });
 
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                User clickedUser = listOfUsers.get(position);
+                User clickedUser = finalListOfUsers.get(position);
                 CrudUser crudUser = new CrudUser();
                 FragmentManager manager = getFragmentManager();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("selectedUser", clickedUser);
+                bundle.putSerializable("userRoles", finalListOfRoles);
                 crudUser.setArguments(bundle);
                 manager.beginTransaction()
                         .replace(R.id.adminMenuLayout, crudUser)

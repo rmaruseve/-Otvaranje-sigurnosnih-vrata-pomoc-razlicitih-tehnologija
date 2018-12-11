@@ -34,7 +34,7 @@ public class LoginScreen extends AppCompatActivity {
     EditText email;
     EditText password;
     Button login;
-
+    User logedUser = new User();
 
     Retrofit.Builder builder = new Retrofit.Builder()
             .baseUrl(ApiInterface.BASE_URL)
@@ -77,7 +77,7 @@ public class LoginScreen extends AppCompatActivity {
 
         private void Login(String usrEmail, String loginPassword)
         {
-            Login login = new Login(usrEmail, loginPassword);
+            final Login login = new Login(usrEmail, loginPassword);
             Call<User> call = apiInterface.login(login);
 
             call.enqueue(new Callback<User>() {
@@ -85,9 +85,17 @@ public class LoginScreen extends AppCompatActivity {
                 public void onResponse(Call<User> call, Response<User> response) {
                     if (response.isSuccessful())
                     {
+                        Log.d("-----------------ROLA:", response.body().getRole()+"---------------------");
+                        logedUser.setId(response.body().getId());
+                        logedUser.setEmail(response.body().getEmail());
+                        logedUser.setFirstName(response.body().getFirstName());
+                        logedUser.setLastName(response.body().getLastName());
+                        logedUser.setToken(response.body().getToken());
+                        logedUser.setRole(response.body().getRole());
+
                         Intent i = new Intent(LoginScreen.this, MainActivity.class);
                         i.putExtra("token",response.body().getToken());
-                        i.putExtra("currentUser", response.body());
+                        i.putExtra("currentUser", logedUser);
                         startActivity(i);
                     }
                     else
