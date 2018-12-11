@@ -74,7 +74,7 @@ namespace restAPI.Controllers
                 FirstName = user.UsrName,
                 LastName = user.UsrSurname,
                 Token = tokenString,
-                Role = user.UsrRol.RolName
+                Role = user.UsrRol
             }));
         }
 
