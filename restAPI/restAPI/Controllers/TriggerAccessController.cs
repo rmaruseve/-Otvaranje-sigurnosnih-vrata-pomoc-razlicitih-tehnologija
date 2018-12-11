@@ -11,6 +11,8 @@ using restAPI.Services;
 using AutoMapper;
 using restAPI.Helpers;
 using Microsoft.Extensions.Options;
+using System.Net.Http;
+using System.Text;
 
 namespace restAPI.Controllers
 {
@@ -37,7 +39,9 @@ namespace restAPI.Controllers
             _appSettings = appSettings.Value;
         }
 
-        // GET api/values
+        /// <summary>
+        /// Request to open object.
+        /// </summary> 
         [HttpPost]
         [AllowAnonymous]
         public ActionResult<string> Get([FromBody] TriggerAccessDto req)
@@ -45,12 +49,24 @@ namespace restAPI.Controllers
             try
             {
                 List<string> objs = _accessControl.objectIO(req);
-                return Ok(
+                if(req.TriggerTypeName == "App")
+                {
+                    var client = new HttpClient();
+                    client.PostAsync("http://192.168.1.1:1880/api/open", new StringContent(JsonConvert.SerializeObject(new
+                    {
+                        objectAccess = objs
+                    }), 
+                    Encoding.UTF8, "application/json"));
+                    return Ok("Success");
+                }else
+                {
+                    return Ok(
                     JsonConvert.SerializeObject(new
                     {
                         objectAccess = objs
                     })
                 );
+                }
             } catch (AppException ex)
             {
                 return BadRequest(new { message = ex.Message });

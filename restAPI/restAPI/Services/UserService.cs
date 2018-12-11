@@ -33,7 +33,8 @@ namespace restAPI.Services
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
                 return null;
 
-            var user = _context.AcUser.SingleOrDefault(x => x.UsrEmail == email);
+            AcUser user = _context.AcUser.Where(x => x.UsrEmail == email).SingleOrDefault();
+            Console.WriteLine(user.UsrRol.RolName);
 
             // check if username exists
             if (user == null)
@@ -171,6 +172,7 @@ namespace restAPI.Services
                 where trg.TrgValue == value && trgt.TrtName == type
                 select new UserTrigger
                 {
+                    TrgtId = trgt.TrtId,
                     UsrId = us.UsrId,
                     TrgActivity = trg.TrgActivity,
                     UsrActivity = us.UsrActivity

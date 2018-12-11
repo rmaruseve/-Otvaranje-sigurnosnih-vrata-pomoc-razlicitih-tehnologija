@@ -35,34 +35,45 @@ namespace restAPI.Services
         {
             List<string> objectIOs = new List<string>();
             UserTrigger usTrg = _userService.getUserByTriggerType(inputs.Value, inputs.TriggerTypeName);
+            List<AcObject> objs = _objectService.getObjects(inputs.TriggerTypeName, inputs.ObjectName);
 
             if (usTrg == null)
             {
+                _logger.InsertEventLog(inputs.Value, usTrg.TrgtId, null, 1);
                 throw new AppException("Trigger not found.");
             }
             else if (usTrg.UsrActivity == 0)
             {
+                _logger.InsertEventLog(inputs.Value, usTrg.TrgtId, null, 4);
                 throw new AppException("User not found.");
             }
             else if (usTrg.TrgActivity == 0)
             {
+                _logger.InsertEventLog(inputs.Value, usTrg.TrgtId, null, 3);
                 throw new AppException("Trigger not found.");
             }
-
-            List<AcObject> objs = _objectService.getObjects(inputs.TriggerTypeName, inputs.ObjectName);
-
-            if (objs.Count == 0)
+            else if (objs.Count == 0)
             {
+                _logger.InsertEventLog(inputs.Value, usTrg.TrgtId, null, 5);
                 throw new AppException("Object not found.");
             }
 
             foreach(AcObject obj in objs)
             {
+                if(obj.ObjActivity == 0)
+                {
+                    _logger.InsertEventLog(inputs.Value, usTrg.TrgtId, obj.ObjId, 6, usTrg.UsrId);
+                    continue;
+                }
                 List<AcAccess> acs = _accessService.checkAccess(usTrg.UsrId, obj.ObjId);
 
                 if (acs.Count != 0)
                 {
+                    _logger.InsertEventLog(inputs.Value, usTrg.TrgtId, obj.ObjId, 10, usTrg.UsrId);
                     objectIOs.Add(obj.ObjAction);
+                }else
+                {
+                    _logger.InsertEventLog(inputs.Value, usTrg.TrgtId, obj.ObjId, 7, usTrg.UsrId);
                 }
             }
 

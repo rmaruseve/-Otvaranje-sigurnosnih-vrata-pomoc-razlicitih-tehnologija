@@ -16,6 +16,7 @@ using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace restAPI.Controllers
 {
@@ -63,28 +64,38 @@ namespace restAPI.Controllers
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
+            Console.WriteLine(user.UsrRol);
 
             // return basic user info (without password) and token to store client side
-            return Ok(new
+            return Ok(JsonConvert.SerializeObject(new
             {
                 Id = user.UsrId,
                 Email = user.UsrEmail,
                 FirstName = user.UsrName,
                 LastName = user.UsrSurname,
-                Token = tokenString
-            });
+                Token = tokenString,
+                Role = user.UsrRol.RolName
+            }));
         }
 
-        [AllowAnonymous]
+
+        /// <summary>
+        /// Register new user.
+        /// </summary> 
         [HttpPost("register")]
         public IActionResult Register([FromBody]UserDto userDto)
         {
             // map dto to entity
-            var user = _mapper.Map<AcUser>(userDto);
+            var userReq = _mapper.Map<AcUser>(userDto);
             try
             {
+                // if admin
+                var userId = int.Parse(User.FindFirst("current_user_id")?.Value);
+                AcUser user = _userService.GetById(userId);
+                if (user.UsrRol.RolName != "Administrator")
+                    throw new AppException("User not admin.");
                 // save 
-                _userService.Create(user, userDto.LoginPassword);
+                _userService.Create(userReq, userDto.LoginPassword);
                 return Ok();
             }
             catch (AppException ex)
@@ -97,9 +108,21 @@ namespace restAPI.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var users = _userService.GetAll();
-            var userDtos = _mapper.Map<IList<UserDto>>(users);
-            return Ok(userDtos);
+            try
+            {
+                var userId = int.Parse(User.FindFirst("current_user_id")?.Value);
+                AcUser user = _userService.GetById(userId);
+                if (user.UsrRol.RolName != "Administrator")
+                    throw new AppException("User not admin.");
+                var users = _userService.GetAll();
+                var userDtos = _mapper.Map<IList<UserDto>>(users);
+                return Ok(userDtos);
+            }
+            catch (AppException ex)
+            {
+                // return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpGet("currentUser")]
@@ -119,17 +142,19 @@ namespace restAPI.Controllers
             return Ok(userDto);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody]UserDto userDto)
+        [HttpPut]
+        public IActionResult Update([FromBody]UserDto userDto)
         {
             // map dto to entity and set id
-            var user = _mapper.Map<AcUser>(userDto);
-            user.UsrId = id;
-
+            var userReq = _mapper.Map<AcUser>(userDto);
             try
             {
+                var userId = int.Parse(User.FindFirst("current_user_id")?.Value);
+                AcUser user = _userService.GetById(userId);
+                if (user.UsrRol.RolName == "Administrator")
+                    throw new AppException("User not admin.");
                 // save 
-                _userService.Update(user, userDto.LoginPassword);
+                _userService.Update(userReq, userDto.LoginPassword);
                 return Ok();
             }
             catch (AppException ex)

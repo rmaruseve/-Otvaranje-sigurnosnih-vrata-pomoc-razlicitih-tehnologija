@@ -8,14 +8,14 @@ namespace restAPI.Services
 {
    public interface ILoggerService
     {
-        void InsertEventLog(string value, int trtId, int objId, int evsId);
-        void InsertEventLog(string value, int trtId, int objId, int evsId, int usrId);
+        void InsertEventLog(string value, int trtId, int? objId, int evsId);
+        void InsertEventLog(string value, int trtId, int? objId, int evsId, int usrId);
     }
 
     public class LoggerService : ILoggerService
     {
-        private static LoggerService _logger;
-        private LoggerService() { }
+        //private static LoggerService _logger;
+        //private LoggerService() { }
         private mydbContext _context;
 
         public LoggerService(mydbContext context)
@@ -24,7 +24,7 @@ namespace restAPI.Services
         }
 
 
-        public static LoggerService Instance
+       /* public static LoggerService Instance
         {
             get
             {
@@ -36,11 +36,10 @@ namespace restAPI.Services
 
                 return _logger;
             }
-        }
+        }*/
 
-        public void InsertEventLog(string value, int trtId, int objId, int evsId)
+        public void InsertEventLog(string value, int trtId, int? objId, int evsId)
         {
-
             AcEventLog eventLog = new AcEventLog
             {
                 EvlDate = DateTime.Now,
@@ -53,7 +52,7 @@ namespace restAPI.Services
             _context.SaveChanges();
             
         }
-        public void InsertEventLog(string value, int trtId, int objId, int evsId, int usrId)
+        public void InsertEventLog(string value, int trtId, int? objId, int evsId, int usrId)
         {
 
             AcEventLog eventLog = new AcEventLog
