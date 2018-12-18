@@ -31,7 +31,7 @@ namespace restAPI.Controllers
         private IAccessService _accessService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
-
+        
         public UsersController(
             IUserService userService,
             ITriggerService triggerService,
@@ -47,9 +47,15 @@ namespace restAPI.Controllers
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
-
+        /// <summary>
+        /// User autentication
+        /// </summary>
+        /// <param name="userDto"></param>
+        /// <returns></returns>
+        /// <response code="400">Username or password is incorrect</response>
         [AllowAnonymous]
         [HttpPost("authenticate")]
+        [ProducesResponseType(typeof(List<UserDto>), 200)]
         public IActionResult Authenticate([FromBody]UserDto userDto)
         {
             var user = _userService.Authenticate(userDto.UsrEmail, userDto.LoginPassword);
@@ -86,8 +92,10 @@ namespace restAPI.Controllers
 
 
         /// <summary>
-        /// Register new user.
-        /// </summary> 
+        ///  Register new user
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="400">return error message if there was an exception</response>
         [HttpPost("register")]
         public IActionResult Register([FromBody]UserDto userDto)
         {
@@ -120,8 +128,15 @@ namespace restAPI.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-        
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="400">return error message if there was an exception</response> 
         [HttpGet]
+        [ProducesResponseType(typeof(List<UserDto>), 200)]
+        [ProducesResponseType(400)]
         public IActionResult GetAll()
         {
             try
@@ -141,6 +156,10 @@ namespace restAPI.Controllers
             }
         }
         // GET: api/AcUsers
+        /// <summary>
+        /// return all users
+        /// </summary>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpGet("All")]
         public IEnumerable<AcUser> GetAcUsers()
@@ -165,7 +184,16 @@ namespace restAPI.Controllers
             return Ok(userDto);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userDto"></param>
+        /// <returns></returns>
+        /// <response code="200">If user is updated</response>
+        /// <response code="400">If the item is null</response>
         [HttpPut]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult Update([FromBody]UserDto userDto)
         {
             // map dto to entity and set id

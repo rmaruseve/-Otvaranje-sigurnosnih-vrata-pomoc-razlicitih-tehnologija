@@ -30,7 +30,9 @@ namespace restAPI.Services
             _objectService = objectService;
             _logger = logger;
         }
-
+        /// <summary>
+        /// main logic for access control, and store results in event log. If access is valid then open object.
+        /// </summary>
         public List<string> objectIO(data.Json.TriggerAccessDto inputs)
         {
             List<string> objectIOs = new List<string>();

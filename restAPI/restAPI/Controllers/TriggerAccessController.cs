@@ -41,9 +41,11 @@ namespace restAPI.Controllers
 
         /// <summary>
         /// Request to open object.
-        /// </summary> 
+        /// </summary>
+        /// <response code="400">return error message if there was an exception</response>  
         [HttpPost]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(List<string>), 200)]
         public ActionResult<string> Get([FromBody] TriggerAccessDto req)
         {
             try
