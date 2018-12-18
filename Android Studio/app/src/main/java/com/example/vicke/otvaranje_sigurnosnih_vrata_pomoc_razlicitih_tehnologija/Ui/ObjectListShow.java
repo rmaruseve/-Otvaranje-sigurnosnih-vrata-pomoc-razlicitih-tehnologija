@@ -11,6 +11,7 @@ import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.facilityObject;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.service.ApiInterface;
 import com.ncorti.slidetoact.SlideToActView;
@@ -28,7 +29,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ObjectListShow extends Fragment {
 
 
-    String token;
+    private String token;
+    private User user;
 
     private ExpandableListView expandableListView;
     private List<facilityObject> objectDataList;
@@ -49,6 +51,7 @@ public class ObjectListShow extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
 
         token = getArguments().getString("token");
+        user = (User)getArguments().getSerializable("user");
         return inflater.inflate(R.layout.object_list_show, parent, false);
 
     }
@@ -63,7 +66,6 @@ public class ObjectListShow extends Fragment {
                 List<facilityObject> facilityObjects = response.body();
                 
                 objectDataList = new ArrayList<>(facilityObjects);
-                Log.d("TEST-------------------", "OVO JE NEKI TEKST -----------------------------------------------");
 
                 expandableListView = getView().findViewById(R.id.expendableList);
 
@@ -79,7 +81,7 @@ public class ObjectListShow extends Fragment {
                 }
 
 
-                objectListAdapter MyAdapter = new objectListAdapter(getContext(), Headings, ChildList, token, objectDataList);
+                objectListAdapter MyAdapter = new objectListAdapter(getContext(), Headings, ChildList, token, user);
                 expandableListView.setAdapter(MyAdapter);
 
                 for (int i = 0; i < objectDataList.size(); i++)

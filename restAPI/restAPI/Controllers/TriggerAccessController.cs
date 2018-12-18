@@ -52,7 +52,7 @@ namespace restAPI.Controllers
                 if(req.TriggerTypeName == "App")
                 {
                     var client = new HttpClient();
-                    client.PostAsync("http://192.168.1.1:1880/api/open", new StringContent(JsonConvert.SerializeObject(new
+                    client.PostAsync("http://192.168.0.1:1880/api/open", new StringContent(JsonConvert.SerializeObject(new
                     {
                         objectAccess = objs
                     }), 

@@ -64,7 +64,7 @@ namespace restAPI.Controllers
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
-            Console.WriteLine(user.UsrRol);
+            //Console.WriteLine(user.UsrRol);
 
             // return basic user info (without password) and token to store client side
             return Ok(JsonConvert.SerializeObject(new
@@ -74,7 +74,7 @@ namespace restAPI.Controllers
                 FirstName = user.UsrName,
                 LastName = user.UsrSurname,
                 Token = tokenString,
-                Role = user.UsrRol.RolName
+                Role = user.UsrRolId
             }));
         }
 
@@ -104,7 +104,7 @@ namespace restAPI.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-
+        
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -112,7 +112,7 @@ namespace restAPI.Controllers
             {
                 var userId = int.Parse(User.FindFirst("current_user_id")?.Value);
                 AcUser user = _userService.GetById(userId);
-                if (user.UsrRol.RolName != "Administrator")
+                if (user.UsrRolId != 1)
                     throw new AppException("User not admin.");
                 var users = _userService.GetAll();
                 var userDtos = _mapper.Map<IList<UserDto>>(users);
@@ -123,6 +123,13 @@ namespace restAPI.Controllers
                 // return error message if there was an exception
                 return BadRequest(new { message = ex.Message });
             }
+        }
+        // GET: api/AcUsers
+        [AllowAnonymous]
+        [HttpGet("All")]
+        public IEnumerable<AcUser> GetAcUsers()
+        {
+            return _context.AcUser;
         }
 
         [HttpGet("currentUser")]

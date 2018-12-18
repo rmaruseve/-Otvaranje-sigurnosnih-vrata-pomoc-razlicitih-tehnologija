@@ -2,12 +2,15 @@ package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologi
 
 public class ObjectOpen {
 
-    private String objectName;
-    //TODO: add other fields
+    private String TriggerTypeName;
+    private String Value;
+    private String ObjectName;
 
-    public ObjectOpen(String objectName)
+    public ObjectOpen(String value, String objectName)
     {
-        this.objectName = objectName;
+        this.TriggerTypeName = "App";
+        this.Value = value;
+        this.ObjectName = objectName;
     }
 
 }

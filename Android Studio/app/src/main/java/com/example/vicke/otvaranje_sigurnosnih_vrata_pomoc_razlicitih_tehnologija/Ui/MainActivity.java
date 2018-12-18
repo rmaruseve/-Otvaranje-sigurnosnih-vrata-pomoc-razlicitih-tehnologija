@@ -12,9 +12,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
@@ -23,7 +25,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     String token;
-    User currentUser = new User();
+    User currentUser;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,17 +42,19 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*if (!currentUser.isAdmin)
+        if (currentUser.getRole() != 1)
         {
-           //TODO: hide admin menu
-        }*/
-
+            navigationView = findViewById(R.id.nav_view);
+            Menu nav_Menu = navigationView.getMenu();
+            nav_Menu.findItem(R.id.nav_admin_options).setVisible(false);
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction t = fragmentManager.beginTransaction();
         ObjectListShow objectListShow = new ObjectListShow();
         Bundle bundle = new Bundle();
         bundle.putString("token", token);
+        bundle.putSerializable("user", currentUser);
         objectListShow.setArguments(bundle);
         t.add(R.id.objectListShowFrame, objectListShow);
         t.commit();
