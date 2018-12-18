@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.AllUser;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.Role;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.service.ApiInterface;
@@ -27,7 +28,7 @@ public class AdminMenu extends AppCompatActivity implements LogFragment.OnFragme
     String token;
     User currentUser = new User();
 
-    List<User> listOfUsers;
+    List<AllUser> listOfUsers;
     List<Role> listOfRoles;
 
     Retrofit retrofit = new Retrofit.Builder()
@@ -48,43 +49,57 @@ public class AdminMenu extends AppCompatActivity implements LogFragment.OnFragme
             currentUser = (User) extras.getSerializable("currentUser");
         }
 
-        Call<List<User>> call = apiInterface.getUsers(token);
-        call.enqueue(new Callback<List<User>>() {
+        Call<List<AllUser>> call = apiInterface.getUsers(token);
+        call.enqueue(new Callback<List<AllUser>>() {
             @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+            public void onResponse(Call<List<AllUser>> call, Response<List<AllUser>> response) {
                 listOfUsers = response.body();
-                TabLayout tabLayout = findViewById(R.id.adminMenuTabLayout);
-                tabLayout.addTab(tabLayout.newTab().setText("Log"));
-                tabLayout.addTab(tabLayout.newTab().setText("Users"));
-                tabLayout.addTab(tabLayout.newTab().setText("Profiles"));
-                tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-                final ViewPager viewPager = findViewById(R.id.adminMenuViewPager);
-                final AdminMenuFragmentAdapter adminMenuFragmentAdapter = new AdminMenuFragmentAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), listOfUsers, listOfRoles);
-
-                viewPager.setAdapter(adminMenuFragmentAdapter);
-                viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
-                tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                Call<List<Role>> callRoles = apiInterface.getRoles(token);
+                callRoles.enqueue(new Callback<List<Role>>() {
                     @Override
-                    public void onTabSelected(TabLayout.Tab tab) {
-                        viewPager.setCurrentItem(tab.getPosition());
+                    public void onResponse(Call<List<Role>> call, Response<List<Role>> response) {
+                        listOfRoles = response.body();
+                        TabLayout tabLayout = findViewById(R.id.adminMenuTabLayout);
+                        tabLayout.addTab(tabLayout.newTab().setText("Log"));
+                        tabLayout.addTab(tabLayout.newTab().setText("Users"));
+                        tabLayout.addTab(tabLayout.newTab().setText("Profiles"));
+                        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+                        final ViewPager viewPager = findViewById(R.id.adminMenuViewPager);
+                        final AdminMenuFragmentAdapter adminMenuFragmentAdapter = new AdminMenuFragmentAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), listOfUsers, listOfRoles);
+
+                        viewPager.setAdapter(adminMenuFragmentAdapter);
+                        viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+                        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                            @Override
+                            public void onTabSelected(TabLayout.Tab tab) {
+                                viewPager.setCurrentItem(tab.getPosition());
+                            }
+
+                            @Override
+                            public void onTabUnselected(TabLayout.Tab tab) {
+
+                            }
+
+                            @Override
+                            public void onTabReselected(TabLayout.Tab tab) {
+
+                            }
+                        });
                     }
 
                     @Override
-                    public void onTabUnselected(TabLayout.Tab tab) {
-
-                    }
-
-                    @Override
-                    public void onTabReselected(TabLayout.Tab tab) {
+                    public void onFailure(Call<List<Role>> call, Throwable t) {
 
                     }
                 });
+
             }
 
             @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
+            public void onFailure(Call<List<AllUser>> call, Throwable t) {
 
             }
         });

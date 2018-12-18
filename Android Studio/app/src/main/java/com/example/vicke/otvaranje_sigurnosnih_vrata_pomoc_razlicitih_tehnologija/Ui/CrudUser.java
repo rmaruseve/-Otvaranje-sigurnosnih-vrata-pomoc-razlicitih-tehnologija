@@ -1,43 +1,25 @@
 package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui;
 
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.AllUser;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.Role;
-import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class CrudUser extends Fragment {
+public class CrudUser extends AppCompatActivity {
 
-    //TODO: declare all xml objects
     private boolean isNew = false;
     private List<Role> listOfRoles;
     Role role;
-
-
-    public static CrudUser newInstance() {
-        return new CrudUser();
-    }
-
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-
-        return inflater.inflate(R.layout.crud_user, parent, false);
-    }
 
     Spinner dropdown;
     TextView firstName;
@@ -47,22 +29,25 @@ public class CrudUser extends Fragment {
     TextView phoneNumber;
 
     @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.crud_user);
 
-        firstName = getActivity().findViewById(R.id.input_first_name);
-        lastName = getActivity().findViewById(R.id.input_last_name);
-        email = getActivity().findViewById(R.id.input_email);
-        password = getActivity().findViewById(R.id.input_password);
-        phoneNumber = getActivity().findViewById(R.id.input_phone_number);
-
-        Bundle bundle = getArguments();
-        listOfRoles = (List<Role>)bundle.getSerializable("listOfRoles");
+        firstName = findViewById(R.id.input_first_name);
+        lastName = findViewById(R.id.input_last_name);
+        email = findViewById(R.id.input_email);
+        password = findViewById(R.id.input_password);
+        phoneNumber = findViewById(R.id.input_phone_number);
 
 
-        /*dropdown = getActivity().findViewById(R.id.roleDropdown);
-        ArrayAdapter<Role> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listOfRoles);
+        Bundle bundle = getIntent().getExtras();
+        listOfRoles = (List<Role>)bundle.getSerializable("userRole");
+
+
+        dropdown = findViewById(R.id.roleDropdown);
+        ArrayAdapter<Role> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listOfRoles);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        dropdown.setAdapter(adapter);*/
+        dropdown.setAdapter(adapter);
 
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -77,15 +62,15 @@ public class CrudUser extends Fragment {
             }
         });
 
-        if (bundle.getSerializable("selectedUser") != null)
+        if (bundle.getSerializable("currentUser") != null)
         {
-            User passedUser = (User) bundle.getSerializable("selectedUser");
-            firstName.setText(passedUser.getFirstName());
-            lastName.setText(passedUser.getLastName());
-            email.setText(passedUser.getEmail());
-            dropdown.setSelection(passedUser.getRole());
+            AllUser passedUser = (AllUser) bundle.getSerializable("currentUser");
+            firstName.setText(passedUser.getUsrName());
+            lastName.setText(passedUser.getUsrSurname());
+            email.setText(passedUser.getUsrEmail());
+            dropdown.setSelection(passedUser.getUsrRolId()-1);
 
-            Button buttonModify = getActivity().findViewById(R.id.btnSave);
+            Button buttonModify = findViewById(R.id.btnSave);
             buttonModify.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -97,7 +82,7 @@ public class CrudUser extends Fragment {
         {
             //its a new user, everything is empty
             isNew = true;
-            Button buttonAddNew = getActivity().findViewById(R.id.btnSave);
+            Button buttonAddNew = findViewById(R.id.btnSave);
             buttonAddNew.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

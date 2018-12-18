@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".Ui.AdminMenu">
+    tools:context=".Ui.AdminMenu"
+    android:id="@+id/adminMenu">
 
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
