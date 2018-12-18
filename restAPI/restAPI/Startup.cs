@@ -103,6 +103,7 @@ namespace restAPI
             services.AddScoped<IObjectService, ObjectService>();
             services.AddScoped<IAccessService, AccessService>();
             services.AddScoped<ILoggerService, LoggerService>();
+            services.AddScoped<ITriggerService, TriggerService>();
 
             services.AddSwaggerGen(c =>
             {

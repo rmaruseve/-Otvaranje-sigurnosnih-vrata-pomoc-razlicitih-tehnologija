@@ -12,5 +12,9 @@ namespace data.Json
         public string UsrEmail { get; set; }
         public byte UsrActivity { get; set; }
         public string LoginPassword { get; set; }
+        public string PhoneNumber { get; set; }
+        public DateTime AccessFrom { get; set; }
+        public DateTime AccessTo { get; set; }
+        public List<int> Objs { get; set; }
     }
 }

@@ -27,17 +27,23 @@ namespace restAPI.Controllers
     {
         private readonly mydbContext _context;
         private IUserService _userService;
+        private ITriggerService _triggerService;
+        private IAccessService _accessService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public UsersController(
             IUserService userService,
+            ITriggerService triggerService,
+            IAccessService accessService,
             IMapper mapper,
             mydbContext context,
             IOptions<AppSettings> appSettings)
         {
             _context = context;
             _userService = userService;
+            _triggerService = triggerService;
+            _accessService = accessService;
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
@@ -95,7 +101,17 @@ namespace restAPI.Controllers
                 if (user.UsrRol.RolName != "Administrator")
                     throw new AppException("User not admin.");
                 // save 
-                _userService.Create(userReq, userDto.LoginPassword);
+                if(userDto.PhoneNumber != null)
+                {
+                    _triggerService.CheckPhoneNumber(userDto.PhoneNumber);
+                    AcUser newUsr = _userService.Create(userReq, userDto.LoginPassword);
+                    _triggerService.CreatePhoneNumber(newUsr.UsrId, userDto.PhoneNumber);
+                    _accessService.Create(userDto, -1, newUsr.UsrId);
+
+                } else
+                {
+                    _userService.Create(userReq, userDto.LoginPassword);
+                }
                 return Ok();
             }
             catch (AppException ex)
