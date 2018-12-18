@@ -33,7 +33,8 @@
                 android:inputType="textEmailAddress"
                 android:hint="Email"
                 android:drawableLeft="@drawable/ic_menu_gallery"
-                android:drawablePadding="15dp"/>
+                android:drawablePadding="15dp"
+                android:text="user7"/>
         </android.support.design.widget.TextInputLayout>
 
         <!--  Password Label -->
@@ -49,7 +50,8 @@
                 android:inputType="textPassword"
                 android:hint="Password"
                 android:drawableLeft="@drawable/ic_menu_gallery"
-                android:drawablePadding="15dp"/>
+                android:drawablePadding="15dp"
+                android:text="password7"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatButton

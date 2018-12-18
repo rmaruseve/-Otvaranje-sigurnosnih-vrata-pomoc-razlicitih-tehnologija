@@ -1,5 +1,6 @@
 package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.service;
 
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.AllUser;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.Login;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.ObjectOpen;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.Role;
@@ -17,7 +18,7 @@ import retrofit2.http.POST;
 
 public interface ApiInterface {
 
-    String BASE_URL = "http://172.16.0.102:5000";
+    String BASE_URL = "http://172.16.0.198:5000";
 
     @GET("/api/AvailableObjects")
     Call<List<facilityObject>> getObjects(@Header("Authorization") String authToken);
@@ -30,7 +31,7 @@ public interface ApiInterface {
     Call<User> login(@Body Login login);
 
     @GET("/api/Users/All")
-    Call<List<User>> getUsers(@Header("Authorization") String authToken);
+    Call<List<AllUser>> getUsers(@Header("Authorization") String authToken);
 
     @GET("/api/Roles")
     Call<List<Role>> getRoles(@Header("Authorization") String authToken);

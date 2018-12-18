@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:background="@color/white">
 
     <LinearLayout
         android:orientation="vertical"
@@ -71,19 +72,6 @@
                 android:hint="Password"/>
         </android.support.design.widget.TextInputLayout>
 
-        <!-- Phone number -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/input_phone_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:hint="Phone number (+385...)" />
-        </android.support.design.widget.TextInputLayout>
-
         <!-- Role Label -->
         <Spinner
             android:id="@+id/roleDropdown"
@@ -91,6 +79,12 @@
             android:layout_height="wrap_content"
             android:spinnerMode="dropdown">
         </Spinner>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Is active"
+            android:id="@+id/checkboxIsActive"/>
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -109,7 +103,7 @@
                 android:layout_weight="1"
                 />
 
-            <!-- Cancek Button -->
+            <!-- Cancel Button -->
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/btnCancel"
                 android:layout_width="wrap_content"
