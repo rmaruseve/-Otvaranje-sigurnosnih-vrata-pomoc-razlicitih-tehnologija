@@ -98,7 +98,7 @@ namespace restAPI
                 };
             });
             services.AddScoped<IAccessControl, AccessControl>();
-
+            services.AddScoped<IEventLogService, EventLogService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IObjectService, ObjectService>();
             services.AddScoped<IAccessService, AccessService>();
