@@ -1,4 +1,5 @@
-﻿using db.Db;
+﻿using data.Json;
+using db.Db;
 using restAPI.Helpers;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace restAPI.Services
     public interface IAccessService
     {
         List<AcAccess> checkAccess(int? userId, int objId);
+        List<AcAccess> Create(UserDto usrDto, int openingCounter, int usrId);
     }
 
     public class AccessService : IAccessService
@@ -30,6 +32,26 @@ namespace restAPI.Services
             ).ToList();
 
             return access;
+        }
+
+        public List<AcAccess> Create(UserDto usrDto, int openingCounter, int usrId)
+        {
+            List<AcAccess> newAcs = new List<AcAccess>();
+            foreach(int objId in usrDto.Objs)
+            {
+                AcAccess newAc = new AcAccess
+                {
+                    AcsValidFrom = usrDto.AccessFrom,
+                    AcsValidTo = usrDto.AccessTo != null ? usrDto.AccessTo : DateTime.MaxValue,
+                    AcsOpeningCounter = openingCounter,
+                    AcsUsrId = usrId,
+                    AcsObjId = objId
+                };
+                _context.AcAccess.Add(newAc);
+                newAcs.Add(newAc);
+            }
+            _context.SaveChanges();
+            return newAcs;
         }
     }
 }
