@@ -171,16 +171,17 @@ namespace restAPI.Services
         public UserTrigger getUserByTriggerType(string value, string type)
         {
             UserTrigger userTrigger = (
-                from trg in _context.AcTrigger
-                join trgt in _context.AcTriggerType on trg.TrgTrtId equals trgt.TrtId
-                join us in _context.AcUser on trg.TrgUsrId equals us.UsrId
-                where trg.TrgValue == value && trgt.TrtName == type
+                from trgt in _context.AcTriggerType
+                join trg in _context.AcTrigger on trgt.TrtId equals trg.TrgTrtId into AcTrigger
+                from q in AcTrigger.DefaultIfEmpty() join us in _context.AcUser on q.TrgUsrId equals us.UsrId into User
+                from l in User.DefaultIfEmpty()
+                where q.TrgValue == value && trgt.TrtName == type
                 select new UserTrigger
                 {
                     TrgtId = trgt.TrtId,
-                    UsrId = us.UsrId,
-                    TrgActivity = trg.TrgActivity,
-                    UsrActivity = us.UsrActivity
+                    UsrId = l.UsrId,
+                    TrgActivity = q.TrgActivity,
+                    UsrActivity = l.UsrActivity
                 }
             ).SingleOrDefault();
             

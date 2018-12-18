@@ -31,7 +31,10 @@ namespace restAPI.Services
                 where trgt.TrtName == type && obj.ObjName == objectName
                 select obj
             ).SingleOrDefault();
-            objs.Add(sObj);
+            if (sObj != null)
+            {
+                objs.Add(sObj);
+            }
 
             return objs;
         }

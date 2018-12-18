@@ -40,17 +40,22 @@ namespace restAPI.Services
             if (usTrg == null)
             {
                 _logger.InsertEventLog(inputs.Value, usTrg.TrgtId, null, 1);
+                throw new AppException("Trigger type not found.");
+            }
+            else if(usTrg.TrgActivity == null)
+            {
+                _logger.InsertEventLog(inputs.Value, usTrg.TrgtId, null, 1);
+                throw new AppException("Trigger not found.");
+            }
+            else if (usTrg.TrgActivity == 0)
+            {
+                _logger.InsertEventLog(inputs.Value, usTrg.TrgtId, null, 3);
                 throw new AppException("Trigger not found.");
             }
             else if (usTrg.UsrActivity == 0)
             {
                 _logger.InsertEventLog(inputs.Value, usTrg.TrgtId, null, 4);
                 throw new AppException("User not found.");
-            }
-            else if (usTrg.TrgActivity == 0)
-            {
-                _logger.InsertEventLog(inputs.Value, usTrg.TrgtId, null, 3);
-                throw new AppException("Trigger not found.");
             }
             else if (objs.Count == 0)
             {

@@ -9,7 +9,7 @@ namespace restAPI.Services
    public interface ILoggerService
     {
         void InsertEventLog(string value, int trtId, int? objId, int evsId);
-        void InsertEventLog(string value, int trtId, int? objId, int evsId, int usrId);
+        void InsertEventLog(string value, int trtId, int? objId, int evsId, int? usrId);
     }
 
     public class LoggerService : ILoggerService
@@ -52,7 +52,7 @@ namespace restAPI.Services
             _context.SaveChanges();
             
         }
-        public void InsertEventLog(string value, int trtId, int? objId, int evsId, int usrId)
+        public void InsertEventLog(string value, int trtId, int? objId, int evsId, int? usrId)
         {
 
             AcEventLog eventLog = new AcEventLog

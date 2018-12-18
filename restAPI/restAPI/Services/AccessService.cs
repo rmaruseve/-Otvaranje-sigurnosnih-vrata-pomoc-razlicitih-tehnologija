@@ -9,7 +9,7 @@ namespace restAPI.Services
 {
     public interface IAccessService
     {
-        List<AcAccess> checkAccess(int userId, int objId);
+        List<AcAccess> checkAccess(int? userId, int objId);
     }
 
     public class AccessService : IAccessService
@@ -21,7 +21,7 @@ namespace restAPI.Services
             _context = context;
         }
 
-        public List<AcAccess> checkAccess(int userId, int objId)
+        public List<AcAccess> checkAccess(int? userId, int objId)
         {
             List<AcAccess> access = (
                 from acs in _context.AcAccess
