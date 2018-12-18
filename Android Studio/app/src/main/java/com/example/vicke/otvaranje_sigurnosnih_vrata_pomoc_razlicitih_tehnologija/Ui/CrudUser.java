@@ -26,7 +26,6 @@ public class CrudUser extends AppCompatActivity {
     TextView lastName;
     TextView email;
     TextView password;
-    TextView phoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +36,6 @@ public class CrudUser extends AppCompatActivity {
         lastName = findViewById(R.id.input_last_name);
         email = findViewById(R.id.input_email);
         password = findViewById(R.id.input_password);
-        phoneNumber = findViewById(R.id.input_phone_number);
 
 
         Bundle bundle = getIntent().getExtras();
