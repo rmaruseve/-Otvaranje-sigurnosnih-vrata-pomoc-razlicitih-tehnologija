@@ -29,6 +29,7 @@ namespace restAPI.Controllers
         private IUserService _userService;
         private ITriggerService _triggerService;
         private IAccessService _accessService;
+        private IMailService _mailService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
         
@@ -36,6 +37,7 @@ namespace restAPI.Controllers
             IUserService userService,
             ITriggerService triggerService,
             IAccessService accessService,
+            IMailService mailService,
             IMapper mapper,
             mydbContext context,
             IOptions<AppSettings> appSettings)
@@ -44,6 +46,7 @@ namespace restAPI.Controllers
             _userService = userService;
             _triggerService = triggerService;
             _accessService = accessService;
+            _mailService = mailService;
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
@@ -111,16 +114,19 @@ namespace restAPI.Controllers
                 // save 
                 if(userDto.PhoneNumber != null)
                 {
-                    _triggerService.CheckPhoneNumber(userDto.PhoneNumber);
-                    AcUser newUsr = _userService.Create(userReq, userDto.LoginPassword);
-                    _triggerService.CreatePhoneNumber(newUsr.UsrId, userDto.PhoneNumber);
-                    _accessService.Create(userDto, -1, newUsr.UsrId);
+                    List<AcTrigger> trgs = _triggerService.GetByValue(userDto.PhoneNumber);
+                    if (trgs.Count > 0)
+                        throw new AppException("Phone number already exists.");
+                    user = _userService.Create(userReq, userDto.LoginPassword);
+                    _triggerService.Create(user.UsrId, "Sms", userDto.PhoneNumber);
+                    _triggerService.Create(user.UsrId, "Phone", userDto.PhoneNumber);
+                    _mailService.Send(user.UsrEmail, "body", "Mobilisis Pristup Objektu", _appSettings.mailSettings);
 
                 } else
                 {
-                    _userService.Create(userReq, userDto.LoginPassword);
+                    user = _userService.Create(userReq, userDto.LoginPassword);
                 }
-                return Ok();
+                return Ok(user.UsrId);
             }
             catch (AppException ex)
             {
@@ -160,7 +166,7 @@ namespace restAPI.Controllers
         /// return all users
         /// </summary>
         /// <returns></returns>
-        [AllowAnonymous]
+        //[AllowAnonymous]
         [HttpGet("All")]
         public IEnumerable<AcUser> GetAcUsers()
         {
