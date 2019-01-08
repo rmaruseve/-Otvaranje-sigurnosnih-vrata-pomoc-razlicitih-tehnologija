@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.ObjectOpen;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.facilityObject;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.service.ApiInterface;
 import com.ncorti.slidetoact.SlideToActView;
 
@@ -29,6 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class objectListAdapter extends BaseExpandableListAdapter {
 
+    private List<facilityObject> listOfObjects;
     private List<String> header_titles;
     private HashMap<String, SlideToActView> child_titles;
     private Context ctx;
@@ -44,13 +46,14 @@ public class objectListAdapter extends BaseExpandableListAdapter {
     ApiInterface apiInterface = retrofit.create(ApiInterface.class);
 
 
-    objectListAdapter(Context ctx, List<String> header_titles, HashMap<String, SlideToActView> child_titles, String token, User user)
+    objectListAdapter(Context ctx, List<String> header_titles, HashMap<String, SlideToActView> child_titles, String token, User user, List<facilityObject> listOfObjects)
     {
         this.ctx = ctx;
         this.child_titles = child_titles;
         this.header_titles = header_titles;
         this.token = token;
         this.activeUser = user;
+        this.listOfObjects = listOfObjects;
     }
 
     @Override
@@ -98,12 +101,17 @@ public class objectListAdapter extends BaseExpandableListAdapter {
             convertView = layoutInflater.inflate(R.layout.parent_layout, null);
         }
 
+        //TODO: skuziti zake se zatvaraju oni koji netrebaju i kak deti da more biti samo jedan otvoren
+        if (listOfObjects.get(groupPosition).getObjActivity() == 0)
+        {
+            convertView.setBackgroundResource(R.color.colorPrimary);
+            convertView.setEnabled(false);
+            convertView.setOnClickListener(null);
+        }
+
         TextView textView = convertView.findViewById(R.id.heading_item);
         textView.setTypeface(null, Typeface.BOLD);
         textView.setText(title);
-
-
-
 
         return convertView;
     }

@@ -50,7 +50,6 @@ public class LoginScreen extends AppCompatActivity {
         setContentView(R.layout.login_screen);
 
         OkHttpClient.Builder client = new OkHttpClient.Builder();
-        //client.interceptors().add(httpLoggingInterceptor);
         client.readTimeout(180, TimeUnit.SECONDS);
         client.connectTimeout(180, TimeUnit.SECONDS);
 

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
@@ -81,55 +82,9 @@ public class ObjectListShow extends Fragment {
                 }
 
 
-                objectListAdapter MyAdapter = new objectListAdapter(getContext(), Headings, ChildList, token, user);
+                objectListAdapter MyAdapter = new objectListAdapter(getContext(), Headings, ChildList, token, user, objectDataList);
                 expandableListView.setAdapter(MyAdapter);
 
-                for (int i = 0; i < objectDataList.size(); i++)
-                {
-                    if (objectDataList.get(i).getObjActivity() == 0)
-                    {
-                        expandableListView.setBackgroundColor(getContext().getResources().getColor(R.color.colorPrimary));
-                    }
-                }
-
-                //TODO: popraviti expanding i contracting
-                expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-                    boolean open = false;
-                    long parentId = -1;
-                    @Override
-                    public boolean onGroupClick(ExpandableListView parent, View v,
-                                                int groupPosition, long id) {
-
-                        if (open = false && objectDataList.get(groupPosition).getObjActivity()==1)
-                        {
-                            parentId = id;
-                            open = true;
-                        }
-                        else
-                        {
-                            if (objectDataList.get(groupPosition).getObjActivity()==1)
-                            {
-                                parent.collapseGroup((int)parentId);
-                                if (parentId == id)
-                                {
-                                    parentId = -1;
-                                    open = false;
-                                }
-                                else
-                                {
-                                    parentId = id;
-                                    open = true;
-                                }
-
-                            }
-                        }
-
-                        if (objectDataList.get(groupPosition).getObjActivity() == 0)
-                            return true;
-
-                        return false;
-                    }
-                });
             }
 
             @Override

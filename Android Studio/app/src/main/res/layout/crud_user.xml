@@ -10,15 +10,9 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="56dp"
+        android:paddingTop="8dp"
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
-
-        <ImageView android:src="@drawable/logo"
-            android:layout_width="wrap_content"
-            android:layout_height="72dp"
-            android:layout_marginBottom="24dp"
-            android:layout_gravity="center_horizontal" />
 
         <!--  First name Label -->
         <android.support.design.widget.TextInputLayout
@@ -64,18 +58,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Generate password"
-            android:id="@+id/generatePassword"/>
+            android:id="@+id/generatePassword"
+            android:layout_marginBottom="16dp"/>
 
         <!-- Role Label -->
         <Spinner
             android:id="@+id/roleDropdown"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:spinnerMode="dropdown">
+            android:spinnerMode="dropdown"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp">
         </Spinner>
 
         <CheckBox
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Is active"

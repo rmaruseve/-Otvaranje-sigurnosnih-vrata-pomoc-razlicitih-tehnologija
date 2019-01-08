@@ -92,6 +92,8 @@ public class UserFragment extends Fragment {
             }
         });
 
+        //TODO: add listener for guest
+
             return v;
     }
 
