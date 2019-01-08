@@ -17,7 +17,7 @@ using restAPI.Services;
 namespace restAPI.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class EventLogsController : ControllerBase
     {
@@ -32,33 +32,33 @@ namespace restAPI.Controllers
             _context = context;
         }
 
-        //// GET: api/EventLogs
-        //[HttpGet]
-        //public IEnumerable<AcEventLog> GetAcEventLog()
-        //{
-        //    return _context.AcEventLog;
-        //}
-
         // GET: api/EventLogs
         [HttpGet]
-        public ActionResult<string> GetAcEventLog([FromBody] FilterEventLogDto req)
+        public IEnumerable<AcEventLog> GetAcEventLog()
         {
-            try
-            {
-                List<AcEventLog> evLog = _eventLogService.getEventLogs(req);
-                return Ok(
-                    JsonConvert.SerializeObject(new
-                    {
-                        eventLog = evLog
-                    })
-                );
-                
-            }
-            catch (AppException ex)
-            {
-                return BadRequest(new {message = ex.Message});
-            }
+            return _context.AcEventLog;
         }
+
+        //// GET: api/EventLogs
+        //[HttpGet]
+        //public ActionResult<string> GetAcEventLog([FromBody] FilterEventLogDto req)
+        //{
+        //    try
+        //    {
+        //        List<AcEventLog> evLog = _eventLogService.getEventLogs(req);
+        //        return Ok(
+        //            JsonConvert.SerializeObject(new
+        //            {
+        //                eventLog = evLog
+        //            })
+        //        );
+                
+        //    }
+        //    catch (AppException ex)
+        //    {
+        //        return BadRequest(new {message = ex.Message});
+        //    }
+        //}
 
         // GET: api/EventLogs/5
         [HttpGet("{id}")]
