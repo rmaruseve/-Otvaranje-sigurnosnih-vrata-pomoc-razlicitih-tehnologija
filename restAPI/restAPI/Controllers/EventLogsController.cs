@@ -1,30 +1,63 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
+using data.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using db.Db;
+using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
+using restAPI.Helpers;
+using restAPI.Services;
 
 namespace restAPI.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class EventLogsController : ControllerBase
     {
         private readonly mydbContext _context;
+        private IEventLogService _eventLogService;
 
-        public EventLogsController(mydbContext context)
+        public EventLogsController(
+            IEventLogService eventLogService
+            ,mydbContext context)
         {
+            _eventLogService = eventLogService;
             _context = context;
         }
 
+        //// GET: api/EventLogs
+        //[HttpGet]
+        //public IEnumerable<AcEventLog> GetAcEventLog()
+        //{
+        //    return _context.AcEventLog;
+        //}
+
         // GET: api/EventLogs
         [HttpGet]
-        public IEnumerable<AcEventLog> GetAcEventLog()
+        public ActionResult<string> GetAcEventLog([FromBody] FilterEventLogDto req)
         {
-            return _context.AcEventLog;
+            try
+            {
+                List<AcEventLog> evLog = _eventLogService.getEventLogs(req);
+                return Ok(
+                    JsonConvert.SerializeObject(new
+                    {
+                        eventLog = evLog
+                    })
+                );
+                
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new {message = ex.Message});
+            }
         }
 
         // GET: api/EventLogs/5

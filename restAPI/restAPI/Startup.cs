@@ -35,7 +35,7 @@ namespace restAPI
         {
             services.AddAutoMapper();
 
-            var connection = "server=192.168.0.1;port=3306;user=root;password=test123;database=mydb";
+            var connection = "server=192.168.1.1;port=3306;user=root;password=test123;database=mydb";
             services.AddDbContext<mydbContext>(options => options.UseMySQL(connection));
             services.AddMvc(options =>
             {
@@ -62,7 +62,7 @@ namespace restAPI
             services.Configure<AppSettings>(appSettingsSection);
 
             var appSettings = appSettingsSection.Get<AppSettings>();
-            var key = Encoding.ASCII.GetBytes("JWTSTRINGJWTSTRINGJWTSTRINGJWTSTRING");
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -98,11 +98,13 @@ namespace restAPI
                 };
             });
             services.AddScoped<IAccessControl, AccessControl>();
-
+            services.AddScoped<IEventLogService, EventLogService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IObjectService, ObjectService>();
             services.AddScoped<IAccessService, AccessService>();
             services.AddScoped<ILoggerService, LoggerService>();
+            services.AddScoped<ITriggerService, TriggerService>();
+            services.AddScoped<IMailService, MailService>();
 
             services.AddSwaggerGen(c =>
             {

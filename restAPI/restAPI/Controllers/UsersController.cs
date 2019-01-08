@@ -27,23 +27,38 @@ namespace restAPI.Controllers
     {
         private readonly mydbContext _context;
         private IUserService _userService;
+        private ITriggerService _triggerService;
+        private IAccessService _accessService;
+        private IMailService _mailService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
-
+        
         public UsersController(
             IUserService userService,
+            ITriggerService triggerService,
+            IAccessService accessService,
+            IMailService mailService,
             IMapper mapper,
             mydbContext context,
             IOptions<AppSettings> appSettings)
         {
             _context = context;
             _userService = userService;
+            _triggerService = triggerService;
+            _accessService = accessService;
+            _mailService = mailService;
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
-
+        /// <summary>
+        /// User autentication
+        /// </summary>
+        /// <param name="userDto"></param>
+        /// <returns></returns>
+        /// <response code="400">Username or password is incorrect</response>
         [AllowAnonymous]
         [HttpPost("authenticate")]
+        [ProducesResponseType(typeof(List<UserDto>), 200)]
         public IActionResult Authenticate([FromBody]UserDto userDto)
         {
             var user = _userService.Authenticate(userDto.UsrEmail, userDto.LoginPassword);
@@ -80,8 +95,10 @@ namespace restAPI.Controllers
 
 
         /// <summary>
-        /// Register new user.
-        /// </summary> 
+        ///  Register new user
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="400">return error message if there was an exception</response>
         [HttpPost("register")]
         public IActionResult Register([FromBody]UserDto userDto)
         {
@@ -95,8 +112,21 @@ namespace restAPI.Controllers
                 if (user.UsrRol.RolName != "Administrator")
                     throw new AppException("User not admin.");
                 // save 
-                _userService.Create(userReq, userDto.LoginPassword);
-                return Ok();
+                if(userDto.PhoneNumber != null)
+                {
+                    List<AcTrigger> trgs = _triggerService.GetByValue(userDto.PhoneNumber);
+                    if (trgs.Count > 0)
+                        throw new AppException("Phone number already exists.");
+                    user = _userService.Create(userReq, userDto.LoginPassword);
+                    _triggerService.Create(user.UsrId, "Sms", userDto.PhoneNumber);
+                    _triggerService.Create(user.UsrId, "Phone", userDto.PhoneNumber);
+                    _mailService.Send(user.UsrEmail, "body", "Mobilisis Pristup Objektu", _appSettings.mailSettings);
+
+                } else
+                {
+                    user = _userService.Create(userReq, userDto.LoginPassword);
+                }
+                return Ok(user.UsrId);
             }
             catch (AppException ex)
             {
@@ -104,8 +134,15 @@ namespace restAPI.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-        
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="400">return error message if there was an exception</response> 
         [HttpGet]
+        [ProducesResponseType(typeof(List<UserDto>), 200)]
+        [ProducesResponseType(400)]
         public IActionResult GetAll()
         {
             try
@@ -125,7 +162,11 @@ namespace restAPI.Controllers
             }
         }
         // GET: api/AcUsers
-        [AllowAnonymous]
+        /// <summary>
+        /// return all users
+        /// </summary>
+        /// <returns></returns>
+        //[AllowAnonymous]
         [HttpGet("All")]
         public IEnumerable<AcUser> GetAcUsers()
         {
@@ -149,7 +190,16 @@ namespace restAPI.Controllers
             return Ok(userDto);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userDto"></param>
+        /// <returns></returns>
+        /// <response code="200">If user is updated</response>
+        /// <response code="400">If the item is null</response>
         [HttpPut]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult Update([FromBody]UserDto userDto)
         {
             // map dto to entity and set id

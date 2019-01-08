@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using db.Db;
+using Microsoft.AspNetCore.Authorization;
 
 namespace restAPI.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class AvailableObjectsController : ControllerBase
     {
@@ -19,7 +21,10 @@ namespace restAPI.Controllers
         {
             _context = context;
         }
-
+        /// <summary>
+        /// return all objects
+        /// </summary>
+        /// <returns></returns>
         // GET: api/AvailableObjects
         [HttpGet]
         public IEnumerable<AcObject> GetAcObject()
