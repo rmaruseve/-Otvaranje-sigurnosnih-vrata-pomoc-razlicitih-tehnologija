@@ -18,7 +18,8 @@
         android:theme="@style/AppTheme">
         <service android:name="org.eclipse.paho.android.service.MqttService" />
 
-        <activity android:name=".Ui.LoginScreen">
+        <activity android:name=".Ui.LoginScreen"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +28,8 @@
         </activity>
         <activity
             android:name=".Ui.MainActivity"
-            android:label="@string/title_activity_main" />
+            android:label="@string/title_activity_main"
+            />
         <activity android:name=".Ui.AdminMenu" />
         <activity android:name=".Ui.CrudUser" />
         <activity android:name=".Ui.CrudTrigger"></activity>

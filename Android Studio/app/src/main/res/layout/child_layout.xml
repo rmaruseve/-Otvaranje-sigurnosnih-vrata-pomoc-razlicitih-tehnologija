@@ -4,7 +4,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="100dp"
-    android:background="@color/colorAccent">
+    >
 
     <com.ncorti.slidetoact.SlideToActView
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
         android:layout_marginTop="13dp"
         android:layout_centerInParent="true"
         app:inner_color="@color/colorPrimary"
-        app:outer_color="#90FFFFFF"
+        app:outer_color="@color/colorPrimaryDark"
         app:text="Slide to open"
         />
 

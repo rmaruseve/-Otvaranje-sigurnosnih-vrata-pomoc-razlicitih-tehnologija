@@ -1,4 +1,4 @@
-package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui;
+package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.Adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -46,7 +46,7 @@ public class objectListAdapter extends BaseExpandableListAdapter {
     ApiInterface apiInterface = retrofit.create(ApiInterface.class);
 
 
-    objectListAdapter(Context ctx, List<String> header_titles, HashMap<String, SlideToActView> child_titles, String token, User user, List<facilityObject> listOfObjects)
+    public objectListAdapter(Context ctx, List<String> header_titles, HashMap<String, SlideToActView> child_titles, String token, User user, List<facilityObject> listOfObjects)
     {
         this.ctx = ctx;
         this.child_titles = child_titles;

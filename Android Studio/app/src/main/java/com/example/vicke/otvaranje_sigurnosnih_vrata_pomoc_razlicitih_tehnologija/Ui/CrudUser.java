@@ -1,5 +1,6 @@
 package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +19,6 @@ import java.util.List;
 
 public class CrudUser extends AppCompatActivity {
 
-    private boolean isNew = false;
     private List<Role> listOfRoles;
     Role role;
 
@@ -88,27 +88,16 @@ public class CrudUser extends AppCompatActivity {
             lastName.setText(passedUser.getUsrSurname());
             email.setText(passedUser.getUsrEmail());
             dropdown.setSelection(passedUser.getUsrRolId()-1);
-
-            Button buttonModify = findViewById(R.id.btnNext);
-            buttonModify.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
+            generatePassword.setChecked(false);
         }
-        else
-        {
-            //its a new user, everything is empty
-            isNew = true;
-            findViewById(R.id.generatePassword).isActivated();
-            Button buttonAddNew = findViewById(R.id.btnNext);
-            buttonAddNew.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                }
-            });
-        }
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: retrofit call
+                Intent i = new Intent(getBaseContext(), CrudTrigger.class);
+                startActivity(i);
+            }
+        });
     }
 }
