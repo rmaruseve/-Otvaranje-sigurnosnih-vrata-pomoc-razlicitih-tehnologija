@@ -90,11 +90,11 @@ public class LoginScreen extends AppCompatActivity {
                         logedUser.setEmail(response.body().getEmail());
                         logedUser.setFirstName(response.body().getFirstName());
                         logedUser.setLastName(response.body().getLastName());
-                        logedUser.setToken(response.body().getToken());
+                        logedUser.setToken("Bearer "+response.body().getToken());
                         logedUser.setRole(response.body().getRole());
 
                         Intent i = new Intent(LoginScreen.this, MainActivity.class);
-                        i.putExtra("token",response.body().getToken());
+                        i.putExtra("token","Bearer "+response.body().getToken());
                         i.putExtra("currentUser", logedUser);
                         startActivity(i);
                     }

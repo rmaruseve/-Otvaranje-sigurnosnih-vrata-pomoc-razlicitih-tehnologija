@@ -80,6 +80,7 @@ public class CrudUser extends AppCompatActivity {
         {
             //its a new user, everything is empty
             isNew = true;
+            findViewById(R.id.generatePassword).isActivated();
             Button buttonAddNew = findViewById(R.id.btnSave);
             buttonAddNew.setOnClickListener(new View.OnClickListener() {
                 @Override

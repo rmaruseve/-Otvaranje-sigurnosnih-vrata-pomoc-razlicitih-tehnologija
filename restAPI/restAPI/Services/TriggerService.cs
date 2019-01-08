@@ -9,8 +9,9 @@ namespace restAPI.Services
 {
     public interface ITriggerService
     {
-        void CreatePhoneNumber(int userId, string phoneNumber);
-        void CheckPhoneNumber(string phoneNumber);
+        void Create(int userId, string triggerType, string triggerValue);
+        void Create(int userId, int triggerTypeId, string triggerValue);
+        List<AcTrigger> GetByValue(string triggerValue);
     }
 
     public class TriggerService : ITriggerService
@@ -22,33 +23,35 @@ namespace restAPI.Services
             _context = context;
         }
 
-        public void CheckPhoneNumber(string phoneNumber)
+        public List<AcTrigger> GetByValue(string triggerValue)
         {
             List<AcTrigger> trgs = (
                 from trg in _context.AcTrigger
                 join trgt in _context.AcTriggerType on trg.TrgTrtId equals trgt.TrtId
-                where (trgt.TrtName == "Sms" || trgt.TrtName == "Phone") && trg.TrgValue == phoneNumber
+                where trg.TrgValue == triggerValue
                 select trg
             ).ToList();
-            if(trgs.Count == 2)
-            {
-                throw new AppException("Phone number already exists.");
-            }
+            return trgs;
         }
 
-        public void CreatePhoneNumber(int userId, string phoneNumber)
+        public void Create(int userId, string triggerType, string triggerValue)
         {
             _context.AcTrigger.Add(new AcTrigger{
                 TrgUsrId = userId,
-                TrgTrt = (from trgt in _context.AcTriggerType where trgt.TrtName == "Sms" select trgt).Single(),
-                TrgValue = phoneNumber,
+                TrgTrtId = (from trgt in _context.AcTriggerType where trgt.TrtName == triggerType select trgt.TrtId).Single(),
+                TrgValue = triggerValue,
                 TrgActivity = 1
             });
+            _context.SaveChanges();
+        }
+
+        public void Create(int userId, int triggerTypeId, string triggerValue)
+        {
             _context.AcTrigger.Add(new AcTrigger
             {
                 TrgUsrId = userId,
-                TrgTrt = (from trgt in _context.AcTriggerType where trgt.TrtName == "Phone" select trgt).Single(),
-                TrgValue = phoneNumber,
+                TrgTrtId = triggerTypeId,
+                TrgValue = triggerValue,
                 TrgActivity = 1
             });
             _context.SaveChanges();
