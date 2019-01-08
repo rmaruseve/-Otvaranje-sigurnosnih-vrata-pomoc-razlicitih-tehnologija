@@ -29,7 +29,8 @@
             android:name=".Ui.MainActivity"
             android:label="@string/title_activity_main" />
         <activity android:name=".Ui.AdminMenu" />
-        <activity android:name=".Ui.CrudUser"></activity>
+        <activity android:name=".Ui.CrudUser" />
+        <activity android:name=".Ui.CrudTrigger"></activity>
     </application>
 
 </manifest>

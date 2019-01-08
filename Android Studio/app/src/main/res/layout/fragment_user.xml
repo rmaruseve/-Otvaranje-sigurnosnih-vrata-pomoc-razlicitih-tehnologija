@@ -16,15 +16,11 @@
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:text="Add new user"
+        style="@style/Widget.AppCompat.Button.Colored"
         />
-    <Button
-        android:id="@+id/addNewGuest"
-        android:layout_weight="1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Add new guest"/>
 
     </LinearLayout>
 

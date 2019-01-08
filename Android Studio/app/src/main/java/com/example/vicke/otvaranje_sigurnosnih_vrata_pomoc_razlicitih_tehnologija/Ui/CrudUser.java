@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -21,11 +22,16 @@ public class CrudUser extends AppCompatActivity {
     private List<Role> listOfRoles;
     Role role;
 
+    CheckBox isActive;
+    CheckBox generatePassword;
     Spinner dropdown;
     TextView firstName;
     TextView lastName;
     TextView email;
     TextView password;
+
+    Button next;
+    Button cancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +42,14 @@ public class CrudUser extends AppCompatActivity {
         lastName = findViewById(R.id.input_last_name);
         email = findViewById(R.id.input_email);
         password = findViewById(R.id.input_password);
+        isActive = findViewById(R.id.checkboxIsActive);
+        generatePassword = findViewById(R.id.generatePassword);
+
+        isActive.setChecked(true);
+        generatePassword.setChecked(true);
+
+        next = findViewById(R.id.btnNext);
+        cancel = findViewById(R.id.btnCancel);
 
 
         Bundle bundle = getIntent().getExtras();
@@ -60,6 +74,13 @@ public class CrudUser extends AppCompatActivity {
             }
         });
 
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         if (bundle.getSerializable("currentUser") != null)
         {
             AllUser passedUser = (AllUser) bundle.getSerializable("currentUser");
@@ -68,7 +89,7 @@ public class CrudUser extends AppCompatActivity {
             email.setText(passedUser.getUsrEmail());
             dropdown.setSelection(passedUser.getUsrRolId()-1);
 
-            Button buttonModify = findViewById(R.id.btnSave);
+            Button buttonModify = findViewById(R.id.btnNext);
             buttonModify.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -81,7 +102,7 @@ public class CrudUser extends AppCompatActivity {
             //its a new user, everything is empty
             isNew = true;
             findViewById(R.id.generatePassword).isActivated();
-            Button buttonAddNew = findViewById(R.id.btnSave);
+            Button buttonAddNew = findViewById(R.id.btnNext);
             buttonAddNew.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

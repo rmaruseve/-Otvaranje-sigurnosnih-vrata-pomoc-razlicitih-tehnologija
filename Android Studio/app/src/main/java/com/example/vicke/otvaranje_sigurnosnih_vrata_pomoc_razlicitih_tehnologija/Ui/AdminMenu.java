@@ -5,7 +5,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.AllUser;
@@ -13,8 +12,6 @@ import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologij
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.service.ApiInterface;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -23,7 +20,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class AdminMenu extends AppCompatActivity implements LogFragment.OnFragmentInteractionListener, UserFragment.OnFragmentInteractionListener, ProfileFragment.OnFragmentInteractionListener {
+public class AdminMenu extends AppCompatActivity implements LogFragment.OnFragmentInteractionListener, UserFragment.OnFragmentInteractionListener, AddGuestFragment.OnFragmentInteractionListener {
 
     String token;
     User currentUser = new User();
@@ -63,7 +60,7 @@ public class AdminMenu extends AppCompatActivity implements LogFragment.OnFragme
                         TabLayout tabLayout = findViewById(R.id.adminMenuTabLayout);
                         tabLayout.addTab(tabLayout.newTab().setText("Log"));
                         tabLayout.addTab(tabLayout.newTab().setText("Users"));
-                        tabLayout.addTab(tabLayout.newTab().setText("Profiles"));
+                        tabLayout.addTab(tabLayout.newTab().setText("Add guest"));
                         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
                         final ViewPager viewPager = findViewById(R.id.adminMenuViewPager);

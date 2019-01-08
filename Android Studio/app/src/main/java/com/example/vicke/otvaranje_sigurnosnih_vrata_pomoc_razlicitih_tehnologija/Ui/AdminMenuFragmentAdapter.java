@@ -7,10 +7,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.AllUser;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.Role;
-import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AdminMenuFragmentAdapter extends FragmentStatePagerAdapter {
@@ -44,8 +42,8 @@ public class AdminMenuFragmentAdapter extends FragmentStatePagerAdapter {
 
                 return userFragment;
             case 2:
-                ProfileFragment profileFragment = new ProfileFragment();
-                return profileFragment;
+                AddGuestFragment addGuestFragment = new AddGuestFragment();
+                return addGuestFragment;
             default:
                 return null;
         }

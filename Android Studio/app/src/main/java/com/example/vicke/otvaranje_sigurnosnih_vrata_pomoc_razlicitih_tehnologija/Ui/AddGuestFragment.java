@@ -13,24 +13,24 @@ import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologij
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ProfileFragment.OnFragmentInteractionListener} interface
+ * {@link AddGuestFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ProfileFragment#newInstance} factory method to
+ * Use the {@link AddGuestFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileFragment extends Fragment {
+public class AddGuestFragment extends Fragment {
 
 
 
 
     private OnFragmentInteractionListener mListener;
 
-    public ProfileFragment() {
+    public AddGuestFragment() {
 
     }
 
-    public static ProfileFragment newInstance() {
-        return new ProfileFragment();
+    public static AddGuestFragment newInstance() {
+        return new AddGuestFragment();
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_profile, container, false);
+        View v = inflater.inflate(R.layout.fragment_add_guest, container, false);
 
         return v;
     }
