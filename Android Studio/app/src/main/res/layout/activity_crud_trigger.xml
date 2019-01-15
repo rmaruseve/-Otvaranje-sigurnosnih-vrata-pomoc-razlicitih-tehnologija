@@ -13,27 +13,28 @@
         android:layout_margin="8dp">
 
         <Button
+            android:id="@+id/addNewTrigger"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add new"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_weight="1"/>
         <Button
+            android:id="@+id/triggerNext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="skip"
+            android:text="next"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_weight="1"/>
 
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scrollbars="vertical"
-        android:id="@+id/triggerRecycler"
-        >
+        android:id="@+id/triggerListView">
 
-    </android.support.v7.widget.RecyclerView>
+    </ListView>
 
 </LinearLayout>

@@ -20,7 +20,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin = "8dp">
-        <EditText android:id="@+id/input_trigger_value"
+        <EditText
+            android:id="@+id/input_trigger_value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapWords"
@@ -35,5 +36,15 @@
         android:checked="true"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="Save"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:id="@+id/triggerButtonSave"/>
 
 </LinearLayout>

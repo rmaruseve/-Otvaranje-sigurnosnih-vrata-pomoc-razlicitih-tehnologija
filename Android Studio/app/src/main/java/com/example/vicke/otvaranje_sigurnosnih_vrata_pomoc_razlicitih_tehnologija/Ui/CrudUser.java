@@ -13,14 +13,34 @@ import android.widget.TextView;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.AllUser;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.CrudUserDataClass;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.Role;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.service.ApiInterface;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class CrudUser extends AppCompatActivity {
+
+    Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(ApiInterface.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+
+    ApiInterface apiInterface = retrofit.create(ApiInterface.class);
 
     private List<Role> listOfRoles;
     Role role;
+    User user;
+    CrudUserDataClass crudUser;
+    AllUser passedUser;
 
     CheckBox isActive;
     CheckBox generatePassword;
@@ -29,6 +49,8 @@ public class CrudUser extends AppCompatActivity {
     TextView lastName;
     TextView email;
     TextView password;
+
+    boolean isNewUser = true;
 
     Button next;
     Button cancel;
@@ -50,7 +72,6 @@ public class CrudUser extends AppCompatActivity {
 
         next = findViewById(R.id.btnNext);
         cancel = findViewById(R.id.btnCancel);
-
 
         Bundle bundle = getIntent().getExtras();
         listOfRoles = (List<Role>)bundle.getSerializable("userRole");
@@ -83,19 +104,72 @@ public class CrudUser extends AppCompatActivity {
 
         if (bundle.getSerializable("currentUser") != null)
         {
-            AllUser passedUser = (AllUser) bundle.getSerializable("currentUser");
+            passedUser = (AllUser) bundle.getSerializable("currentUser"); //ovo je kliknuti user za kojeg se uređuju stvari
             firstName.setText(passedUser.getUsrName());
             lastName.setText(passedUser.getUsrSurname());
             email.setText(passedUser.getUsrEmail());
             dropdown.setSelection(passedUser.getUsrRolId()-1);
             generatePassword.setChecked(false);
+            crudUser.setUsrId(passedUser.getUsrId());
+            isNewUser = false;
         }
+
+        user = (User) bundle.getSerializable("user"); //od tud vucem token
 
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: retrofit call
+
+                crudUser.setUsrName(firstName.getText().toString());
+                crudUser.setUsrSurname(lastName.getText().toString());
+                crudUser.setUsrEmail(email.getText().toString());
+                if (generatePassword.isChecked())
+                {
+                    crudUser.setGeneratePassword(true);
+                }
+                else
+                {
+                    crudUser.setGeneratePassword(false);
+                }
+                crudUser.setUsrRolId(role.getRolId());
+                if (isActive.isChecked())
+                {
+                    crudUser.setActivity(1);
+                }
+                else
+                {
+                    crudUser.setActivity(0);
+                }
+
+
+                Call<Integer> call;
+
+                if (isNewUser)
+                {
+                    call = apiInterface.crudUsersNew(user.getToken(), crudUser);
+                }
+                else
+                {
+                    call = apiInterface.crudUsers(user.getToken(), crudUser);
+                }
+
+                call.enqueue(new Callback<Integer>() {
+                    @Override
+                    public void onResponse(Call<Integer> call, Response<Integer> response) {
+                        if (isNewUser)
+                        {
+                            crudUser.setUsrId(response.body());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Integer> call, Throwable t) {
+
+                    }
+                });
                 Intent i = new Intent(getBaseContext(), CrudTrigger.class);
+                i.putExtra("user", user);
+                i.putExtra("editUser", crudUser);
                 startActivity(i);
             }
         });

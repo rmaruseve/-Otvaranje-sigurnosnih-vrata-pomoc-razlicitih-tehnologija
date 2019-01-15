@@ -65,7 +65,7 @@ public class AdminMenu extends AppCompatActivity implements LogFragment.OnFragme
                         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
                         final ViewPager viewPager = findViewById(R.id.adminMenuViewPager);
-                        final AdminMenuFragmentAdapter adminMenuFragmentAdapter = new AdminMenuFragmentAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), listOfUsers, listOfRoles);
+                        final AdminMenuFragmentAdapter adminMenuFragmentAdapter = new AdminMenuFragmentAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), listOfUsers, listOfRoles, currentUser);
 
                         viewPager.setAdapter(adminMenuFragmentAdapter);
                         viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
