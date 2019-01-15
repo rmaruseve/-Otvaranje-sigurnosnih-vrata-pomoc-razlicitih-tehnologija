@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace restAPI.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -107,24 +107,33 @@ namespace restAPI.Controllers
             try
             {
                 // if admin
-                var userId = int.Parse(User.FindFirst("current_user_id")?.Value);
-                AcUser user = _userService.GetById(userId);
-                if (user.UsrRol.RolName != "Administrator")
-                    throw new AppException("User not admin.");
+                string currentId = User.FindFirst("current_user_id")?.Value;
+                if(currentId != null)
+                {
+                    var userId = int.Parse(currentId);
+                    AcUser currentUsr = _userService.GetById(userId);
+                }
+                //if (currentUsr.UsrRol.RolName != "Administrator")
+                //    throw new AppException("User not admin.");
                 // save 
-                if(userDto.PhoneNumber != null)
+                AcUser user = new AcUser();
+                if(userDto.UsrEmail != null)
+                {
+                    string randPassword = Functions.RandString(8);
+                    user = _userService.Create(userReq, randPassword);
+                    _mailService.Send(user.UsrEmail, "Your password is: " + randPassword, "Mobilisis User Account");
+
+                } else
                 {
                     List<AcTrigger> trgs = _triggerService.GetByValue(userDto.PhoneNumber);
                     if (trgs.Count > 0)
                         throw new AppException("Phone number already exists.");
-                    user = _userService.Create(userReq, userDto.LoginPassword);
+                    userReq.UsrEmail = userDto.PhoneNumber;
+                    string randPassword = Functions.RandString(8);
+                    user = _userService.Create(userReq, randPassword);
                     _triggerService.Create(user.UsrId, "Sms", userDto.PhoneNumber);
                     _triggerService.Create(user.UsrId, "Phone", userDto.PhoneNumber);
-                    _mailService.Send(user.UsrEmail, "body", "Mobilisis Pristup Objektu", _appSettings.mailSettings);
-
-                } else
-                {
-                    user = _userService.Create(userReq, userDto.LoginPassword);
+                    // send sms
                 }
                 return Ok(user.UsrId);
             }
@@ -197,7 +206,7 @@ namespace restAPI.Controllers
         /// <returns></returns>
         /// <response code="200">If user is updated</response>
         /// <response code="400">If the item is null</response>
-        [HttpPut]
+        [HttpPost("update")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Update([FromBody]UserDto userDto)

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using data.Json;
 using db.Db;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using restAPI.Helpers;
@@ -12,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace restAPI.Controllers
 {
+    [Route("api/[controller]")]
+    [Authorize]
+    [ApiController]
     public class TriggerController : ControllerBase
     {
 
@@ -40,7 +44,7 @@ namespace restAPI.Controllers
         /// </summary>
         /// <response code="400">return error message if there was an exception</response>  
         [HttpPost]
-        public IActionResult CreateTriggers([FromBody]TriggerDto trgDto)
+        public IActionResult Create([FromBody]TriggerTypeValueDto trgDto)
         {
             try
             {
@@ -49,10 +53,7 @@ namespace restAPI.Controllers
                 AcUser user = _userService.GetById(userId);
                 if (user.UsrRol.RolName != "Administrator")
                     throw new AppException("User not admin.");
-                foreach(TriggerTypeValueDto triggerValueType in trgDto.triggerTypeValues)
-                {
-                    _triggerService.Create(trgDto.userId, triggerValueType.triggerTypeId, triggerValueType.triggerValue);
-                }
+                _triggerService.Create(trgDto.userId, trgDto.triggerTypeId, trgDto.triggerValue, (byte)trgDto.trgActivity);
                 return Ok();
             }
             catch (AppException ex)
@@ -61,4 +62,5 @@ namespace restAPI.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+    }
 }

@@ -1,4 +1,5 @@
-﻿using restAPI.Helpers;
+﻿using Microsoft.Extensions.Options;
+using restAPI.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,19 +11,27 @@ namespace restAPI.Services
 {
     public interface IMailService
     {
-        int Send(string reciever, string body, string subject, MailSettings mailSettings);
+        int Send(string reciever, string body, string subject);
     }
 
     public class MailService : IMailService
     {
-        public int Send(string reciever, string body, string subject, MailSettings mailSettings)
+        private readonly AppSettings _appSettings;
+
+        public MailService(IOptions<AppSettings> appSettings)
         {
-            SmtpClient client = new SmtpClient(mailSettings.Host, mailSettings.Port);
+            _appSettings = appSettings.Value;
+        }
+
+        public int Send(string reciever, string body, string subject)
+        {
+            SmtpClient client = new SmtpClient(_appSettings.MailHost, _appSettings.MailPort);
+            client.EnableSsl = true;
             client.UseDefaultCredentials = false;
-            client.Credentials = new NetworkCredential(mailSettings.Username, mailSettings.Password);
+            client.Credentials = new NetworkCredential(_appSettings.MailUsername, _appSettings.MailPassword);
 
             MailMessage mailMessage = new MailMessage();
-            mailMessage.From = new MailAddress(mailSettings.Username);
+            mailMessage.From = new MailAddress(_appSettings.MailUsername);
             mailMessage.To.Add(reciever);
             mailMessage.Body = body;
             mailMessage.Subject = subject;

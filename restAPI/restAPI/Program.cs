@@ -27,6 +27,7 @@ namespace restAPI
                 .UseStartup<Startup>()
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
+                    config.SetBasePath(Directory.GetCurrentDirectory());
                     config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
                 })
                 .UseUrls("http://0.0.0.0:5000/")

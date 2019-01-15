@@ -11,7 +11,7 @@ namespace restAPI.Services
     public interface IAccessService
     {
         List<AcAccess> checkAccess(int? userId, int objId);
-        List<AcAccess> Create(UserDto usrDto, int openingCounter, int usrId);
+        //List<AcAccess> Create(UserDto usrDto, int openingCounter, int usrId);
     }
 
     public class AccessService : IAccessService
@@ -34,7 +34,7 @@ namespace restAPI.Services
             return access;
         }
 
-        public List<AcAccess> Create(UserDto usrDto, int openingCounter, int usrId)
+        /*public List<AcAccess> Create(UserDto usrDto, int openingCounter, int usrId)
         {
             List<AcAccess> newAcs = new List<AcAccess>();
             foreach(int objId in usrDto.Objs)
@@ -52,6 +52,6 @@ namespace restAPI.Services
             }
             _context.SaveChanges();
             return newAcs;
-        }
+        }*/
     }
 }

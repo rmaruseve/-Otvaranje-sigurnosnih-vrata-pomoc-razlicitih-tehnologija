@@ -9,8 +9,8 @@ namespace restAPI.Services
 {
     public interface ITriggerService
     {
-        void Create(int userId, string triggerType, string triggerValue);
-        void Create(int userId, int triggerTypeId, string triggerValue);
+        void Create(int userId, string triggerType, string triggerValue, byte trgActivity);
+        void Create(int userId, int triggerTypeId, string triggerValue, byte trgActivity);
         List<AcTrigger> GetByValue(string triggerValue);
     }
 
@@ -34,26 +34,39 @@ namespace restAPI.Services
             return trgs;
         }
 
-        public void Create(int userId, string triggerType, string triggerValue)
+        public void Create(int userId, string triggerType, string triggerValue, byte trgActivity)
         {
             _context.AcTrigger.Add(new AcTrigger{
                 TrgUsrId = userId,
                 TrgTrtId = (from trgt in _context.AcTriggerType where trgt.TrtName == triggerType select trgt.TrtId).Single(),
                 TrgValue = triggerValue,
-                TrgActivity = 1
+                TrgActivity = trgActivity
             });
             _context.SaveChanges();
         }
 
-        public void Create(int userId, int triggerTypeId, string triggerValue)
+        public void Create(int userId, int triggerTypeId, string triggerValue, byte trgActivity)
         {
             _context.AcTrigger.Add(new AcTrigger
             {
                 TrgUsrId = userId,
                 TrgTrtId = triggerTypeId,
                 TrgValue = triggerValue,
-                TrgActivity = 1
+                TrgActivity = trgActivity
             });
+            _context.SaveChanges();
+        }
+
+        public void Update(int userId, int triggerTypeId, string triggerValue, byte trgActivity)
+        {
+            AcTrigger trg = new AcTrigger
+            {
+                TrgUsrId = userId,
+                TrgTrtId = triggerTypeId,
+                TrgValue = triggerValue,
+                TrgActivity = trgActivity
+            };
+            _context.AcTrigger.Update(trg);
             _context.SaveChanges();
         }
     }

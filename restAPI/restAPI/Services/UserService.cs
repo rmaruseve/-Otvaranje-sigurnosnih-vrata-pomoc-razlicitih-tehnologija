@@ -67,8 +67,8 @@ namespace restAPI.Services
         public AcUser Create(AcUser user, string password)
         {
             // validation
-            if (string.IsNullOrWhiteSpace(password))
-                throw new AppException("Password is required");
+            if (string.IsNullOrWhiteSpace(password) && string.IsNullOrWhiteSpace(user.UsrEmail))
+                throw new AppException("Password and Email are required");
 
             Console.WriteLine(user.UsrEmail);
 
