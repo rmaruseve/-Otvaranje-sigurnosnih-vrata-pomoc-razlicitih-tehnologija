@@ -56,6 +56,9 @@ public interface ApiInterface {
 
 
     @POST("api/neke")
+    Call<ResponseBody> crudTriggersNew(@Header("Authorization") String authToken, @Body TriggerList triggerLists);
+
+    @POST("api/neke")
     Call<ResponseBody> crudTriggers(@Header("Authorization") String authToken, @Body TriggerList triggerLists);
 
     @GET("/api/Roles")

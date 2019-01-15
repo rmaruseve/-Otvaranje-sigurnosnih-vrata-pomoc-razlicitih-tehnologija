@@ -1,7 +1,9 @@
 package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -65,14 +67,6 @@ public class CrudTrigger extends AppCompatActivity {
             crudUser = (CrudUserDataClass) extras.getSerializable("editUser");
         }
 
-        Bundle crudTriggerSecondaryBundle = getIntent().getExtras();
-        if (crudTriggerSecondaryBundle != null)
-        {
-            //primi podatke, vjerojatno TriggerList objekt koji bu se zapisal u zadnji element liste
-            //nemam blage ke se desi ak neko u Secondary prozoru stisne back
-
-        }
-
         //prvi retrofit za sve triggere
         Call<ArrayList<TriggerType>> call = apiInterface.getTriggerTypes(user.getToken());
         call.enqueue(new Callback<ArrayList<TriggerType>>() {
@@ -131,7 +125,20 @@ public class CrudTrigger extends AppCompatActivity {
                 //TODO: idi na sljedeci ekran
             }
         });
+    }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 1)
+        {
+            if(resultCode == Activity.RESULT_OK)
+            {
+                TriggerList result = (TriggerList) data.getSerializableExtra("result");
+                listData.get(listData.size() - 1).setTriggerId(result.getTriggerId());
+                listData.get(listData.size() - 1).setTriggerValue(result.getTriggerValue());
+                listData.get(listData.size() - 1).setIsTriggerActive(result.getIsTriggerActive());
+                arrayAdapter.notifyDataSetChanged();
+            }
+        }
     }
 }

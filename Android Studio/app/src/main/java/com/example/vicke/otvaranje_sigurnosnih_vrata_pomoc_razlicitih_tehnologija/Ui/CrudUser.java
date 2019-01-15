@@ -36,6 +36,8 @@ public class CrudUser extends AppCompatActivity {
 
     ApiInterface apiInterface = retrofit.create(ApiInterface.class);
 
+    Call<Integer> call;
+
     private List<Role> listOfRoles;
     Role role;
     User user;
@@ -142,7 +144,7 @@ public class CrudUser extends AppCompatActivity {
                 }
 
 
-                Call<Integer> call;
+
 
                 if (isNewUser)
                 {

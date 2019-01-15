@@ -1,6 +1,8 @@
 package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model;
 
-public class TriggerList {
+import java.io.Serializable;
+
+public class TriggerList implements Serializable {
 
     private int triggerId;
     private String triggerValue;
