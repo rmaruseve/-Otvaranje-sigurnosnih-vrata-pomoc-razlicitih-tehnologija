@@ -36,7 +36,7 @@ namespace restAPI.Controllers
         [HttpGet]
         public IActionResult GetAcEventLog()
         {
-            return Ok(JsonConvert.SerializeObject(_eventLogService.getEventLogs()));
+            return Ok(JsonConvert.SerializeObject(_eventLogService.getEventLogs(null)));
         }
 
        
@@ -44,19 +44,7 @@ namespace restAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAcEventLog([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var acEventLog = await _context.AcEventLog.FindAsync(id);
-
-            if (acEventLog == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(acEventLog);
+            return Ok(JsonConvert.SerializeObject(_eventLogService.getEventLogs(id)));
         }
 
         // PUT: api/EventLogs/5
