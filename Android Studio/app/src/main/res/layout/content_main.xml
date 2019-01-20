@@ -16,11 +16,10 @@
         android:elevation="20dp"
         android:layout_marginBottom="8dp"
         android:layout_centerInParent="true"
-        app:inner_color="@color/colorPrimary"
+        app:inner_color="@color/white"
         app:outer_color="@color/colorPrimaryDark"
         android:scaleY="0.8"
         android:scaleX="0.8"
-
         app:text="Close all"
         android:layout_gravity="bottom"
         />

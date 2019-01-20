@@ -101,7 +101,7 @@ public class objectListAdapter extends BaseExpandableListAdapter {
             convertView = layoutInflater.inflate(R.layout.parent_layout, null);
         }
 
-        //TODO: skuziti zake se zatvaraju oni koji netrebaju i kak deti da more biti samo jedan otvoren
+        //TODO: skuziti zake se ovo ponasa ko da je z černobila
         if (listOfObjects.get(groupPosition).getObjActivity() == 0)
         {
             convertView.setBackgroundResource(R.color.colorPrimary);

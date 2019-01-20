@@ -69,5 +69,15 @@ namespace restAPI.Services
             _context.AcTrigger.Update(trg);
             _context.SaveChanges();
         }
+
+        public void Delete(int id)
+        {
+            var trg = _context.AcTrigger.Find(id);
+            if (trg != null)
+            {
+                _context.AcTrigger.Remove(trg);
+                _context.SaveChanges();
+            }
+        }
     }
 }

@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity
             navigationView = findViewById(R.id.nav_view);
             Menu nav_Menu = navigationView.getMenu();
             nav_Menu.findItem(R.id.nav_admin_options).setVisible(false);
+            //TODO: show slider on bottom, add retrofit
+            //slideToActView.resetSlider(); ide na kraj retrofit on response za slider
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -104,11 +106,6 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            //TODO: open setting
-            return true;
-        }
         if (id == R.id.action_refresh) {
             finish();
             startActivity(getIntent());

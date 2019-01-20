@@ -67,7 +67,7 @@ namespace restAPI.Controllers
                 return BadRequest(new { message = "Username or password is incorrect" });
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("JWTSTRINGJWTSTRINGJWTSTRINGJWTSTRING");
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -131,8 +131,8 @@ namespace restAPI.Controllers
                     userReq.UsrEmail = userDto.PhoneNumber;
                     string randPassword = Functions.RandString(8);
                     user = _userService.Create(userReq, randPassword);
-                    _triggerService.Create(user.UsrId, "Sms", userDto.PhoneNumber);
-                    _triggerService.Create(user.UsrId, "Phone", userDto.PhoneNumber);
+                    _triggerService.Create(user.UsrId, "Sms", userDto.PhoneNumber, 1);
+                    _triggerService.Create(user.UsrId, "Phone", userDto.PhoneNumber, 1);
                     // send sms
                 }
                 return Ok(user.UsrId);

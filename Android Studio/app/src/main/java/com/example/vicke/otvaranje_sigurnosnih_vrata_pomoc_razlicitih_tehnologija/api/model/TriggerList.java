@@ -1,31 +1,19 @@
 package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 
-public class TriggerList {
+public class TriggerList implements Serializable {
 
-    private String triggerName;
+    private int triggerId;
     private String triggerValue;
-    private boolean isTriggerActive;
+    private int isTriggerActive;
 
-    public TriggerList()
-    {
-
+    public int getTriggerId() {
+        return triggerId;
     }
 
-    public TriggerList(String triggerName, String triggerValue, boolean isTriggerActive)
-    {
-        this.triggerName = triggerName;
-        this.triggerValue = triggerValue;
-        this.isTriggerActive = isTriggerActive;
-    }
-
-    public String getTriggerName() {
-        return triggerName;
-    }
-
-    public void setTriggerName(String triggerName) {
-        this.triggerName = triggerName;
+    public void setTriggerId(int triggerId) {
+        this.triggerId = triggerId;
     }
 
     public String getTriggerValue() {
@@ -36,11 +24,11 @@ public class TriggerList {
         this.triggerValue = triggerValue;
     }
 
-    public boolean isTriggerActive() {
+    public int getIsTriggerActive() {
         return isTriggerActive;
     }
 
-    public void setTriggerActive(boolean triggerActive) {
-        isTriggerActive = triggerActive;
+    public void setIsTriggerActive(int isTriggerActive) {
+        this.isTriggerActive = isTriggerActive;
     }
 }

@@ -16,6 +16,7 @@ import android.widget.ListView;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.AllUser;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.Role;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
 
 import java.util.ArrayList;
 
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 public class UserFragment extends Fragment {
 
 
-
+    User user;
 
     private OnFragmentInteractionListener mListener;
 
@@ -51,6 +52,8 @@ public class UserFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_user, container, false);
 
+
+
         ArrayList<AllUser> listOfUsers = new ArrayList<>();
         ArrayList<Role> listOfRoles = new ArrayList<>();
         final ListView listView = v.findViewById(R.id.adminUserList);
@@ -60,6 +63,7 @@ public class UserFragment extends Fragment {
         if(bundle != null){
             listOfUsers = (ArrayList)bundle.getSerializable("listOfUsers");
             listOfRoles = (ArrayList)bundle.getSerializable("listOfRoles");
+            user = (User)bundle.getSerializable("currentUser");
         }
 
         ArrayAdapter<AllUser> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.admin_user_list_item, R.id.adminUserListItem, listOfUsers);
@@ -75,6 +79,7 @@ public class UserFragment extends Fragment {
             public void onClick(View v) {
                 Intent i = new Intent(getContext(), CrudUser.class);
                 i.putExtra("userRole", finalListOfRoles);
+                i.putExtra("user", user);
                 startActivity(i);
             }
         });
@@ -88,6 +93,7 @@ public class UserFragment extends Fragment {
                 Intent i = new Intent(getContext(), CrudUser.class);
                 i.putExtra("userRole", finalListOfRoles);
                 i.putExtra("currentUser", clickedUser);
+                i.putExtra("user", user);
                 startActivity(i);
             }
         });
@@ -123,7 +129,7 @@ public class UserFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+
         void onFragmentInteraction(Uri uri);
     }
 }
