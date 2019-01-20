@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using restAPI.Controllers;
 using db.AcessControl;
 using restAPI.Helpers;
+using data.Json;
 
 namespace restAPI.Services
 {
     public interface IAccessControl
     {
         List<string> objectIO(data.Json.TriggerAccessDto inputs);
+        List<string> closeAll(List<TriggerAccessDto> inputs);
     }
 
     public class AccessControl : IAccessControl
@@ -29,6 +31,24 @@ namespace restAPI.Services
             _accessService = accessService;
             _objectService = objectService;
             _logger = logger;
+        }
+
+        public List<string> closeAll(List<TriggerAccessDto> inputs)
+        {
+            List<string> objectIOs = new List<string>();
+            for (int i = 0; i < inputs.Count; i++)
+            {
+
+                UserTrigger usTrg = _userService.getUserByTriggerType(inputs[i].Value, inputs[i].TriggerTypeName);
+                List<AcObject> objs = _objectService.getObjects(inputs[i].TriggerTypeName, inputs[i].ObjectName);
+                foreach (AcObject obj in objs)
+                {
+                    _logger.InsertEventLog(inputs[i].Value, usTrg.TrgtId, obj.ObjId, 6, usTrg.UsrId);
+                    objectIOs.Add(obj.ObjAction);
+                }
+            }
+
+            return objectIOs;
         }
         /// <summary>
         /// main logic for access control, and store results in event log. If access is valid then open object.

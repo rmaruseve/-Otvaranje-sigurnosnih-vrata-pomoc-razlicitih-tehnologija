@@ -17,7 +17,7 @@ using restAPI.Services;
 namespace restAPI.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     [ApiController]
     public class EventLogsController : ControllerBase
     {
@@ -42,7 +42,7 @@ namespace restAPI.Controllers
        
         // GET: api/EventLogs/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAcEventLog([FromRoute] int id)
+        public IActionResult GetAcEventLog([FromRoute] int id)
         {
             return Ok(JsonConvert.SerializeObject(_eventLogService.getEventLogs(id)));
         }

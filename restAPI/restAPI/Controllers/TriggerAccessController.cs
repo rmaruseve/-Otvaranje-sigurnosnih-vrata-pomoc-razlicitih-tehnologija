@@ -13,6 +13,7 @@ using restAPI.Helpers;
 using Microsoft.Extensions.Options;
 using System.Net.Http;
 using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace restAPI.Controllers
 {
@@ -37,16 +38,51 @@ namespace restAPI.Controllers
             _mapper = mapper;
             _accessControl = accessControl;
             _appSettings = appSettings.Value;
+
         }
 
         /// <summary>
+        /// Request to close all objects.
+        /// </summary>
+        /// <response code="400">return error message if there was an exception</response>
+        // POST api/TriggerAccessController/Close
+        [AllowAnonymous]
+        [HttpPost("Close")]
+        [ProducesResponseType(typeof(List<string>), 200)]
+        public IActionResult CloseAll([FromBody] List<TriggerAccessDto> req)
+        {
+            try
+            {
+                List<string> objs = _accessControl.closeAll(req);
+                var client = new HttpClient();
+                client.PostAsync("http://192.168.0.1:1880/api/close", new StringContent(JsonConvert.SerializeObject(
+                        new
+                        {
+                            objectAccess = objs
+                        }),
+                    Encoding.UTF8, "application/json"));
+
+                
+
+                return Ok("Success");
+                
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new {message = ex.Message});
+            }
+        }
+    
+
+
+    /// <summary>
         /// Request to open object.
         /// </summary>
         /// <response code="400">return error message if there was an exception</response>  
         [HttpPost]
         [AllowAnonymous]
         [ProducesResponseType(typeof(List<string>), 200)]
-        public ActionResult<string> Get([FromBody] TriggerAccessDto req)
+        public ActionResult<string> Post([FromBody] TriggerAccessDto req)
         {
             try
             {
