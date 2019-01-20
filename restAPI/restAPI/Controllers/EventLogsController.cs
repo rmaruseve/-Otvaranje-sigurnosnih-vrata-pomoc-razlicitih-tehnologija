@@ -34,32 +34,12 @@ namespace restAPI.Controllers
 
         // GET: api/EventLogs
         [HttpGet]
-        public IEnumerable<AcEventLog> GetAcEventLog()
+        public IActionResult GetAcEventLog()
         {
-            return _context.AcEventLog;
+            return Ok(JsonConvert.SerializeObject(_eventLogService.getEventLogs()));
         }
 
-        //// GET: api/EventLogs
-        //[HttpGet]
-        //public ActionResult<string> GetAcEventLog([FromBody] FilterEventLogDto req)
-        //{
-        //    try
-        //    {
-        //        List<AcEventLog> evLog = _eventLogService.getEventLogs(req);
-        //        return Ok(
-        //            JsonConvert.SerializeObject(new
-        //            {
-        //                eventLog = evLog
-        //            })
-        //        );
-                
-        //    }
-        //    catch (AppException ex)
-        //    {
-        //        return BadRequest(new {message = ex.Message});
-        //    }
-        //}
-
+       
         // GET: api/EventLogs/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAcEventLog([FromRoute] int id)

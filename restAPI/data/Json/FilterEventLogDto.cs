@@ -7,6 +7,7 @@ namespace data.Json
     public class FilterEventLogDto
     {
         public int EventLogId { get; set; }
+        public DateTime Date { get; set; }
         public string TriggerValue { get; set; }
         public string UserName { get; set; }
         public string UserSurname { get; set; }
