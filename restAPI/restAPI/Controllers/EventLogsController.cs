@@ -33,18 +33,29 @@ namespace restAPI.Controllers
         }
 
         // GET: api/EventLogs
+        /// <summary>
+        /// return all events
+        /// </summary>
+        /// <returns></returns>
+        [Produces("application/json")]
         [HttpGet]
         public IActionResult GetAcEventLog()
         {
-            return Ok(JsonConvert.SerializeObject(_eventLogService.getEventLogs(null)));
+            return Ok(_eventLogService.getEventLogs(null));
         }
 
-       
+
         // GET: api/EventLogs/5
+        /// <summary>
+        /// return all events
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Produces("application/json")]
         [HttpGet("{id}")]
         public IActionResult GetAcEventLog([FromRoute] int id)
         {
-            return Ok(JsonConvert.SerializeObject(_eventLogService.getEventLogs(id)));
+            return Ok(_eventLogService.getEventLogs(id));
         }
 
         // PUT: api/EventLogs/5

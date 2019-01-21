@@ -11,7 +11,10 @@ namespace restAPI.Services
     public interface IAccessService
     {
         List<AcAccess> checkAccess(int? userId, int objId);
-        //List<AcAccess> Create(UserDto usrDto, int openingCounter, int usrId);
+        List<AcAccess> GetByUser(int id);
+        void Create(AccessDto acs);
+        void Update(AccessDto acs);
+        void Delete(int id);
     }
 
     public class AccessService : IAccessService
@@ -34,24 +37,53 @@ namespace restAPI.Services
             return access;
         }
 
-        /*public List<AcAccess> Create(UserDto usrDto, int openingCounter, int usrId)
+        public List<AcAccess> GetByUser(int id)
         {
-            List<AcAccess> newAcs = new List<AcAccess>();
-            foreach(int objId in usrDto.Objs)
+            List<AcAccess> acss = (
+                from acs in _context.AcAccess
+                where acs.AcsUsrId == id
+                select acs
+            ).ToList();
+            return acss;
+        }
+
+        public void Create(AccessDto acs)
+        {
+            _context.AcAccess.Add(new AcAccess
             {
-                AcAccess newAc = new AcAccess
-                {
-                    AcsValidFrom = usrDto.AccessFrom,
-                    AcsValidTo = usrDto.AccessTo != null ? usrDto.AccessTo : DateTime.MaxValue,
-                    AcsOpeningCounter = openingCounter,
-                    AcsUsrId = usrId,
-                    AcsObjId = objId
-                };
-                _context.AcAccess.Add(newAc);
-                newAcs.Add(newAc);
-            }
+                AcsValidFrom = acs.ValidFrom,
+                AcsValidTo = acs.ValidTo,
+                AcsOpeningCounter = acs.Counter != null ? acs.Counter : -1,
+                AcsUsrId = acs.UsrId,
+                AcsProId = acs.ProId,
+                AcsObjId = acs.ObjId
+            });
             _context.SaveChanges();
-            return newAcs;
-        }*/
+        }
+
+        public void Update(AccessDto acs)
+        {
+            _context.AcAccess.Update(new AcAccess
+            {
+                AcsId = acs.AcsId,
+                AcsValidFrom = acs.ValidFrom,
+                AcsValidTo = acs.ValidTo,
+                AcsOpeningCounter = acs.Counter != null ? acs.Counter : -1,
+                AcsUsrId = acs.UsrId,
+                AcsProId = acs.ProId,
+                AcsObjId = acs.ObjId
+            });
+            _context.SaveChanges();
+        }
+
+        public void Delete(int id)
+        {
+            var acs = _context.AcAccess.Find(id);
+            if (acs != null)
+            {
+                _context.AcAccess.Remove(acs);
+                _context.SaveChanges();
+            }
+        }
     }
 }

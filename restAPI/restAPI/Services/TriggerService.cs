@@ -11,7 +11,10 @@ namespace restAPI.Services
     {
         void Create(int userId, string triggerType, string triggerValue, byte trgActivity);
         void Create(int userId, int triggerTypeId, string triggerValue, byte trgActivity);
+        void Update(int userId, int triggerTypeId, string triggerValue, byte trgActivity);
         List<AcTrigger> GetByValue(string triggerValue);
+        List<AcTrigger> GetByUser(int id);
+        void Delete(int id);
     }
 
     public class TriggerService : ITriggerService
@@ -34,6 +37,17 @@ namespace restAPI.Services
             return trgs;
         }
 
+        public List<AcTrigger> GetByUser(int id)
+        {
+            List<AcTrigger> trgs = (
+                from trg in _context.AcTrigger
+                join trgt in _context.AcTriggerType on trg.TrgTrtId equals trgt.TrtId
+                where trg.TrgUsrId == id
+                select trg
+            ).ToList();
+            return trgs;
+        }
+
         public void Create(int userId, string triggerType, string triggerValue, byte trgActivity)
         {
             _context.AcTrigger.Add(new AcTrigger{
@@ -47,18 +61,25 @@ namespace restAPI.Services
 
         public void Create(int userId, int triggerTypeId, string triggerValue, byte trgActivity)
         {
-            _context.AcTrigger.Add(new AcTrigger
+            List<AcTrigger> trgs = this.GetByValue(triggerValue);
+            if (trgs.Count > 0)
+                throw new AppException("Phone number already exists.");
+            AcTrigger trg = new AcTrigger
             {
                 TrgUsrId = userId,
                 TrgTrtId = triggerTypeId,
                 TrgValue = triggerValue,
                 TrgActivity = trgActivity
-            });
+            };
+            _context.AcTrigger.Add(trg);
             _context.SaveChanges();
         }
 
         public void Update(int userId, int triggerTypeId, string triggerValue, byte trgActivity)
         {
+            List<AcTrigger> trgs = this.GetByValue(triggerValue);
+            if (trgs.Count > 0)
+                throw new AppException("Phone number already exists.");
             AcTrigger trg = new AcTrigger
             {
                 TrgUsrId = userId,

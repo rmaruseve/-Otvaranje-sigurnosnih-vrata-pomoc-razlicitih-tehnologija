@@ -104,24 +104,32 @@ namespace restAPI.Controllers
         {
             // map dto to entity
             var userReq = _mapper.Map<AcUser>(userDto);
+            string newPassword;
+            if (userDto.GenPassword)
+            {
+                newPassword = Functions.RandString(8);
+            }
+            else
+            {
+                newPassword = userDto.LoginPassword;
+            }
             try
             {
-                // if admin
-                string currentId = User.FindFirst("current_user_id")?.Value;
-                if(currentId != null)
-                {
-                    var userId = int.Parse(currentId);
-                    AcUser currentUsr = _userService.GetById(userId);
-                }
+                // check if admin
+                //string currentId = User.FindFirst("current_user_id")?.Value;
+                //if(currentId != null)
+                //{
+                //    var userId = int.Parse(currentId);
+                //    AcUser currentUsr = _userService.GetById(userId);
+                //}
                 //if (currentUsr.UsrRol.RolName != "Administrator")
                 //    throw new AppException("User not admin.");
                 // save 
                 AcUser user = new AcUser();
                 if(userDto.UsrEmail != null)
                 {
-                    string randPassword = Functions.RandString(8);
-                    user = _userService.Create(userReq, randPassword);
-                    _mailService.Send(user.UsrEmail, "Your password is: " + randPassword, "Mobilisis User Account");
+                    user = _userService.Create(userReq, newPassword);
+                    if(userDto.GenPassword) _mailService.Send(user.UsrEmail, "Your password is: " + newPassword, "Mobilisis User Account");
 
                 } else
                 {
@@ -129,8 +137,7 @@ namespace restAPI.Controllers
                     if (trgs.Count > 0)
                         throw new AppException("Phone number already exists.");
                     userReq.UsrEmail = userDto.PhoneNumber;
-                    string randPassword = Functions.RandString(8);
-                    user = _userService.Create(userReq, randPassword);
+                    user = _userService.Create(userReq, newPassword);
                     _triggerService.Create(user.UsrId, "Sms", userDto.PhoneNumber, 1);
                     _triggerService.Create(user.UsrId, "Phone", userDto.PhoneNumber, 1);
                     // send sms
@@ -156,10 +163,7 @@ namespace restAPI.Controllers
         {
             try
             {
-                var userId = int.Parse(User.FindFirst("current_user_id")?.Value);
-                AcUser user = _userService.GetById(userId);
-                if (user.UsrRolId != 1)
-                    throw new AppException("User not admin.");
+                //check if admin
                 var users = _userService.GetAll();
                 var userDtos = _mapper.Map<IList<UserDto>>(users);
                 return Ok(userDtos);
@@ -215,10 +219,7 @@ namespace restAPI.Controllers
             var userReq = _mapper.Map<AcUser>(userDto);
             try
             {
-                var userId = int.Parse(User.FindFirst("current_user_id")?.Value);
-                AcUser user = _userService.GetById(userId);
-                if (user.UsrRol.RolName == "Administrator")
-                    throw new AppException("User not admin.");
+                //check if admin
                 // save 
                 _userService.Update(userReq, userDto.LoginPassword);
                 return Ok();

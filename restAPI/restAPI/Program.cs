@@ -30,6 +30,13 @@ namespace restAPI
                     config.SetBasePath(Directory.GetCurrentDirectory());
                     config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
                 })
+                .ConfigureLogging((hostingContext, logging) =>
+                {
+                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                    logging.AddConsole();
+                    logging.AddDebug();
+                    logging.AddEventSourceLogger();
+                })
                 .UseUrls("http://0.0.0.0:5000/")
                 .Build();
     }
