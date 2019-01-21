@@ -9,6 +9,6 @@ namespace db.AcessControl
         public int? UsrId { get; set; }
         public int TrgtId { get; set; }
         public byte? TrgActivity { get; set; }
-        public byte UsrActivity { get; set; }
+        public byte? UsrActivity { get; set; }
     }
 }

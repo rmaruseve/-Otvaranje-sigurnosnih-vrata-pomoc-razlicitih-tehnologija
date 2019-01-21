@@ -102,7 +102,10 @@ namespace restAPI.Services
                     _logger.InsertEventLog(inputs.Value, usTrg.TrgtId, obj.ObjId, 7, usTrg.UsrId);
                 }
             }
-
+            if(objectIOs.Count == 0)
+            {
+                throw new AppException("User has no access.");
+            }
             return objectIOs;
         }
     }
