@@ -12,11 +12,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
@@ -24,7 +22,6 @@ import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologij
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    String token;
     User currentUser;
     NavigationView navigationView;
 
@@ -35,7 +32,6 @@ public class MainActivity extends AppCompatActivity
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            token = extras.getString("token");
             currentUser = (User) extras.getSerializable("currentUser");
         }
 
@@ -47,7 +43,7 @@ public class MainActivity extends AppCompatActivity
             navigationView = findViewById(R.id.nav_view);
             Menu nav_Menu = navigationView.getMenu();
             nav_Menu.findItem(R.id.nav_admin_options).setVisible(false);
-            //TODO: show slider on bottom, add retrofit
+            //TODO: show slider on bottom, add retrofit when slided
             //slideToActView.resetSlider(); ide na kraj retrofit on response za slider
         }
 
@@ -55,7 +51,6 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction t = fragmentManager.beginTransaction();
         ObjectListShow objectListShow = new ObjectListShow();
         Bundle bundle = new Bundle();
-        bundle.putString("token", token);
         bundle.putSerializable("user", currentUser);
         objectListShow.setArguments(bundle);
         t.add(R.id.objectListShowFrame, objectListShow);
@@ -120,27 +115,23 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home)
+        if (id == R.id.nav_profile)
         {
-
-        }
-        else if (id == R.id.nav_profile)
-        {
+            Intent i = new Intent(MainActivity.this, UserProfile.class);
+            i.putExtra("user",currentUser);
+            startActivity(i);
 
         }
         else if (id == R.id.nav_map)
         {
-
+            //TODO: modularnost putem slike
         }
         else if (id == R.id.nav_admin_options)
         {
             Intent i = new Intent(MainActivity.this, AdminMenu.class);
-            i.putExtra("token",token);
             i.putExtra("currentUser",currentUser);
             startActivity(i);
         }
-
-        //TODO: add logout
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

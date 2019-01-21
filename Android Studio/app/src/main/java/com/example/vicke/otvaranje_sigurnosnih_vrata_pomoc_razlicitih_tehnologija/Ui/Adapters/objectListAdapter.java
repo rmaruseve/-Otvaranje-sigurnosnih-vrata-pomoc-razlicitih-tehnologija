@@ -34,7 +34,6 @@ public class objectListAdapter extends BaseExpandableListAdapter {
     private List<String> header_titles;
     private HashMap<String, SlideToActView> child_titles;
     private Context ctx;
-    private String token;
     private User activeUser;
 
     Retrofit.Builder builder = new Retrofit.Builder()
@@ -46,12 +45,11 @@ public class objectListAdapter extends BaseExpandableListAdapter {
     ApiInterface apiInterface = retrofit.create(ApiInterface.class);
 
 
-    public objectListAdapter(Context ctx, List<String> header_titles, HashMap<String, SlideToActView> child_titles, String token, User user, List<facilityObject> listOfObjects)
+    public objectListAdapter(Context ctx, List<String> header_titles, HashMap<String, SlideToActView> child_titles, User user, List<facilityObject> listOfObjects)
     {
         this.ctx = ctx;
         this.child_titles = child_titles;
         this.header_titles = header_titles;
-        this.token = token;
         this.activeUser = user;
         this.listOfObjects = listOfObjects;
     }
@@ -132,7 +130,7 @@ public class objectListAdapter extends BaseExpandableListAdapter {
 
                 ObjectOpen objectOpen = new ObjectOpen(activeUser.getEmail(), header_titles.get(groupPosition));
 
-                Call<ResponseBody> call = apiInterface.openObject(token,objectOpen);
+                Call<ResponseBody> call = apiInterface.openObject(activeUser.getToken(),objectOpen);
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

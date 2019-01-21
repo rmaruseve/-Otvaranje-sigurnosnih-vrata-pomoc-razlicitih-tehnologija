@@ -33,6 +33,8 @@
         <activity android:name=".Ui.AdminMenu" />
         <activity android:name=".Ui.CrudUser" />
         <activity android:name=".Ui.CrudTrigger"></activity>
+        <activity android:name=".Ui.CrudProfile"></activity>
+        <activity android:name=".Ui.UserProfile"></activity>
     </application>
 
 </manifest>
