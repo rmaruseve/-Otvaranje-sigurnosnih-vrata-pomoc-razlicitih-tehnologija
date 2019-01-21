@@ -11,6 +11,8 @@ namespace data.Json
         public string UsrSurname { get; set; }
         public string UsrEmail { get; set; }
         public byte UsrActivity { get; set; }
+        public int UsrRolId { get; set; }
+        public bool GenPassword { get; set; }
         public string LoginPassword { get; set; }
         public string PhoneNumber { get; set; }
     }
