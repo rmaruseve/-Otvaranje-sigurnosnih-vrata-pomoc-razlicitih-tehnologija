@@ -38,7 +38,7 @@ public class UserProfile extends AppCompatActivity {
         firstName.setText(user.getFirstName());
         lastName.setText(user.getLastName());
         email.setText(user.getEmail());
-        role.setText(user.getRole());
+        //role.setText(user.getRole());
 
         profileBack = findViewById(R.id.profileBack);
 

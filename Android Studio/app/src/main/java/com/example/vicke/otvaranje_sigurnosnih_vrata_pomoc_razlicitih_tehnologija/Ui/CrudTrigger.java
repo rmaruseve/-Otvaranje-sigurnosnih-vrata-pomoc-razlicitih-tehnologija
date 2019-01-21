@@ -7,12 +7,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
-import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.Adapters.TriggerListAdapter;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.CrudUserDataClass;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.EventLogData;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.TriggerList;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.TriggerType;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
@@ -29,6 +30,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CrudTrigger extends AppCompatActivity {
 
+    ArrayAdapter<TriggerList> triggerListAdapter;
+    ListView listViewTrigger;
+
     User user;
     CrudUserDataClass crudUser;
 
@@ -36,10 +40,9 @@ public class CrudTrigger extends AppCompatActivity {
     Button next;
 
     ListView listView;
-    TriggerListAdapter arrayAdapter;
 
-    private ArrayList<TriggerList> listData;
-    private ArrayList<TriggerType> listofTriggerNames;
+    ArrayList<TriggerList> listData = new ArrayList<>();
+    ArrayList<TriggerType> listofTriggerNames = new ArrayList<>();
 
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(ApiInterface.BASE_URL)
@@ -58,7 +61,7 @@ public class CrudTrigger extends AppCompatActivity {
         addNew = findViewById(R.id.addNewTrigger);
         next = findViewById(R.id.triggerNext);
 
-
+        listViewTrigger = findViewById(R.id.triggerListView);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -74,13 +77,13 @@ public class CrudTrigger extends AppCompatActivity {
                 listofTriggerNames = response.body();
 
                 //drugi retrofit poziv za listu trigger typeova(listData)
-                Call<ArrayList<TriggerList>> call2 = apiInterface.getTriggerList(user.getToken());
+                Call<ArrayList<TriggerList>> call2 = apiInterface.getTriggerList(user.getToken(), crudUser.getUsrId());
                 call2.enqueue(new Callback<ArrayList<TriggerList>>() {
                     @Override
                     public void onResponse(Call<ArrayList<TriggerList>> call, Response<ArrayList<TriggerList>> response) {
                         listData = response.body();
-                        arrayAdapter = new TriggerListAdapter(CrudTrigger.this, listofTriggerNames, listData);
-                        listView.setAdapter(arrayAdapter);
+                        triggerListAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.trigger_list_item, R.id.triggerListItem, listData);
+                        listViewTrigger.setAdapter(triggerListAdapter);
                     }
                     @Override
                         public void onFailure(Call<ArrayList<TriggerList>> call, Throwable t) {
@@ -102,6 +105,7 @@ public class CrudTrigger extends AppCompatActivity {
                 i.putExtra("user", user);
                 i.putExtra("listDataItem", (Serializable) listData.get(position));
                 i.putExtra("listOfTriggerNames", listofTriggerNames);
+                i.putExtra("editUser", crudUser);
                 startActivity(i);
             }
         });
@@ -110,9 +114,10 @@ public class CrudTrigger extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 listData.add(new TriggerList());
-                arrayAdapter.notifyDataSetChanged();
+                triggerListAdapter.notifyDataSetChanged();
                 Intent i = new Intent(getBaseContext(), CrudTriggerSecondary.class);
                 i.putExtra("user", user);
+                i.putExtra("editUser", crudUser);
                 i.putExtra("listOfTriggerNames", listofTriggerNames);
                 startActivity(i);
             }
@@ -137,10 +142,10 @@ public class CrudTrigger extends AppCompatActivity {
             if(resultCode == Activity.RESULT_OK)
             {
                 TriggerList result = (TriggerList) data.getSerializableExtra("result");
-                listData.get(listData.size() - 1).setTriggerId(result.getTriggerId());
-                listData.get(listData.size() - 1).setTriggerValue(result.getTriggerValue());
-                listData.get(listData.size() - 1).setIsTriggerActive(result.getIsTriggerActive());
-                arrayAdapter.notifyDataSetChanged();
+                listData.get(listData.size() - 1).setTrgUsrId(result.getTrgUsrId());
+                listData.get(listData.size() - 1).setTrgValue(result.getTrgValue());
+                listData.get(listData.size() - 1).setTrgActivity(result.getTrgActivity());
+                triggerListAdapter.notifyDataSetChanged(); //TODO: ne dela kak treba
             }
         }
     }

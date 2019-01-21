@@ -4,31 +4,45 @@ import java.io.Serializable;
 
 public class TriggerList implements Serializable {
 
-    private int triggerId;
-    private String triggerValue;
-    private int isTriggerActive;
+    private int trgUsrId;
+    private String trgValue;
+    private int trgTrtId;
+    private int trgActivity;
 
-    public int getTriggerId() {
-        return triggerId;
+    public int getTrgUsrId() {
+        return trgUsrId;
     }
 
-    public void setTriggerId(int triggerId) {
-        this.triggerId = triggerId;
+    public void setTrgUsrId(int trgUsrId) {
+        this.trgUsrId = trgUsrId;
     }
 
-    public String getTriggerValue() {
-        return triggerValue;
+    public String getTrgValue() {
+        return trgValue;
     }
 
-    public void setTriggerValue(String triggerValue) {
-        this.triggerValue = triggerValue;
+    public void setTrgValue(String trgValue) {
+        this.trgValue = trgValue;
     }
 
-    public int getIsTriggerActive() {
-        return isTriggerActive;
+    public int getTrgActivity() {
+        return trgActivity;
     }
 
-    public void setIsTriggerActive(int isTriggerActive) {
-        this.isTriggerActive = isTriggerActive;
+    public void setTrgActivity(int trgActivity) {
+        this.trgActivity = trgActivity;
+    }
+
+    public int getTrgTrtId() {
+        return trgTrtId;
+    }
+
+    public void setTrgTrtId(int trgTrtId) {
+        this.trgTrtId = trgTrtId;
+    }
+
+    @Override
+    public String toString() {
+        return trgValue + " | " + trgActivity;
     }
 }

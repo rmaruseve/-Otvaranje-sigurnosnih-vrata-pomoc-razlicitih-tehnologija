@@ -7,8 +7,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.EventLogData;
+
+import java.util.ArrayList;
+import java.util.EventListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,6 +47,19 @@ public class LogFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_log, container, false);
+
+        ArrayList<EventLogData> eventLogData = new ArrayList<>();
+        final ListView listViewLog = v.findViewById(R.id.logList);
+
+        Bundle bundle = this.getArguments();
+
+        if(bundle != null)
+        {
+            eventLogData = (ArrayList)bundle.getSerializable("logList");
+        }
+
+        ArrayAdapter<EventLogData> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.log_list_item, R.id.logListItem, eventLogData);
+        listViewLog.setAdapter(arrayAdapter);
 
         return v;
     }

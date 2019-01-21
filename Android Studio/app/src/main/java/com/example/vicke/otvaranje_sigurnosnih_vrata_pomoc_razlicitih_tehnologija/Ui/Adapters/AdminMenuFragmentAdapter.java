@@ -9,6 +9,7 @@ import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologij
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.LogFragment;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.UserFragment;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.AllUser;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.EventLogData;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.Role;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
 
@@ -21,14 +22,16 @@ public class AdminMenuFragmentAdapter extends FragmentStatePagerAdapter {
     int numberOfTabs;
     private List<AllUser> userList;
     private List<Role> roleList;
+    private List<EventLogData> eventLogData;
 
-    public AdminMenuFragmentAdapter(FragmentManager fm, int numberOfTabs, List<AllUser> userList, List<Role> roleList, User user)
+    public AdminMenuFragmentAdapter(FragmentManager fm, int numberOfTabs, List<AllUser> userList, List<Role> roleList, User user, List<EventLogData> eventLogData)
     {
         super(fm);
         this.numberOfTabs = numberOfTabs;
         this.userList = userList;
         this.roleList = roleList;
         this.user = user;
+        this.eventLogData = eventLogData;
     }
 
     @Override
@@ -38,6 +41,10 @@ public class AdminMenuFragmentAdapter extends FragmentStatePagerAdapter {
         {
             case 0:
                 LogFragment logFragment = new LogFragment();
+                Bundle bundleLog = new Bundle();
+                bundleLog.putSerializable("logList", (Serializable) eventLogData);
+                logFragment.setArguments(bundleLog);
+
                 return logFragment;
             case 1:
                 UserFragment userFragment = new UserFragment();

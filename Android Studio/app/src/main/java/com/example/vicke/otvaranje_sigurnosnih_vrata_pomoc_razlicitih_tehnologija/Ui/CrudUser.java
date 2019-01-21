@@ -41,7 +41,7 @@ public class CrudUser extends AppCompatActivity {
     private List<Role> listOfRoles;
     Role role;
     User user;
-    CrudUserDataClass crudUser;
+    CrudUserDataClass crudUser = new CrudUserDataClass();
     AllUser passedUser;
 
     CheckBox isActive;
