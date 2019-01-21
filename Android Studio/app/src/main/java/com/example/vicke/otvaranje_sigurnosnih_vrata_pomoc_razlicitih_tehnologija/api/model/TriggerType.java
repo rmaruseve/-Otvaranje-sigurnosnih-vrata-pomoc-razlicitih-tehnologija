@@ -4,27 +4,32 @@ import java.io.Serializable;
 
 public class TriggerType implements Serializable {
 
-    private int triggerTypeId;
-    private String triggerName;
+    private int trtId;
+    private String trtName;
 
     public TriggerType(int triggerTypeId, String triggerName) {
-        this.triggerTypeId = triggerTypeId;
-        this.triggerName = triggerName;
+        this.trtId = triggerTypeId;
+        this.trtName = triggerName;
     }
 
     public int getTriggerTypeId() {
-        return triggerTypeId;
+        return trtId;
     }
 
     public void setTriggerTypeId(int triggerTypeId) {
-        this.triggerTypeId = triggerTypeId;
+        this.trtId = triggerTypeId;
     }
 
     public String getTriggerName() {
-        return triggerName;
+        return trtName;
     }
 
     public void setTriggerName(String triggerName) {
-        this.triggerName = triggerName;
+        this.trtName = triggerName;
+    }
+
+    @Override
+    public String toString() {
+        return trtName;
     }
 }

@@ -15,6 +15,7 @@ import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.CrudUserDataClass;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.TriggerList;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.TriggerType;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
@@ -38,6 +39,8 @@ public class CrudTriggerSecondary extends AppCompatActivity {
     TriggerType spinnerSelected;
 
     boolean isNewTrigger = true;
+
+    CrudUserDataClass crudUser;
 
     Spinner spinner;
     EditText editText;
@@ -65,24 +68,27 @@ public class CrudTriggerSecondary extends AppCompatActivity {
 
         saveTrigger = findViewById(R.id.triggerButtonSave);
 
-        ArrayAdapter<TriggerType> adapter = new ArrayAdapter<TriggerType>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, triggerTypes);
-        adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+
 
         Bundle extras = getIntent().getExtras();
         if (extras != null)
         {
             user = (User) extras.getSerializable("user");
             triggerTypes = (ArrayList<TriggerType>) extras.getSerializable("listOfTriggerNames");
+            crudUser = (CrudUserDataClass) extras.getSerializable("editUser");
         }
+
+        ArrayAdapter<TriggerType> adapter = new ArrayAdapter<TriggerType>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, triggerTypes);
+        adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
 
         if (extras.getSerializable("listDataItem") != null)
         {
             triggerList = (TriggerList) extras.getSerializable("listDataItem");
             isNewTrigger = false;
-            spinner.setSelection(triggerList.getTriggerId() + 1);
-            editText.setText(triggerList.getTriggerValue());
-            if (triggerList.getIsTriggerActive() == 1)
+            spinner.setSelection(triggerList.getTrgUsrId() + 1);
+            editText.setText(triggerList.getTrgValue());
+            if (triggerList.getTrgActivity() == 1)
             {
                 checkBox.setChecked(true);
             }
@@ -110,15 +116,16 @@ public class CrudTriggerSecondary extends AppCompatActivity {
             public void onClick(View v) {
 
                 final TriggerList triggerListPOST = new TriggerList();
-                triggerListPOST.setTriggerId(spinnerSelected.getTriggerTypeId());
-                triggerListPOST.setTriggerValue(editText.getText().toString());
+                triggerListPOST.setTrgTrtId(spinnerSelected.getTriggerTypeId());
+                triggerListPOST.setTrgValue(editText.getText().toString());
+                triggerListPOST.setTrgUsrId(crudUser.getUsrId());
                 if (checkBox.isChecked())
                 {
-                    triggerListPOST.setIsTriggerActive(1);
+                    triggerListPOST.setTrgActivity(1);
                 }
                 else
                 {
-                    triggerListPOST.setIsTriggerActive(0);
+                    triggerListPOST.setTrgActivity(0);
                 }
 
 

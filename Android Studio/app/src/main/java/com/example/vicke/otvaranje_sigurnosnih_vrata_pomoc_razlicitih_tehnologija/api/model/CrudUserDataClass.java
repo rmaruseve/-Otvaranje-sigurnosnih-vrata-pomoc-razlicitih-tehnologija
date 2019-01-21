@@ -10,7 +10,7 @@ public class CrudUserDataClass implements Serializable {
     private String usrEmail;
     private int usrActivity;
     private int usrRolId;
-    private boolean generatePassword;
+    private boolean genPassword;
 
     public String getUsrName() {
         return usrName;
@@ -53,11 +53,11 @@ public class CrudUserDataClass implements Serializable {
     }
 
     public boolean isGeneratePassword() {
-        return generatePassword;
+        return genPassword;
     }
 
     public void setGeneratePassword(boolean generatePassword) {
-        this.generatePassword = generatePassword;
+        this.genPassword = generatePassword;
     }
 
     public int getUsrId() {

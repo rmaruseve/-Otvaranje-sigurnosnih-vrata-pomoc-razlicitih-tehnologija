@@ -35,6 +35,7 @@
         <activity android:name=".Ui.CrudTrigger"></activity>
         <activity android:name=".Ui.CrudProfile"></activity>
         <activity android:name=".Ui.UserProfile"></activity>
+        <activity android:name=".Ui.CrudTriggerSecondary"></activity>
     </application>
 
 </manifest>
