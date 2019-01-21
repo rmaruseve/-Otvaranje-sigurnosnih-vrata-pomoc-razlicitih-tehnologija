@@ -29,7 +29,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ObjectListShow extends Fragment {
 
 
-    private String token;
     private User user;
 
     private ExpandableListView expandableListView;
@@ -50,7 +49,6 @@ public class ObjectListShow extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
 
-        token = getArguments().getString("token");
         user = (User)getArguments().getSerializable("user");
         return inflater.inflate(R.layout.object_list_show, parent, false);
 
@@ -59,7 +57,7 @@ public class ObjectListShow extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
 
-        Call<List<facilityObject>> call = apiInterface.getObjects(token);
+        Call<List<facilityObject>> call = apiInterface.getObjects(user.getToken());
         call.enqueue(new Callback<List<facilityObject>>() {
             @Override
             public void onResponse(Call<List<facilityObject>> call, Response<List<facilityObject>> response) {
@@ -81,7 +79,7 @@ public class ObjectListShow extends Fragment {
                 }
 
 
-                objectListAdapter MyAdapter = new objectListAdapter(getContext(), Headings, ChildList, token, user, objectDataList);
+                objectListAdapter MyAdapter = new objectListAdapter(getContext(), Headings, ChildList, user, objectDataList);
                 expandableListView.setAdapter(MyAdapter);
 
             }

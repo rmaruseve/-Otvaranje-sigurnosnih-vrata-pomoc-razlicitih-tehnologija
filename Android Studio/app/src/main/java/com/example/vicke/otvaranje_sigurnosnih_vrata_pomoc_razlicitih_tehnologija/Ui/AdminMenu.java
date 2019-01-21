@@ -23,7 +23,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AdminMenu extends AppCompatActivity implements LogFragment.OnFragmentInteractionListener, UserFragment.OnFragmentInteractionListener, AddGuestFragment.OnFragmentInteractionListener {
 
-    String token;
     User currentUser = new User();
 
     List<AllUser> listOfUsers;
@@ -43,17 +42,16 @@ public class AdminMenu extends AppCompatActivity implements LogFragment.OnFragme
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            token = extras.getString("token");
             currentUser = (User) extras.getSerializable("currentUser");
         }
 
-        Call<List<AllUser>> call = apiInterface.getUsers(token);
+        Call<List<AllUser>> call = apiInterface.getUsers(currentUser.getToken());
         call.enqueue(new Callback<List<AllUser>>() {
             @Override
             public void onResponse(Call<List<AllUser>> call, Response<List<AllUser>> response) {
                 listOfUsers = response.body();
 
-                Call<List<Role>> callRoles = apiInterface.getRoles(token);
+                Call<List<Role>> callRoles = apiInterface.getRoles(currentUser.getToken());
                 callRoles.enqueue(new Callback<List<Role>>() {
                     @Override
                     public void onResponse(Call<List<Role>> call, Response<List<Role>> response) {

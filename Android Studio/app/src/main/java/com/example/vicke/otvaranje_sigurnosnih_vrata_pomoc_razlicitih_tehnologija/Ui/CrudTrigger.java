@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -123,6 +122,10 @@ public class CrudTrigger extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //TODO: idi na sljedeci ekran
+                //za sad ide natrag na admin meni, kasnije dodati da ide na crudProfile
+                Intent i = new Intent(CrudTrigger.this, AdminMenu.class);
+                i.putExtra("currentUser",user);
+                startActivity(i);
             }
         });
     }
