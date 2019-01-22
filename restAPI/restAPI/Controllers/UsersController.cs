@@ -72,7 +72,8 @@ namespace restAPI.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.UsrId.ToString())
+                    new Claim(ClaimTypes.Name, user.UsrId.ToString()),
+                    new Claim("current_user_rol_name", user.UsrRol.RolName)
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -116,15 +117,6 @@ namespace restAPI.Controllers
             try
             {
                 // check if admin
-                //string currentId = User.FindFirst("current_user_id")?.Value;
-                //if(currentId != null)
-                //{
-                //    var userId = int.Parse(currentId);
-                //    AcUser currentUsr = _userService.GetById(userId);
-                //}
-                //if (currentUsr.UsrRol.RolName != "Administrator")
-                //    throw new AppException("User not admin.");
-                // save 
                 AcUser user = new AcUser();
                 if(userDto.UsrEmail != null)
                 {

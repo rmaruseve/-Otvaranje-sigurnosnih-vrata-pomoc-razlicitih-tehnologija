@@ -32,15 +32,18 @@ namespace restAPI.Services
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
                 return null;
-            var user = _context.AcUser.Where(x => x.UsrEmail == email).SingleOrDefault();
-            //AcRole role = _context.AcRole.Where(x => x.RolId == user.UsrRolId).SingleOrDefault();
-            //AcUser user = (
-            //    from usr in _context.AcUser
-            //    join rol in _context.AcRole on usr.UsrRolId equals rol.RolId
-            //    where usr.UsrEmail == email
-            //    select usr
-            //).SingleOrDefault();
-            //Console.WriteLine(user.UsrRol?.RolName ?? "Without role");
+            var userWithRole = (
+                from usr in _context.AcUser
+                join rol in _context.AcRole on usr.UsrRolId equals rol.RolId
+                where usr.UsrEmail == email
+                select new
+                {
+                    User = usr,
+                    RolName = rol
+                }
+            ).SingleOrDefault();
+            AcUser user = userWithRole.User;
+            user.UsrRol = userWithRole.RolName;
 
             // check if username exists
             if (user == null)
