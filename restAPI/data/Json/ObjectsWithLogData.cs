@@ -4,7 +4,7 @@ using System.Text;
 
 namespace data.Json
 {
-    class ObjectsWithLogData
+    public class ObjectsWithLogData
     {
         public int ObjId { get; set; }
         public string ObjName { get; set; }

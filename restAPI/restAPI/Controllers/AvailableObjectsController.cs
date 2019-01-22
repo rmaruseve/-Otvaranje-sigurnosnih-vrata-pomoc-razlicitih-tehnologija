@@ -28,24 +28,25 @@ namespace restAPI.Controllers
             _context = context;
         }
 
-        
+
         /// <summary>
         /// return all objects
         /// </summary>
         /// <returns></returns>
         // GET: api/AvailableObjects
-        //[HttpGet]
-        //public IEnumerable<AcObject> GetAcObject()
-        //{
-        //    return _context.AcObject;
-        //}
+        [HttpGet]
+        public IEnumerable<AcObject> GetAcObject()
+        {
+            return _context.AcObject;
+        }
+        //TODO send objects with about last action from Log
         //[HttpGet]
         //public IActionResult GetAcObject()
         //{
-        //    AcObject req =  _context.AcObject;
-        //    return Ok(_eventLogService.getObjects(req));
+            
+        //    return Ok(_eventLogService.getObjects());
         //}
-        
+
 
 
 
