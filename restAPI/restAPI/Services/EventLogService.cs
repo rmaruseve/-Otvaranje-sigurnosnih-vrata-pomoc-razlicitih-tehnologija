@@ -25,8 +25,8 @@ namespace restAPI.Services
             List <FilterEventLogDto> eventLogs = (
                 from evl in _context.AcEventLog
                 join evs in _context.AcEventStatus on evl.EvlEvsId equals evs.EvsId
-                join obj in _context.AcObject on evl.EvlObjId equals obj.ObjId
-                join usr in _context.AcUser on evl.EvlUsrId equals usr.UsrId
+                join obj1 in _context.AcObject on evl.EvlObjId equals obj1.ObjId into AcObject from obj in AcObject.DefaultIfEmpty()
+                join usr1 in _context.AcUser on evl.EvlUsrId equals usr1.UsrId into AcUser from usr in AcUser.DefaultIfEmpty() 
                 join trt in _context.AcTriggerType on evl.EvlTrtId equals trt.TrtId
                 where id == null || evl.EvlUsrId==id 
                 select new FilterEventLogDto
@@ -40,7 +40,7 @@ namespace restAPI.Services
                     ObjectName = obj.ObjName,
                     EventStatusName = evs.EvsName
                 }
-            ).ToList();
+            ).OrderByDescending(x => x.Date).ToList();
 
             return eventLogs;
         }

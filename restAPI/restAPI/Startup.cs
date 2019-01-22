@@ -18,6 +18,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using System.Reflection;
 using System.IO;
 using System;
+using System.Collections.Generic;
 
 namespace restAPI
 {

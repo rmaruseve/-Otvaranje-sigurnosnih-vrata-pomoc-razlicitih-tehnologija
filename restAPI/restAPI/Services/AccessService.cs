@@ -20,10 +20,12 @@ namespace restAPI.Services
     public class AccessService : IAccessService
     {
         private mydbContext _context;
+        private IMailService _mailService;
 
-        public AccessService(mydbContext context)
+        public AccessService(mydbContext context, IMailService mailService)
         {
             _context = context;
+            _mailService = mailService;
         }
 
         public List<AcAccess> checkAccess(int? userId, int objId)

@@ -1,10 +1,13 @@
 ﻿using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using restAPI.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Mail;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace restAPI.Services
@@ -12,6 +15,7 @@ namespace restAPI.Services
     public interface IMailService
     {
         int Send(string reciever, string body, string subject);
+        int SendSMS(string number, string body);
     }
 
     public class MailService : IMailService
@@ -36,6 +40,18 @@ namespace restAPI.Services
             mailMessage.Body = body;
             mailMessage.Subject = subject;
             client.Send(mailMessage);
+            return 1;
+        }
+
+        public int SendSMS(string number, string body)
+        {
+            var client = new HttpClient();
+            client.PostAsync("http://192.168.0.1:1880/api/gotAccess", new StringContent(JsonConvert.SerializeObject(new
+            {
+                phoneNumber = number,
+                msg = body
+            }),
+            Encoding.UTF8, "application/json"));
             return 1;
         }
     }

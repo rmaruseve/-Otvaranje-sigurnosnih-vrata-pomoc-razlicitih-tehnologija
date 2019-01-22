@@ -63,7 +63,7 @@ namespace restAPI.Services
         {
             List<AcTrigger> trgs = this.GetByValue(triggerValue);
             if (trgs.Count > 0)
-                throw new AppException("Phone number already exists.");
+                throw new AppException("Trigger already exists.");
             AcTrigger trg = new AcTrigger
             {
                 TrgUsrId = userId,
@@ -79,7 +79,7 @@ namespace restAPI.Services
         {
             List<AcTrigger> trgs = this.GetByValue(triggerValue);
             if (trgs.Count > 0)
-                throw new AppException("Phone number already exists.");
+                throw new AppException("Trigger already exists.");
             AcTrigger trg = new AcTrigger
             {
                 TrgUsrId = userId,
