@@ -34,7 +34,7 @@
                 android:hint="Email"
                 android:drawableLeft="@drawable/profile"
                 android:drawablePadding="15dp"
-                android:text="user7"/>
+                android:text="karlo.vuljanko@gmail.com"/>
         </android.support.design.widget.TextInputLayout>
 
         <!--  Password Label -->

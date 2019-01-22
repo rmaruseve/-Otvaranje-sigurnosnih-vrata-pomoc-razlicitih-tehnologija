@@ -79,6 +79,35 @@ public class EventLogData implements Serializable {
 
     @Override
     public String toString() {
-        return userName + " " + userSurname + " | " + triggerName + " -- " + triggerValue + " | " + objectName + " | " + eventStatusName;
+        String str = "";
+        if (userName != null)
+        {
+            str += "User: " + userName + " ";
+        }
+        if (userSurname != null)
+        {
+            str += userSurname + "\n";
+        }
+        if (triggerName != null)
+        {
+            str += triggerName + " -> ";
+        }
+        if (triggerValue != null)
+        {
+            str += triggerValue + "\n";
+        }
+        if (objectName != null)
+        {
+            str += "Object name: " + objectName + "\n";
+        }
+        if (eventStatusName != null)
+        {
+            str += "Status: " + eventStatusName + "\n";
+        }
+        if (date != null)
+        {
+            str+= "Date: " + date;
+        }
+        return str;
     }
 }

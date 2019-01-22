@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.CrudTriggerListItemData;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.CrudUserDataClass;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.EventLogData;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.TriggerList;
@@ -30,7 +31,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CrudTrigger extends AppCompatActivity {
 
-    ArrayAdapter<TriggerList> triggerListAdapter;
+    ArrayAdapter<CrudTriggerListItemData> triggerListAdapter;
     ListView listViewTrigger;
 
     User user;
@@ -40,6 +41,8 @@ public class CrudTrigger extends AppCompatActivity {
     Button next;
 
     ListView listView;
+
+    ArrayList<CrudTriggerListItemData> triggerDatForList = new ArrayList<>();
 
     ArrayList<TriggerList> listData = new ArrayList<>();
     ArrayList<TriggerType> listofTriggerNames = new ArrayList<>();
@@ -82,7 +85,11 @@ public class CrudTrigger extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<ArrayList<TriggerList>> call, Response<ArrayList<TriggerList>> response) {
                         listData = response.body();
-                        triggerListAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.trigger_list_item, R.id.triggerListItem, listData);
+                        for(int i = 0; i < listData.size(); i++)
+                        {
+                            triggerDatForList.add(new CrudTriggerListItemData(listofTriggerNames.get(listData.get(i).getTrgTrtId()-1).getTriggerName(), listData.get(i).getTrgValue(), listData.get(i).getTrgActivity()));
+                        }
+                        triggerListAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.trigger_list_item, R.id.triggerListItem, triggerDatForList);
                         listViewTrigger.setAdapter(triggerListAdapter);
                     }
                     @Override
@@ -103,10 +110,10 @@ public class CrudTrigger extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(getBaseContext(), CrudTriggerSecondary.class);
                 i.putExtra("user", user);
-                i.putExtra("listDataItem", (Serializable) listData.get(position));
+                i.putExtra("listDataItem", listData.get(position));
                 i.putExtra("listOfTriggerNames", listofTriggerNames);
                 i.putExtra("editUser", crudUser);
-                startActivity(i);
+                startActivityForResult(i, 2);
             }
         });
 
@@ -119,7 +126,7 @@ public class CrudTrigger extends AppCompatActivity {
                 i.putExtra("user", user);
                 i.putExtra("editUser", crudUser);
                 i.putExtra("listOfTriggerNames", listofTriggerNames);
-                startActivity(i);
+                startActivityForResult(i, 2);
             }
         });
 
@@ -137,16 +144,16 @@ public class CrudTrigger extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == 1)
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 2)
         {
-            if(resultCode == Activity.RESULT_OK)
-            {
                 TriggerList result = (TriggerList) data.getSerializableExtra("result");
                 listData.get(listData.size() - 1).setTrgUsrId(result.getTrgUsrId());
                 listData.get(listData.size() - 1).setTrgValue(result.getTrgValue());
                 listData.get(listData.size() - 1).setTrgActivity(result.getTrgActivity());
-                triggerListAdapter.notifyDataSetChanged(); //TODO: ne dela kak treba
-            }
+                listViewTrigger.setAdapter(null);
+                listViewTrigger.setAdapter(triggerListAdapter);
         }
     }
 }

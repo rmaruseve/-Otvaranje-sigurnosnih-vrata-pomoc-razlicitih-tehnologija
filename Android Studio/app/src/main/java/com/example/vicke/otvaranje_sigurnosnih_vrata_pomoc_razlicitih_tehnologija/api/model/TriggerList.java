@@ -42,7 +42,8 @@ public class TriggerList implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return trgValue + " | " + trgActivity;
+    public String toString()
+    {
+        return  "Trigger value: " + trgValue + "\n" + "Trigger activity: " + trgActivity;
     }
 }

@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity
             navigationView = findViewById(R.id.nav_view);
             Menu nav_Menu = navigationView.getMenu();
             nav_Menu.findItem(R.id.nav_admin_options).setVisible(false);
-            //TODO: show slider on bottom, add retrofit when slided
+            //TODO: show slider on bottom only for admin, add retrofit when slided
             //slideToActView.resetSlider(); ide na kraj retrofit on response za slider
         }
 

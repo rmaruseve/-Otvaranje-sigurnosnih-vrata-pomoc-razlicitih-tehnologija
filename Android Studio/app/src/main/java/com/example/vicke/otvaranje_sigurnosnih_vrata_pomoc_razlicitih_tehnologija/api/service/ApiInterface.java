@@ -9,7 +9,7 @@ import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologij
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.TriggerList;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.TriggerType;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
-import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.facilityObject;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.FacilityObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +24,10 @@ import retrofit2.http.Query;
 
 public interface ApiInterface {
 
-    String BASE_URL = "http://192.168.43.195:5000";
+    String BASE_URL = "http://192.168.1.5:5000";
 
     @GET("/api/AvailableObjects")
-    Call<List<facilityObject>> getObjects(@Header("Authorization") String authToken);
+    Call<List<FacilityObject>> getObjects(@Header("Authorization") String authToken);
 
     @POST("/api/triggeraccess")
     Call<ResponseBody> openObject(@Header("Authorization") String authToken,@Body ObjectOpen objectOpen);

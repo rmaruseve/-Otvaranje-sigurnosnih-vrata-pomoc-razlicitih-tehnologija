@@ -24,8 +24,7 @@
             android:id="@+id/input_trigger_value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textCapWords"
-            android:hint="Trigger value" />
+            android:inputType="textCapWords" />
     </android.support.design.widget.TextInputLayout>
 
     <CheckBox
