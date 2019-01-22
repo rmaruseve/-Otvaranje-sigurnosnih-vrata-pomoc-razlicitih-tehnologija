@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using db.Db;
 using Microsoft.AspNetCore.Authorization;
+using restAPI.Services;
 
 namespace restAPI.Controllers
 {
@@ -17,20 +18,36 @@ namespace restAPI.Controllers
     {
         private readonly mydbContext _context;
 
-        public AvailableObjectsController(mydbContext context)
+        private IEventLogService _eventLogService;
+
+        public AvailableObjectsController(
+            IEventLogService eventLogService
+            , mydbContext context)
         {
+            _eventLogService = eventLogService;
             _context = context;
         }
+
+        
         /// <summary>
         /// return all objects
         /// </summary>
         /// <returns></returns>
         // GET: api/AvailableObjects
-        [HttpGet]
-        public IEnumerable<AcObject> GetAcObject()
-        {
-            return _context.AcObject;
-        }
+        //[HttpGet]
+        //public IEnumerable<AcObject> GetAcObject()
+        //{
+        //    return _context.AcObject;
+        //}
+        //[HttpGet]
+        //public IActionResult GetAcObject()
+        //{
+        //    AcObject req =  _context.AcObject;
+        //    return Ok(_eventLogService.getObjects(req));
+        //}
+        
+
+
 
         // GET: api/AcObjects/5
         [HttpGet("{id}")]
