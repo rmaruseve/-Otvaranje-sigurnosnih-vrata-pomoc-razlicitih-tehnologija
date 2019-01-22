@@ -3,16 +3,18 @@ package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologi
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.ObjectOpen;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
-import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.facilityObject;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.FacilityObject;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.service.ApiInterface;
 import com.ncorti.slidetoact.SlideToActView;
 
@@ -30,7 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class objectListAdapter extends BaseExpandableListAdapter {
 
-    private List<facilityObject> listOfObjects;
+    private List<FacilityObject> listOfObjects;
     private List<String> header_titles;
     private HashMap<String, SlideToActView> child_titles;
     private Context ctx;
@@ -45,7 +47,7 @@ public class objectListAdapter extends BaseExpandableListAdapter {
     ApiInterface apiInterface = retrofit.create(ApiInterface.class);
 
 
-    public objectListAdapter(Context ctx, List<String> header_titles, HashMap<String, SlideToActView> child_titles, User user, List<facilityObject> listOfObjects)
+    public objectListAdapter(Context ctx, List<String> header_titles, HashMap<String, SlideToActView> child_titles, User user, List<FacilityObject> listOfObjects)
     {
         this.ctx = ctx;
         this.child_titles = child_titles;
@@ -99,14 +101,6 @@ public class objectListAdapter extends BaseExpandableListAdapter {
             convertView = layoutInflater.inflate(R.layout.parent_layout, null);
         }
 
-        //TODO: skuziti zake se ovo ponasa ko da je z černobila
-        if (listOfObjects.get(groupPosition).getObjActivity() == 0)
-        {
-            convertView.setBackgroundResource(R.color.colorPrimary);
-            convertView.setEnabled(false);
-            convertView.setOnClickListener(null);
-        }
-
         TextView textView = convertView.findViewById(R.id.heading_item);
         textView.setTypeface(null, Typeface.BOLD);
         textView.setText(title);
@@ -126,7 +120,7 @@ public class objectListAdapter extends BaseExpandableListAdapter {
 
         slideToActView.setOnSlideCompleteListener(new SlideToActView.OnSlideCompleteListener() {
             @Override
-            public void onSlideComplete(@NotNull SlideToActView slideToActView) {
+            public void onSlideComplete(@NotNull final SlideToActView slideToActView) {
 
                 ObjectOpen objectOpen = new ObjectOpen(activeUser.getEmail(), header_titles.get(groupPosition));
 
@@ -135,6 +129,20 @@ public class objectListAdapter extends BaseExpandableListAdapter {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
+                        String str = "";
+                        if (response.message().contains("Bad Request"))
+                        {
+                            str = "You can't open this object";
+                        }
+                        if (response.message().contains("OK"))
+                        {
+                            str = "Object opened";
+                        }
+
+                        Toast toast= Toast.makeText(slideToActView.getContext(),
+                                str, Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 250);
+                        toast.show();
                     }
 
                     @Override

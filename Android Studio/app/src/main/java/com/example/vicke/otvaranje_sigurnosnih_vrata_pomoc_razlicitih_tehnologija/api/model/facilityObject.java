@@ -1,6 +1,6 @@
 package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model;
 
-public class facilityObject {
+public class FacilityObject {
 
     private  int objId;
     private String objName;
@@ -14,7 +14,7 @@ public class facilityObject {
 
 
 
-    public facilityObject(int ObjId, String ObjName, byte ObjOpen, byte ObjAuto, byte ObjActivity, String ObjGps, String ObjAction, String ObjObtTypeId) {
+    public FacilityObject(int ObjId, String ObjName, byte ObjOpen, byte ObjAuto, byte ObjActivity, String ObjGps, String ObjAction, String ObjObtTypeId) {
         this.objId = ObjId;
         this.objName = ObjName;
         this.objOpen = ObjOpen;

@@ -86,7 +86,7 @@ public class CrudTriggerSecondary extends AppCompatActivity {
         {
             triggerList = (TriggerList) extras.getSerializable("listDataItem");
             isNewTrigger = false;
-            spinner.setSelection(triggerList.getTrgUsrId() + 1);
+            spinner.setSelection(triggerList.getTrgTrtId()-1);
             editText.setText(triggerList.getTrgValue());
             if (triggerList.getTrgActivity() == 1)
             {
@@ -103,6 +103,21 @@ public class CrudTriggerSecondary extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 spinnerSelected = null;
                 spinnerSelected = (TriggerType) parent.getSelectedItem();
+                if (spinnerSelected.getTriggerName().contains("App"))
+                {
+                    editText.requestFocus();
+                    editText.setHint("");
+                    editText.setText(crudUser.getUsrEmail());
+                    editText.setVisibility(View.INVISIBLE);
+                }
+                else
+                {
+                    editText.setVisibility(View.VISIBLE);
+                    editText.requestFocus();
+                    editText.setHint("Format unosa: 385#...#");
+                    editText.setText("");
+                }
+
             }
 
             @Override
@@ -144,7 +159,7 @@ public class CrudTriggerSecondary extends AppCompatActivity {
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         Intent returnIntent = new Intent();
                         returnIntent.putExtra("result",triggerListPOST);
-                        setResult(Activity.RESULT_OK,returnIntent);
+                        setResult(2, returnIntent);
                         finish();
                     }
 
@@ -159,6 +174,6 @@ public class CrudTriggerSecondary extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, "You cannot go back", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "You can't go back", Toast.LENGTH_SHORT).show();
     }
 }
