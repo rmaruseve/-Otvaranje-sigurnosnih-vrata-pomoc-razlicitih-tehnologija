@@ -15,5 +15,8 @@ namespace data.Json
         public bool GenPassword { get; set; }
         public string LoginPassword { get; set; }
         public string PhoneNumber { get; set; }
+        public DateTime guestValidFrom { get; set; }
+        public DateTime guestValidTo { get; set; }
+        public int guestObjId { get; set; } 
     }
 }

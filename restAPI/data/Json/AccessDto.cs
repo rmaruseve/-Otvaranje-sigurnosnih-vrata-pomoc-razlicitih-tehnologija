@@ -11,7 +11,7 @@ namespace data.Json
         public DateTime ValidTo { get; set; }
         public int? Counter { get; set; }
         public int UsrId { get; set; }
-        public int ProId { get; set; }
+        public int? ProId { get; set; }
         public int ObjId { get; set; }
     }
 }

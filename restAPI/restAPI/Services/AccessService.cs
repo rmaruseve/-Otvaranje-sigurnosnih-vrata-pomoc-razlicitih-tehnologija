@@ -55,7 +55,7 @@ namespace restAPI.Services
                 AcsValidTo = acs.ValidTo,
                 AcsOpeningCounter = acs.Counter != null ? acs.Counter : -1,
                 AcsUsrId = acs.UsrId,
-                AcsProId = acs.ProId,
+                AcsProId = acs.ProId != null ? acs.ProId : (from pro in _context.AcProfil where pro.ProName=="guest" select pro.ProId).SingleOrDefault(),
                 AcsObjId = acs.ObjId
             };
             _context.AcAccess.Add(acsNew);
@@ -72,7 +72,7 @@ namespace restAPI.Services
                 AcsValidTo = acs.ValidTo,
                 AcsOpeningCounter = acs.Counter != null ? acs.Counter : -1,
                 AcsUsrId = acs.UsrId,
-                AcsProId = acs.ProId,
+                AcsProId = acs.ProId != null ? acs.ProId : (from pro in _context.AcProfil where pro.ProName == "guest" select pro.ProId).SingleOrDefault(),
                 AcsObjId = acs.ObjId
             };
             _context.AcAccess.Update(acsUp);
