@@ -12,20 +12,18 @@ namespace restAPI.Services
     {
         List<AcAccess> checkAccess(int? userId, int objId);
         List<AcAccess> GetByUser(int id);
-        void Create(AccessDto acs);
-        void Update(AccessDto acs);
+        AcAccess Create(AccessDto acs);
+        AcAccess Update(AccessDto acs);
         void Delete(int id);
     }
 
     public class AccessService : IAccessService
     {
         private mydbContext _context;
-        private IMailService _mailService;
 
         public AccessService(mydbContext context, IMailService mailService)
         {
             _context = context;
-            _mailService = mailService;
         }
 
         public List<AcAccess> checkAccess(int? userId, int objId)
@@ -49,9 +47,9 @@ namespace restAPI.Services
             return acss;
         }
 
-        public void Create(AccessDto acs)
+        public AcAccess Create(AccessDto acs)
         {
-            _context.AcAccess.Add(new AcAccess
+            AcAccess acsNew = new AcAccess
             {
                 AcsValidFrom = acs.ValidFrom,
                 AcsValidTo = acs.ValidTo,
@@ -59,13 +57,15 @@ namespace restAPI.Services
                 AcsUsrId = acs.UsrId,
                 AcsProId = acs.ProId,
                 AcsObjId = acs.ObjId
-            });
+            };
+            _context.AcAccess.Add(acsNew);
             _context.SaveChanges();
+            return acsNew;
         }
 
-        public void Update(AccessDto acs)
+        public AcAccess Update(AccessDto acs)
         {
-            _context.AcAccess.Update(new AcAccess
+            AcAccess acsUp = new AcAccess
             {
                 AcsId = acs.AcsId,
                 AcsValidFrom = acs.ValidFrom,
@@ -74,8 +74,10 @@ namespace restAPI.Services
                 AcsUsrId = acs.UsrId,
                 AcsProId = acs.ProId,
                 AcsObjId = acs.ObjId
-            });
+            };
+            _context.AcAccess.Update(acsUp);
             _context.SaveChanges();
+            return acsUp;
         }
 
         public void Delete(int id)
