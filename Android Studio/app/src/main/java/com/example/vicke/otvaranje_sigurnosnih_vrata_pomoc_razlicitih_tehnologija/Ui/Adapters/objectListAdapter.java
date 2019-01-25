@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.ObjectOpen;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
-import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.FacilityObject;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.facilityObject;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.service.ApiInterface;
 import com.ncorti.slidetoact.SlideToActView;
 
@@ -32,7 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class objectListAdapter extends BaseExpandableListAdapter {
 
-    private List<FacilityObject> listOfObjects;
+    private List<facilityObject> listOfObjects;
     private List<String> header_titles;
     private HashMap<String, SlideToActView> child_titles;
     private Context ctx;
@@ -47,7 +47,7 @@ public class objectListAdapter extends BaseExpandableListAdapter {
     ApiInterface apiInterface = retrofit.create(ApiInterface.class);
 
 
-    public objectListAdapter(Context ctx, List<String> header_titles, HashMap<String, SlideToActView> child_titles, User user, List<FacilityObject> listOfObjects)
+    public objectListAdapter(Context ctx, List<String> header_titles, HashMap<String, SlideToActView> child_titles, User user, List<facilityObject> listOfObjects)
     {
         this.ctx = ctx;
         this.child_titles = child_titles;

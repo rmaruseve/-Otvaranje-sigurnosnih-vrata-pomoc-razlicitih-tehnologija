@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.Adapters.objectListAdapter;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
-import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.FacilityObject;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.facilityObject;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.service.ApiInterface;
 import com.ncorti.slidetoact.SlideToActView;
 
@@ -32,8 +32,8 @@ public class ObjectListShow extends Fragment {
     private User user;
 
     private ExpandableListView expandableListView;
-    private List<FacilityObject> objectDataList;
-    private List<FacilityObject> objectDataListCopy;
+    private List<facilityObject> objectDataList;
+    private List<facilityObject> objectDataListCopy;
 
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(ApiInterface.BASE_URL)
@@ -58,11 +58,11 @@ public class ObjectListShow extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
 
-        Call<List<FacilityObject>> call = apiInterface.getObjects(user.getToken());
-        call.enqueue(new Callback<List<FacilityObject>>() {
+        Call<List<facilityObject>> call = apiInterface.getObjects(user.getToken());
+        call.enqueue(new Callback<List<facilityObject>>() {
             @Override
-            public void onResponse(Call<List<FacilityObject>> call, Response<List<FacilityObject>> response) {
-                List<FacilityObject> FacilityObjects = response.body();
+            public void onResponse(Call<List<facilityObject>> call, Response<List<facilityObject>> response) {
+                List<facilityObject> FacilityObjects = response.body();
 
                 objectDataList = new ArrayList<>(FacilityObjects);
                 objectDataListCopy = new ArrayList<>(objectDataList);
@@ -97,7 +97,7 @@ public class ObjectListShow extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<FacilityObject>> call, Throwable t) {
+            public void onFailure(Call<List<facilityObject>> call, Throwable t) {
                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -105,7 +105,7 @@ public class ObjectListShow extends Fragment {
 
     }
 
-    private List<String> addHeaderName(List<String> headerList, List<FacilityObject> nameList)
+    private List<String> addHeaderName(List<String> headerList, List<facilityObject> nameList)
     {
         
         for (int i=0; i<nameList.size(); i++)
