@@ -33,6 +33,9 @@ public interface ApiInterface {
     @POST("/api/triggeraccess")
     Call<ResponseBody> openObject(@Header("Authorization") String authToken,@Body ObjectOpen objectOpen);
 
+    @POST("/api/neke")
+    Call<ResponseBody> closeAll(@Header("Authorization") String authToken);
+
 
 
     @POST("/api/Users/authenticate")

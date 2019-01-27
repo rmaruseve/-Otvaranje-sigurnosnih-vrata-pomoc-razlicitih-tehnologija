@@ -33,14 +33,7 @@ public class ObjectListShow extends Fragment {
 
     private ExpandableListView expandableListView;
     private List<facilityObject> objectDataList;
-    private List<facilityObject> objectDataListCopy;
 
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(ApiInterface.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-
-    ApiInterface apiInterface = retrofit.create(ApiInterface.class);
 
 
     public static ObjectListShow newInstance() {
@@ -51,6 +44,7 @@ public class ObjectListShow extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
 
         user = (User)getArguments().getSerializable("user");
+        objectDataList = (ArrayList<facilityObject>)getArguments().getSerializable("objectList");
         return inflater.inflate(R.layout.object_list_show, parent, false);
 
     }
@@ -58,56 +52,29 @@ public class ObjectListShow extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
 
-        Call<List<facilityObject>> call = apiInterface.getObjects(user.getToken());
-        call.enqueue(new Callback<List<facilityObject>>() {
-            @Override
-            public void onResponse(Call<List<facilityObject>> call, Response<List<facilityObject>> response) {
-                List<facilityObject> FacilityObjects = response.body();
+        expandableListView = getView().findViewById(R.id.expendableList);
 
-                objectDataList = new ArrayList<>(FacilityObjects);
-                objectDataListCopy = new ArrayList<>(objectDataList);
+        List<String> Headings = new ArrayList<>();
+        Headings = addHeaderName(Headings, objectDataList);
 
-                for (int i = 0; i < objectDataList.size(); i++)
-                {
-                    if (objectDataList.get(i).getObjActivity() == 0)
-                    {
-                        objectDataList.remove(i);
-                        i--;
-                    }
-                }
+        HashMap<String, SlideToActView> ChildList = new HashMap<>();
+
+        for (int i = 0; i<Headings.size(); i++)
+        {
+            SlideToActView slideToActView = new SlideToActView(getContext());
+            ChildList.put(Headings.get(i),slideToActView);
+        }
 
 
-                expandableListView = getView().findViewById(R.id.expendableList);
-
-                List<String> Headings = new ArrayList<>();
-                Headings = addHeaderName(Headings, objectDataList);
-
-                HashMap<String, SlideToActView> ChildList = new HashMap<>();
-
-                for (int i = 0; i<Headings.size(); i++)
-                {
-                    SlideToActView slideToActView = new SlideToActView(getContext());
-                    ChildList.put(Headings.get(i),slideToActView);
-                }
-
-
-                ObjectListAdapter MyAdapter = new ObjectListAdapter(getContext(), Headings, ChildList, user, objectDataList);
-                expandableListView.setAdapter(MyAdapter);
-
-            }
-
-            @Override
-            public void onFailure(Call<List<facilityObject>> call, Throwable t) {
-                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        ObjectListAdapter MyAdapter = new ObjectListAdapter(getContext(), Headings, ChildList, user, objectDataList);
+        expandableListView.setAdapter(MyAdapter);
 
 
     }
 
     private List<String> addHeaderName(List<String> headerList, List<facilityObject> nameList)
     {
-        
+
         for (int i=0; i<nameList.size(); i++)
         {
             headerList.add(nameList.get(i).getObjName());
@@ -115,4 +82,5 @@ public class ObjectListShow extends Fragment {
 
         return headerList;
     }
+
 }

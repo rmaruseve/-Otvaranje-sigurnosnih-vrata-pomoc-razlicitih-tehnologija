@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.CoreComponentFactory;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -15,11 +16,31 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.example.core.CoreClass;
+import com.example.core.CoreInterface;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.Adapters.ObjectListAdapter;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.Fragments.ObjectListShow;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.facilityObject;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.service.ApiInterface;
 import com.ncorti.slidetoact.SlideToActView;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -27,6 +48,17 @@ public class MainActivity extends AppCompatActivity
     User currentUser;
     NavigationView navigationView;
     SlideToActView slideToActView;
+
+    private List<facilityObject> objectDataList;
+    private List<facilityObject> objectDataListCopy;
+
+    Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(ApiInterface.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+
+    ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,19 +70,80 @@ public class MainActivity extends AppCompatActivity
             currentUser = (User) extras.getSerializable("currentUser");
         }
 
+        Call<List<facilityObject>> call = apiInterface.getObjects(currentUser.getToken());
+        call.enqueue(new Callback<List<facilityObject>>() {
+            @Override
+            public void onResponse(Call<List<facilityObject>> call, Response<List<facilityObject>> response) {
+                List<facilityObject> FacilityObjects = response.body();
+
+                objectDataList = new ArrayList<>(FacilityObjects);
+                objectDataListCopy = new ArrayList<>();
+
+                for (int i = 0; i < objectDataList.size(); i++)
+                {
+                    facilityObject fO = new facilityObject();
+
+                    fO.setObjId(objectDataList.get(i).getObjId());
+                    fO.setObjAction(objectDataList.get(i).getObjAction());
+                    fO.setObjActivity(objectDataList.get(i).getObjActivity());
+                    fO.setObjAuto(objectDataList.get(i).getObjAuto());
+                    fO.setObjGps(objectDataList.get(i).getObjGps());
+                    fO.setObjName(objectDataList.get(i).getObjName());
+                    fO.setObjObtTypeId(objectDataList.get(i).getObjObtTypeId());
+                    fO.setObjOpen(objectDataList.get(i).getObjOpen());
+
+                    objectDataListCopy.add(fO);
+                }
+
+
+                for (int i = 0; i < objectDataList.size(); i++)
+                {
+                    if (objectDataList.get(i).getObjActivity() == 0)
+                    {
+                        objectDataList.remove(i);
+                        i--;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<facilityObject>> call, Throwable t) {
+                Toast.makeText(getBaseContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         slideToActView = findViewById(R.id.slide_to_close_all);
 
-        if (currentUser.getRole() != 1)
+        if (currentUser.getRole() == 1)
         {
             navigationView = findViewById(R.id.nav_view);
             Menu nav_Menu = navigationView.getMenu();
-            nav_Menu.findItem(R.id.nav_admin_options).setVisible(false);
+            nav_Menu.findItem(R.id.nav_admin_options).setVisible(true);
+
             slideToActView.setVisibility(View.VISIBLE);
-            //TODO: retrofit for slider close all
-            //slideToActView.resetSlider(); ide na kraj retrofit on response za slider
+
+            slideToActView.setOnSlideCompleteListener(new SlideToActView.OnSlideCompleteListener() {
+                @Override
+                public void onSlideComplete(@NotNull SlideToActView slideToActView) {
+                    Call<ResponseBody> call = apiInterface.closeAll(currentUser.getToken());
+                    call.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                        }
+                    });
+
+                    slideToActView.resetSlider();
+                }
+            });
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -58,6 +151,7 @@ public class MainActivity extends AppCompatActivity
         ObjectListShow objectListShow = new ObjectListShow();
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", currentUser);
+        bundle.putSerializable("objectList", (Serializable) objectDataList);
         objectListShow.setArguments(bundle);
         t.add(R.id.objectListShowFrame, objectListShow);
         t.commit();
@@ -136,6 +230,7 @@ public class MainActivity extends AppCompatActivity
         {
             Intent i = new Intent(MainActivity.this, AdminMenu.class);
             i.putExtra("currentUser",currentUser);
+            i.putExtra("objectList", (Serializable) objectDataListCopy);
             startActivity(i);
         }
 

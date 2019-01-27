@@ -12,8 +12,10 @@ import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologij
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.EventLogData;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.Role;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.facilityObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdminMenuFragmentAdapter extends FragmentStatePagerAdapter {
@@ -23,8 +25,9 @@ public class AdminMenuFragmentAdapter extends FragmentStatePagerAdapter {
     private List<AllUser> userList;
     private List<Role> roleList;
     private List<EventLogData> eventLogData;
+    private ArrayList<facilityObject> objectList;
 
-    public AdminMenuFragmentAdapter(FragmentManager fm, int numberOfTabs, List<AllUser> userList, List<Role> roleList, User user, List<EventLogData> eventLogData)
+    public AdminMenuFragmentAdapter(FragmentManager fm, int numberOfTabs, List<AllUser> userList, List<Role> roleList, User user, List<EventLogData> eventLogData, ArrayList<facilityObject> objectList)
     {
         super(fm);
         this.numberOfTabs = numberOfTabs;
@@ -32,6 +35,7 @@ public class AdminMenuFragmentAdapter extends FragmentStatePagerAdapter {
         this.roleList = roleList;
         this.user = user;
         this.eventLogData = eventLogData;
+        this.objectList = objectList;
     }
 
     @Override
@@ -51,6 +55,7 @@ public class AdminMenuFragmentAdapter extends FragmentStatePagerAdapter {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("listOfUsers", (Serializable) userList);
                 bundle.putSerializable("listOfRoles", (Serializable) roleList);
+                //TODO: tu isto poslati objekte i onda slati dalje
                 bundle.putSerializable("currentUser", user);
                 userFragment.setArguments(bundle);
 
@@ -58,7 +63,7 @@ public class AdminMenuFragmentAdapter extends FragmentStatePagerAdapter {
             case 2:
                 AddGuestFragment addGuestFragment = new AddGuestFragment();
                 Bundle bundleGuest = new Bundle();
-                bundleGuest.putSerializable("listOfObjects", (Serializable) userList); //listOfObjects umjesto listOfUsers
+                bundleGuest.putSerializable("listOfObjects", (Serializable) objectList);
                 bundleGuest.putSerializable("user", user);
                 addGuestFragment.setArguments(bundleGuest);
                 return addGuestFragment;

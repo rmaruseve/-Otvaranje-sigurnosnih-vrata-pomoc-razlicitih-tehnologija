@@ -15,8 +15,10 @@ import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologij
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.EventLogData;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.Role;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.facilityObject;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.service.ApiInterface;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -33,6 +35,8 @@ public class AdminMenu extends AppCompatActivity implements LogFragment.OnFragme
     List<Role> listOfRoles;
     List<EventLogData> eventLogData;
 
+    ArrayList<facilityObject> objectDataListCopy;
+
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(ApiInterface.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -48,6 +52,7 @@ public class AdminMenu extends AppCompatActivity implements LogFragment.OnFragme
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             currentUser = (User) extras.getSerializable("currentUser");
+            objectDataListCopy = (ArrayList<facilityObject>) extras.getSerializable("objectList");
         }
 
         Call<List<AllUser>> call = apiInterface.getUsers(currentUser.getToken());
@@ -75,7 +80,7 @@ public class AdminMenu extends AppCompatActivity implements LogFragment.OnFragme
                                 tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
                                 final ViewPager viewPager = findViewById(R.id.adminMenuViewPager);
-                                final AdminMenuFragmentAdapter adminMenuFragmentAdapter = new AdminMenuFragmentAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), listOfUsers, listOfRoles, currentUser, eventLogData);
+                                final AdminMenuFragmentAdapter adminMenuFragmentAdapter = new AdminMenuFragmentAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), listOfUsers, listOfRoles, currentUser, eventLogData, objectDataListCopy);
 
                                 viewPager.setAdapter(adminMenuFragmentAdapter);
                                 viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));

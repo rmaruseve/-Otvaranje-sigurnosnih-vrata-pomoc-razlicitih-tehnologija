@@ -15,6 +15,7 @@
         <item
             android:id="@+id/nav_admin_options"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Admin menu" />
+            android:title="Admin menu"
+            android:visible="false"/>
     </group>
 </menu>
