@@ -14,5 +14,6 @@ namespace data.Json
         public string TriggerName { get; set; }
         public string ObjectName { get; set; }
         public string EventStatusName { get; set; }
+        public int? ObjectId { get; set; }
     }
 }
