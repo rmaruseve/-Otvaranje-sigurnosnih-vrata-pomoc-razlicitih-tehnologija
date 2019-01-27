@@ -12,19 +12,18 @@ using restAPI.Services;
 namespace restAPI.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
     [ApiController]
     public class AvailableObjectsController : ControllerBase
     {
         private readonly mydbContext _context;
 
-        private IEventLogService _eventLogService;
+        private IObjectService _objectService;
 
         public AvailableObjectsController(
-            IEventLogService eventLogService
+            IObjectService objectService
             , mydbContext context)
         {
-            _eventLogService = eventLogService;
+            _objectService = objectService;
             _context = context;
         }
 
@@ -39,13 +38,13 @@ namespace restAPI.Controllers
         {
             return _context.AcObject;
         }
-        //TODO send objects with about last action from Log
-        //[HttpGet]
-        //public IActionResult GetAcObject()
-        //{
-            
-        //    return Ok(_eventLogService.getObjects());
-        //}
+
+        [HttpGet("lastOpened")]
+        public IActionResult GetAcObjectLastOpened()
+        {
+
+            return Ok(_objectService.getObjectsLastOpened());
+        }
 
 
 

@@ -106,14 +106,8 @@ namespace restAPI.Controllers
             // map dto to entity
             var userReq = _mapper.Map<AcUser>(userDto);
             string newPassword;
-            if (userDto.GenPassword)
-            {
-                newPassword = Functions.RandString(8);
-            }
-            else
-            {
-                newPassword = userDto.LoginPassword;
-            }
+            if (userDto.GenPassword) newPassword = Functions.RandString(8);
+            else newPassword = userDto.LoginPassword;
             try
             {
                 // check if admin
@@ -128,10 +122,18 @@ namespace restAPI.Controllers
                     List<AcTrigger> trgs = _triggerService.GetByValue(userDto.PhoneNumber);
                     if (trgs.Count > 0)
                         throw new AppException("Phone number already exists.");
-                    userReq.UsrEmail = userDto.PhoneNumber;
+                    userReq.UsrEmail = "guest-" + userDto.PhoneNumber;
                     user = _userService.Create(userReq, newPassword);
                     _triggerService.Create(user.UsrId, "Sms", userDto.PhoneNumber, 1);
                     _triggerService.Create(user.UsrId, "Phone", userDto.PhoneNumber, 1);
+                    AcAccess acs = _accessService.Create(new AccessDto
+                    {
+                        ObjId = userDto.guestObjId,
+                        UsrId = user.UsrId,
+                        ValidFrom = userDto.guestValidFrom,
+                        ValidTo = userDto.guestValidTo
+                    });
+                    _mailService.SendSMS(userDto.PhoneNumber, "Dodan vam je pristup objektu: " + acs.AcsObj.ObjName);
                     // send sms
                 }
                 return Ok(user.UsrId);

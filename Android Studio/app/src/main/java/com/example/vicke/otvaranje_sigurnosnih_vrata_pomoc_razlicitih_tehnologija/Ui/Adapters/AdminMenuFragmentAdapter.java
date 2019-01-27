@@ -57,6 +57,10 @@ public class AdminMenuFragmentAdapter extends FragmentStatePagerAdapter {
                 return userFragment;
             case 2:
                 AddGuestFragment addGuestFragment = new AddGuestFragment();
+                Bundle bundleGuest = new Bundle();
+                bundleGuest.putSerializable("listOfObjects", (Serializable) userList); //listOfObjects umjesto listOfUsers
+                bundleGuest.putSerializable("user", user);
+                addGuestFragment.setArguments(bundleGuest);
                 return addGuestFragment;
             default:
                 return null;

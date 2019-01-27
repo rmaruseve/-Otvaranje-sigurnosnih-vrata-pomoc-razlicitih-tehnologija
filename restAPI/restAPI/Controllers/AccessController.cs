@@ -24,19 +24,22 @@ namespace restAPI.Controllers
         private IMapper _mapper;
         private IUserService _userService;
         private readonly AppSettings _appSettings;
+        private IMailService _mailService;
 
         public AccessController(
             IMapper mapper,
             mydbContext context,
             IAccessService accessService,
             IUserService userService,
-            IOptions<AppSettings> appSettings)
+            IOptions<AppSettings> appSettings,
+            IMailService mailService)
         {
             _context = context;
             _mapper = mapper;
             _userService = userService;
             _accessService = accessService;
             _appSettings = appSettings.Value;
+            _mailService = mailService;
         }
 
         /// <summary>
@@ -60,7 +63,11 @@ namespace restAPI.Controllers
             try
             {
                 // if admin
-                _accessService.Create(trgDto);
+                AcAccess acs = _accessService.Create(trgDto);
+                if(_userService.GetRole(trgDto.UsrId) == "Guest")
+                {
+
+                }
                 return Ok();
             }
             catch (AppException ex)

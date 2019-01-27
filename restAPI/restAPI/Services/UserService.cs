@@ -12,6 +12,7 @@ namespace restAPI.Services
     {
         AcUser Authenticate(string username, string password);
         IEnumerable<AcUser> GetAll();
+        string GetRole(int id);
         AcUser GetById(int id);
         AcUser Create(AcUser user, string password);
         void Update(AcUser user, string password = null);
@@ -65,6 +66,13 @@ namespace restAPI.Services
         public AcUser GetById(int id)
         {
             return _context.AcUser.Find(id);
+        }
+
+        public string GetRole(int id)
+        {
+            return (from us in _context.AcUser
+                    join rl in _context.AcRole on us.UsrRolId equals rl.RolId
+                    select rl.RolName).SingleOrDefault();
         }
 
         public AcUser Create(AcUser user, string password)
