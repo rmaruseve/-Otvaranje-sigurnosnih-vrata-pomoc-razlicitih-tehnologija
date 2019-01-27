@@ -1,4 +1,4 @@
-package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui;
+package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.Fragments;
 
 import android.content.Context;
 import android.net.Uri;
@@ -8,13 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.ListView;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.EventLogData;
 
 import java.util.ArrayList;
-import java.util.EventListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,6 +48,9 @@ public class LogFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_log, container, false);
 
+        String searchWord = "";
+        String date = "";
+
         ArrayList<EventLogData> eventLogData = new ArrayList<>();
         final ListView listViewLog = v.findViewById(R.id.logList);
 
@@ -60,6 +63,9 @@ public class LogFragment extends Fragment {
 
         ArrayAdapter<EventLogData> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.log_list_item, R.id.logListItem, eventLogData);
         listViewLog.setAdapter(arrayAdapter);
+
+        //TODO: search(po imenu i prezimenu) and filter(po datumu)
+
 
         return v;
     }

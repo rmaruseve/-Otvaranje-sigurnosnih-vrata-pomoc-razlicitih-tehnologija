@@ -133,10 +133,9 @@ public class CrudTrigger extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: idi na sljedeci ekran
-                //za sad ide natrag na admin meni, kasnije dodati da ide na crudProfile
-                Intent i = new Intent(CrudTrigger.this, AdminMenu.class);
+                Intent i = new Intent(CrudTrigger.this, CrudProfile.class);
                 i.putExtra("currentUser",user);
+                i.putExtra("editUser", crudUser);
                 startActivity(i);
             }
         });

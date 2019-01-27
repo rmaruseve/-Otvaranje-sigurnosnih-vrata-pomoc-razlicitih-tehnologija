@@ -11,9 +11,6 @@ public class FacilityObject {
     private String objAction;
     private String objObtTypeId;
 
-
-
-
     public FacilityObject(int ObjId, String ObjName, byte ObjOpen, byte ObjAuto, byte ObjActivity, String ObjGps, String ObjAction, String ObjObtTypeId) {
         this.objId = ObjId;
         this.objName = ObjName;

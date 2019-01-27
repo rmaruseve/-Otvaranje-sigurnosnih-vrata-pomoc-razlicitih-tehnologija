@@ -30,7 +30,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class objectListAdapter extends BaseExpandableListAdapter {
+public class ObjectListAdapter extends BaseExpandableListAdapter {
 
     private List<FacilityObject> listOfObjects;
     private List<String> header_titles;
@@ -47,7 +47,7 @@ public class objectListAdapter extends BaseExpandableListAdapter {
     ApiInterface apiInterface = retrofit.create(ApiInterface.class);
 
 
-    public objectListAdapter(Context ctx, List<String> header_titles, HashMap<String, SlideToActView> child_titles, User user, List<FacilityObject> listOfObjects)
+    public ObjectListAdapter(Context ctx, List<String> header_titles, HashMap<String, SlideToActView> child_titles, User user, List<FacilityObject> listOfObjects)
     {
         this.ctx = ctx;
         this.child_titles = child_titles;

@@ -17,13 +17,16 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.Fragments.ObjectListShow;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
+import com.ncorti.slidetoact.SlideToActView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     User currentUser;
     NavigationView navigationView;
+    SlideToActView slideToActView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +41,15 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        slideToActView = findViewById(R.id.slide_to_close_all);
+
         if (currentUser.getRole() != 1)
         {
             navigationView = findViewById(R.id.nav_view);
             Menu nav_Menu = navigationView.getMenu();
             nav_Menu.findItem(R.id.nav_admin_options).setVisible(false);
-            //TODO: show slider on bottom only for admin, add retrofit when slided
+            slideToActView.setVisibility(View.VISIBLE);
+            //TODO: retrofit for slider close all
             //slideToActView.resetSlider(); ide na kraj retrofit on response za slider
         }
 
