@@ -70,6 +70,13 @@ public class ObjectListShow extends Fragment {
         expandableListView.setAdapter(MyAdapter);
 
 
+        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                return false;
+            }
+        });
+
     }
 
     private List<String> addHeaderName(List<String> headerList, List<facilityObject> nameList)

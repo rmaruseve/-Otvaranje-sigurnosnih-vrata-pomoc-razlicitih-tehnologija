@@ -104,6 +104,8 @@ public class ObjectListAdapter extends BaseExpandableListAdapter {
         TextView textView = convertView.findViewById(R.id.heading_item);
         textView.setTypeface(null, Typeface.BOLD);
         textView.setText(title);
+        //TODO: staviti ovo ispod umjesto ovog iznad kad modificiram klasu da ima i datum zadnjeg otvaranja i usera koji je otvoril
+        // textView.setText("Name: " + title + "\n" + "Last interaction: " + listOfObjects.get(groupPosition).getObjectDate + "\n" + "User: " + listOfObjects.get(groupPosition).getUserId);
 
         return convertView;
     }
