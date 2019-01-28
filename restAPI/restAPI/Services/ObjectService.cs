@@ -26,26 +26,19 @@ namespace restAPI.Services
 
         public List<AcObject> getObjects(string type, string objectName)
         {
-            List<AcObject> objs = new List<AcObject>();
-            AcObject sObj = (
+            List<AcObject> sObj = (
                 from obj in _context.AcObject
                 join ohs in _context.AcObjectHasTriggerType on obj.ObjId equals ohs.OhtObjId
                 join trgt in _context.AcTriggerType on ohs.OhtTrtId equals trgt.TrtId
                 where trgt.TrtName == type && obj.ObjName == objectName
                 select obj
-            ).SingleOrDefault();
-            if (sObj != null)
-            {
-                objs.Add(sObj);
-            }
+            ).ToList();
 
-            return objs;
+            return sObj;
         }
 
         public List<ObjectsWithLogData> getObjectsLastOpened()
         {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
             List<FilterEventLogDto> lastOpened = (from evl in _context.AcEventLog
                              join evs in _context.AcEventStatus on evl.EvlEvsId equals evs.EvsId
                              join obj1 in _context.AcObject on evl.EvlObjId equals obj1.ObjId into AcObject
@@ -91,8 +84,6 @@ namespace restAPI.Services
                     TriggerName = v.TriggerName,
                     EventStatusName = v.EventStatusName
                 }).ToList();
-            sw.Stop();
-            //Console.WriteLine("Elapsed={0}", sw.Elapsed);
             return lstt;
         }
     }
