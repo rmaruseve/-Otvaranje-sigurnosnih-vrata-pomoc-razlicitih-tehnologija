@@ -16,8 +16,10 @@ import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologij
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.CrudUserDataClass;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.Role;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.facilityObject;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.service.ApiInterface;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -39,6 +41,9 @@ public class CrudUser extends AppCompatActivity {
     Call<Integer> call;
 
     private List<Role> listOfRoles;
+
+    ArrayList<facilityObject> listOfObjects = new ArrayList<>();
+
     Role role;
     User user;
     CrudUserDataClass crudUser = new CrudUserDataClass();
@@ -77,6 +82,7 @@ public class CrudUser extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         listOfRoles = (List<Role>)bundle.getSerializable("userRole");
+        listOfObjects = (ArrayList<facilityObject>) bundle.getSerializable("listOfObjects");
 
 
         dropdown = findViewById(R.id.roleDropdown);
@@ -171,6 +177,7 @@ public class CrudUser extends AppCompatActivity {
                 });
                 Intent i = new Intent(getBaseContext(), CrudTrigger.class);
                 i.putExtra("user", user);
+                i.putExtra("listOfObjects", listOfObjects);
                 i.putExtra("editUser", crudUser);
                 startActivity(i);
             }

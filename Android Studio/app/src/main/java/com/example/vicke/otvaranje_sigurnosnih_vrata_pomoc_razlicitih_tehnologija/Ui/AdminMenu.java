@@ -5,6 +5,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.Adapters.AdminMenuFragmentAdapter;
@@ -37,6 +39,8 @@ public class AdminMenu extends AppCompatActivity implements LogFragment.OnFragme
 
     ArrayList<facilityObject> objectDataListCopy;
 
+    ProgressBar progressBar;
+
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(ApiInterface.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -49,12 +53,16 @@ public class AdminMenu extends AppCompatActivity implements LogFragment.OnFragme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_menu);
 
+        progressBar = findViewById(R.id.adminMenuAnim);
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             currentUser = (User) extras.getSerializable("currentUser");
             objectDataListCopy = (ArrayList<facilityObject>) extras.getSerializable("objectList");
         }
 
+
+        progressBar.setVisibility(View.VISIBLE);
         Call<List<AllUser>> call = apiInterface.getUsers(currentUser.getToken());
         call.enqueue(new Callback<List<AllUser>>() {
             @Override
@@ -71,6 +79,9 @@ public class AdminMenu extends AppCompatActivity implements LogFragment.OnFragme
                         callEventLog.enqueue(new Callback<List<EventLogData>>() {
                             @Override
                             public void onResponse(Call<List<EventLogData>> call, Response<List<EventLogData>> response) {
+
+                                progressBar.setVisibility(View.GONE);
+
                                 eventLogData = response.body();
 
                                 TabLayout tabLayout = findViewById(R.id.adminMenuTabLayout);

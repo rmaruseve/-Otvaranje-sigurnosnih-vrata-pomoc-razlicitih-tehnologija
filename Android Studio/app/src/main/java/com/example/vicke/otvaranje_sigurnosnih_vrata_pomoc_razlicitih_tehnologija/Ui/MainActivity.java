@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.core.CoreClass;
@@ -23,6 +24,7 @@ import com.example.core.CoreInterface;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.Adapters.ObjectListAdapter;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.Fragments.ObjectListShow;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.ObjectOpen;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.facilityObject;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.service.ApiInterface;
@@ -52,6 +54,10 @@ public class MainActivity extends AppCompatActivity
     private List<facilityObject> objectDataList;
     private List<facilityObject> objectDataListCopy;
 
+    ArrayList<ObjectOpen> closeAllList = new ArrayList<>();
+
+
+
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(ApiInterface.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -65,15 +71,18 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             currentUser = (User) extras.getSerializable("currentUser");
         }
 
         Call<List<facilityObject>> call = apiInterface.getObjects(currentUser.getToken());
+
         call.enqueue(new Callback<List<facilityObject>>() {
             @Override
             public void onResponse(Call<List<facilityObject>> call, Response<List<facilityObject>> response) {
+
                 List<facilityObject> FacilityObjects = response.body();
 
                 objectDataList = new ArrayList<>(FacilityObjects);
@@ -91,6 +100,14 @@ public class MainActivity extends AppCompatActivity
                     fO.setObjName(objectDataList.get(i).getObjName());
                     fO.setObjObtTypeId(objectDataList.get(i).getObjObtTypeId());
                     fO.setObjOpen(objectDataList.get(i).getObjOpen());
+                    fO.setEventLogId(objectDataList.get(i).getEventLogId());
+                    fO.setDate(objectDataList.get(i).getDate());
+                    fO.setTriggerValue(objectDataList.get(i).getTriggerValue());
+                    fO.setUserName(objectDataList.get(i).getUserName());
+                    fO.setUserSurname(objectDataList.get(i).getUserSurname());
+                    fO.setTriggerName(objectDataList.get(i).getTriggerName());
+                    fO.setObjectName(objectDataList.get(i).getObjectName());
+                    fO.setEventStatusName(objectDataList.get(i).getEventStatusName());
 
                     objectDataListCopy.add(fO);
                 }
@@ -104,6 +121,22 @@ public class MainActivity extends AppCompatActivity
                         i--;
                     }
                 }
+
+                for (int i = 0; i < objectDataListCopy.size(); i++)
+                {
+                    ObjectOpen objectOpen = new ObjectOpen(currentUser.getEmail(), objectDataListCopy.get(i).getObjName());
+                    closeAllList.add(objectOpen);
+                }
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction t = fragmentManager.beginTransaction();
+                ObjectListShow objectListShow = new ObjectListShow();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("user", currentUser);
+                bundle.putSerializable("objectList", (Serializable) objectDataList);
+                objectListShow.setArguments(bundle);
+                t.add(R.id.objectListShowFrame, objectListShow);
+                t.commit();
             }
 
             @Override
@@ -128,7 +161,7 @@ public class MainActivity extends AppCompatActivity
             slideToActView.setOnSlideCompleteListener(new SlideToActView.OnSlideCompleteListener() {
                 @Override
                 public void onSlideComplete(@NotNull SlideToActView slideToActView) {
-                    Call<ResponseBody> call = apiInterface.closeAll(currentUser.getToken());
+                    Call<ResponseBody> call = apiInterface.closeAll(currentUser.getToken(), closeAllList);
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -146,15 +179,7 @@ public class MainActivity extends AppCompatActivity
             });
         }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction t = fragmentManager.beginTransaction();
-        ObjectListShow objectListShow = new ObjectListShow();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("user", currentUser);
-        bundle.putSerializable("objectList", (Serializable) objectDataList);
-        objectListShow.setArguments(bundle);
-        t.add(R.id.objectListShowFrame, objectListShow);
-        t.commit();
+
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -190,6 +215,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        menu.clear();
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }

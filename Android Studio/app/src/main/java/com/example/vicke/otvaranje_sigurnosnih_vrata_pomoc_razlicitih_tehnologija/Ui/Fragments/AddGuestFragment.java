@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -48,12 +50,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class AddGuestFragment extends Fragment {
 
+    //TODO: popraviti datume
 
     DatePickerDialog.OnDateSetListener dateFromListener;
     DatePickerDialog.OnDateSetListener dateToListener;
 
     TimePickerDialog.OnTimeSetListener timeFromListener;
     TimePickerDialog.OnTimeSetListener timeToListener;
+
+    TextView dateFromText;
+    TextView dateToText;
 
     String dateFromStr = "";
     String dateToStr = "";
@@ -97,6 +103,9 @@ public class AddGuestFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_add_guest, container, false);
 
+        dateFromText = v.findViewById(R.id.dateFromText);
+        dateToText = v.findViewById(R.id.dateToText);
+
         Bundle bundle = this.getArguments();
 
         if(bundle != null)
@@ -107,18 +116,16 @@ public class AddGuestFragment extends Fragment {
 
         final EditText phoneNumber = v.findViewById(R.id.inputGuestPhone);
         final Spinner objectDropdown = v.findViewById(R.id.objectDropdown);
-        final Button dateFrom = v.findViewById(R.id.dateFrom);
-        Button dateTo = v.findViewById(R.id.dateTo);
         Button save = v.findViewById(R.id.btnGuestSave);
-
 
         ArrayAdapter<facilityObject> adapter = new ArrayAdapter<facilityObject>(getContext(), android.R.layout.simple_spinner_dropdown_item, listOfObjects);
         adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
         objectDropdown.setAdapter(adapter);
 
-        dateFrom.setOnClickListener(new View.OnClickListener() {
+        dateFromText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dateFromStr = "";
                 Calendar calFromDate = Calendar.getInstance();
                 int year = calFromDate.get(Calendar.YEAR);
                 int month = calFromDate.get(Calendar.MONTH);
@@ -137,7 +144,8 @@ public class AddGuestFragment extends Fragment {
         dateFromListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                dateFromStr += year + "-" + month + "-" + dayOfMonth + " ";
+                dateFromStr += year + "-" + month + "-" + dayOfMonth + "T";
+
 
 
                 Calendar calFromTime = Calendar.getInstance();
@@ -158,15 +166,21 @@ public class AddGuestFragment extends Fragment {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         dateFromStr += hourOfDay +":"+ minute;
+                        //dateFromText.setText(dateFromStr);
+                        Toast.makeText(getActivity(), dateFromStr , Toast.LENGTH_SHORT).show();
                     }
                 };
+
+
             }
         };
 
 
-        dateTo.setOnClickListener(new View.OnClickListener() {
+
+        dateToText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dateToStr = "";
                 Calendar calToDate = Calendar.getInstance();
                 int year = calToDate.get(Calendar.YEAR);
                 int month = calToDate.get(Calendar.MONTH);
@@ -185,7 +199,7 @@ public class AddGuestFragment extends Fragment {
         dateToListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                dateToStr += year + "-" + month + "-" + dayOfMonth + " ";
+                dateToStr += year + "-" + month + "-" + dayOfMonth + "T";
 
 
                 Calendar calToTime = Calendar.getInstance();
@@ -206,20 +220,32 @@ public class AddGuestFragment extends Fragment {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         dateToStr += hourOfDay +":"+ minute;
+                        //dateToText.setText(dateToStr);
+                        Toast.makeText(getActivity(), dateToStr , Toast.LENGTH_SHORT).show();
                     }
                 };
+
             }
         };
 
 
-        objectDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedObject = null;
-                selectedObject = (facilityObject) parent.getSelectedItem();
-                objectId = selectedObject.getObjId();
-            }
-        });
+
+        objectDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                                     @Override
+                                                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                                         selectedObject = null;
+                                                         selectedObject = (facilityObject) parent.getSelectedItem();
+                                                         objectId = selectedObject.getObjId();
+                                                     }
+
+                                                     @Override
+                                                     public void onNothingSelected(AdapterView<?> parent) {
+
+                                                     }
+                                                 });
+
+
+
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -227,13 +253,14 @@ public class AddGuestFragment extends Fragment {
 
                 phoneNumberStr = phoneNumber.getText().toString();
 
-                if (phoneNumberStr != "" && objectId !=0  && dateFromStr != "" && dateToStr != "")
+                if (phoneNumberStr != "" && objectId !=0  )
                 {
                     guestData = new GuestData();
                     guestData.setObjectId(objectId);
                     guestData.setPhoneNumber(phoneNumberStr);
-                    guestData.setDateFrom(dateFromStr);
-                    guestData.setDateTo(dateToStr);
+                    guestData.setGenPassword(true);
+                    //guestData.setDateFrom(dateFromStr);
+                    //guestData.setDateTo(dateToStr);
                     Call<ResponseBody> call = apiInterface.setGuest(user.getToken(), guestData);
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
@@ -242,6 +269,10 @@ public class AddGuestFragment extends Fragment {
                             dateFromStr = "";
                             dateToStr = "";
                             objectId = 0;
+                            phoneNumber.setText("");
+                            objectDropdown.setSelection(0);
+                            dateFromText.setText("");
+                            dateToText.setText("");
 
                             Toast.makeText(getActivity(), "Guest added" , Toast.LENGTH_SHORT).show();
                         }

@@ -18,6 +18,7 @@ import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologij
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.TriggerList;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.TriggerType;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.facilityObject;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.service.ApiInterface;
 
 import java.io.Serializable;
@@ -34,13 +35,13 @@ public class CrudTrigger extends AppCompatActivity {
     ArrayAdapter<CrudTriggerListItemData> triggerListAdapter;
     ListView listViewTrigger;
 
+    ArrayList<facilityObject> listOfObjects = new ArrayList<>();
+
     User user;
     CrudUserDataClass crudUser;
 
     Button addNew;
     Button next;
-
-    ListView listView;
 
     ArrayList<CrudTriggerListItemData> triggerDatForList = new ArrayList<>();
 
@@ -59,8 +60,6 @@ public class CrudTrigger extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crud_trigger);
 
-        listView = findViewById(R.id.triggerListView);
-
         addNew = findViewById(R.id.addNewTrigger);
         next = findViewById(R.id.triggerNext);
 
@@ -70,6 +69,7 @@ public class CrudTrigger extends AppCompatActivity {
         if (extras != null) {
             user = (User) extras.getSerializable("user");
             crudUser = (CrudUserDataClass) extras.getSerializable("editUser");
+            listOfObjects = (ArrayList<facilityObject>) extras.getSerializable("listOfObjects");
         }
 
         //prvi retrofit za sve triggere
@@ -105,7 +105,7 @@ public class CrudTrigger extends AppCompatActivity {
             }
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listViewTrigger.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(getBaseContext(), CrudTriggerSecondary.class);
@@ -135,6 +135,7 @@ public class CrudTrigger extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(CrudTrigger.this, CrudProfile.class);
                 i.putExtra("currentUser",user);
+                i.putExtra("listOfObjects", listOfObjects);
                 i.putExtra("editUser", crudUser);
                 startActivity(i);
             }
@@ -151,8 +152,10 @@ public class CrudTrigger extends AppCompatActivity {
                 listData.get(listData.size() - 1).setTrgUsrId(result.getTrgUsrId());
                 listData.get(listData.size() - 1).setTrgValue(result.getTrgValue());
                 listData.get(listData.size() - 1).setTrgActivity(result.getTrgActivity());
-                listViewTrigger.setAdapter(null);
-                listViewTrigger.setAdapter(triggerListAdapter);
+                //listViewTrigger.setAdapter(null);
+                //listViewTrigger.setAdapter(triggerListAdapter);
+            finish();
+            startActivity(getIntent());
         }
     }
 }

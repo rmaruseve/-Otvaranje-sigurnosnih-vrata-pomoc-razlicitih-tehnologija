@@ -115,7 +115,14 @@ public class CrudTriggerSecondary extends AppCompatActivity {
                     editText.setVisibility(View.VISIBLE);
                     editText.requestFocus();
                     editText.setHint("Format unosa: 385#...#");
-                    editText.setText("");
+                    if (isNewTrigger)
+                    {
+                        editText.setText("");
+                    }
+                    else
+                    {
+                        editText.setText(triggerList.getTrgValue());
+                    }
                 }
 
             }

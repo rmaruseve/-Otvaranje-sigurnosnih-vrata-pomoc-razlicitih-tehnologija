@@ -2,25 +2,26 @@ package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologi
 
 public class GuestData {
 
-    private String dateFrom;
-    private String dateTo;
+    private String guestValidFrom;
+    private String guestValidTo;
     private String phoneNumber;
-    private int objectId;
+    private int guestObjId;
+    private boolean genPassword;
 
     public String getDateFrom() {
-        return dateFrom;
+        return guestValidFrom;
     }
 
     public void setDateFrom(String dateFrom) {
-        this.dateFrom = dateFrom;
+        this.guestValidFrom = dateFrom;
     }
 
     public String getDateTo() {
-        return dateTo;
+        return guestValidTo;
     }
 
     public void setDateTo(String dateTo) {
-        this.dateTo = dateTo;
+        this.guestValidTo = dateTo;
     }
 
     public String getPhoneNumber() {
@@ -32,10 +33,18 @@ public class GuestData {
     }
 
     public int getObjectId() {
-        return objectId;
+        return guestObjId;
     }
 
     public void setObjectId(int objectId) {
-        this.objectId = objectId;
+        this.guestObjId = objectId;
+    }
+
+    public boolean isGenPassword() {
+        return genPassword;
+    }
+
+    public void setGenPassword(boolean genPassword) {
+        this.genPassword = genPassword;
     }
 }

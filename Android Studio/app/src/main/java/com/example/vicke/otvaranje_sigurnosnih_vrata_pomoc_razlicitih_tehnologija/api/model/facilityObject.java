@@ -1,6 +1,8 @@
 package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model;
 
-public class facilityObject {
+import java.io.Serializable;
+
+public class facilityObject implements Serializable {
 
     private  int objId;
     private String objName;
@@ -10,6 +12,15 @@ public class facilityObject {
     private String objGps;
     private String objAction;
     private String objObtTypeId;
+
+    private int eventLogId;
+    private String date;
+    private String triggerValue;
+    private String userName;
+    private String userSurname;
+    private String triggerName;
+    private String objectName;
+    private String eventStatusName;
 
     public facilityObject() {
 
@@ -87,6 +98,70 @@ public class facilityObject {
 
     public void setObjObtTypeId(String objObtTypeId) {
         this.objObtTypeId = objObtTypeId;
+    }
+
+    public int getEventLogId() {
+        return eventLogId;
+    }
+
+    public void setEventLogId(int eventLogId) {
+        this.eventLogId = eventLogId;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTriggerValue() {
+        return triggerValue;
+    }
+
+    public void setTriggerValue(String triggerValue) {
+        this.triggerValue = triggerValue;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserSurname() {
+        return userSurname;
+    }
+
+    public void setUserSurname(String userSurname) {
+        this.userSurname = userSurname;
+    }
+
+    public String getTriggerName() {
+        return triggerName;
+    }
+
+    public void setTriggerName(String triggerName) {
+        this.triggerName = triggerName;
+    }
+
+    public String getObjectName() {
+        return objectName;
+    }
+
+    public void setObjectName(String objectName) {
+        this.objectName = objectName;
+    }
+
+    public String getEventStatusName() {
+        return eventStatusName;
+    }
+
+    public void setEventStatusName(String eventStatusName) {
+        this.eventStatusName = eventStatusName;
     }
 
     @Override

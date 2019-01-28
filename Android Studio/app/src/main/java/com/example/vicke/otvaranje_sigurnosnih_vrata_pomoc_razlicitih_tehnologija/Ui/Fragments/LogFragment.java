@@ -23,6 +23,8 @@ import android.widget.SearchView;
 import android.widget.TimePicker;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.AdminMenu;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.MainActivity;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.EventLogData;
 
 import java.lang.reflect.Array;
@@ -43,9 +45,7 @@ public class LogFragment extends Fragment {
     ListView listViewLog;
 
 
-    DatePickerDialog.OnDateSetListener dateListener;
-    TimePickerDialog.OnTimeSetListener timeListener;
-    String date = "";
+    SearchView searchView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -70,6 +70,7 @@ public class LogFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_log, container, false);
 
         listViewLog = v.findViewById(R.id.logList);
+        searchView = v.findViewById(R.id.searchLog);
 
         Bundle bundle = this.getArguments();
 
@@ -81,118 +82,39 @@ public class LogFragment extends Fragment {
         ArrayAdapter<EventLogData> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.log_list_item, R.id.logListItem, eventLogData);
         listViewLog.setAdapter(arrayAdapter);
 
-        Button resetDate = v.findViewById(R.id.logResetFilter);
-        Button setFilter = v.findViewById(R.id.filterLog);
-
-        setFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar calFromDate = Calendar.getInstance();
-                int year = calFromDate.get(Calendar.YEAR);
-                int month = calFromDate.get(Calendar.MONTH);
-                int day = calFromDate.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog dialogFromDate = new DatePickerDialog(
-                        getContext(),
-                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                        dateListener,
-                        year, month, day);
-                dialogFromDate.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialogFromDate.show();
-            }
-        });
-
-        dateListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                date += year + "-" + month + "-" + dayOfMonth + " ";
-
-
-                Calendar calFromTime = Calendar.getInstance();
-                int hour = calFromTime.get(Calendar.HOUR_OF_DAY);
-                int minute = calFromTime.get(Calendar.MINUTE);
-
-                // Launch Time Picker Dialog
-                TimePickerDialog dialogFromTime = new TimePickerDialog(
-                        getContext(),
-                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                        timeListener,
-                        hour,minute,true
-                );
-                dialogFromTime.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialogFromTime.show();
-
-                timeListener = new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        date += hourOfDay +":"+ minute;
-                    }
-                };
-            }
-        };
-
-        resetDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                date = "";
-            }
-        });
-
-
-        return v;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.search, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.searchButton);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
+
                 ArrayList<EventLogData> tempList = new ArrayList<>();
 
                 for (EventLogData item: eventLogData)
                 {
-                    if (tempList.contains(newText))
+
+                    String tempString = item.getUserName() + " " + item.getUserSurname();
+
+                    if (tempString.contains(newText))
                     {
                         tempList.add(item);
                     }
                 }
 
 
-                if (date == "")
-                {
                     ArrayAdapter<EventLogData> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.log_list_item, R.id.logListItem, tempList);
                     listViewLog.setAdapter(arrayAdapter);
-                }
-                else
-                {
-                    //TODO: if date is set filter by date
-                    for (int i = 0; i < tempList.size(); i++)
-                    {
-                        if (tempList.get(i).getDate() != date)
-                        {
-                            tempList.remove(i);
-                            i--;
-                        }
-                    }
-                    ArrayAdapter<EventLogData> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.log_list_item, R.id.logListItem, tempList);
-                    listViewLog.setAdapter(arrayAdapter);
-                }
+
                 return true;
             }
         });
 
-        super.onCreateOptionsMenu(menu,inflater);
+        return v;
     }
+
 
     @Override
     public void onAttach(Context context) {

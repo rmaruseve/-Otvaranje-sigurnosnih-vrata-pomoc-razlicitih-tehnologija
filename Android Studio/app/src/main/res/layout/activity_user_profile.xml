@@ -34,12 +34,18 @@
             <TextView
                 android:id="@+id/profileFirstName"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:text="" />
         </LinearLayout>
 
         <!--  Last name Label -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -55,8 +61,15 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:text="" />
+    </LinearLayout>
 
         <!-- Email Label -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,22 +85,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:text="" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/profile"
-            android:drawablePadding="5dp"
-            android:paddingEnd="5dp"
-            android:gravity="center_vertical"
-            android:text="Role:" />
-
-        <TextView
-            android:id="@+id/profileRole"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="" />
+    </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"

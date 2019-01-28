@@ -6,12 +6,15 @@ import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologij
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.GuestData;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.Login;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.ObjectOpen;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.Profile;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.Role;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.TriggerList;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.TriggerType;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.UserAccess;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.facilityObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,16 +28,16 @@ import retrofit2.http.Query;
 
 public interface ApiInterface {
 
-    String BASE_URL = "http://192.168.1.5:5000";
+    String BASE_URL = "http://192.168.43.113:5000";
 
-    @GET("/api/AvailableObjects")
+    @GET("/api/AvailableObjects/lastOpened")
     Call<List<facilityObject>> getObjects(@Header("Authorization") String authToken);
 
     @POST("/api/triggeraccess")
     Call<ResponseBody> openObject(@Header("Authorization") String authToken,@Body ObjectOpen objectOpen);
 
-    @POST("/api/neke")
-    Call<ResponseBody> closeAll(@Header("Authorization") String authToken);
+    @POST("/api/TriggerAccess/Close")
+    Call<ResponseBody> closeAll(@Header("Authorization") String authToken, @Body ArrayList<ObjectOpen> objectOpens);
 
 
 
@@ -72,12 +75,18 @@ public interface ApiInterface {
 
 
 
+    @GET("api/Neke")
+    Call<ArrayList<UserAccess>> getAccess(@Header("Authorization") String authToken);
+
+
+
     @GET("/api/EventLogs")
     Call<List<EventLogData>> getEventLogData(@Header("Authorization") String authToken);
 
 
 
-    @POST("/api/Neke")
+    @POST("/api/Users/register")
     Call<ResponseBody> setGuest(@Header("Authorization") String authToken, @Body GuestData guestData);
+
 
 }

@@ -55,7 +55,7 @@ public class AdminMenuFragmentAdapter extends FragmentStatePagerAdapter {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("listOfUsers", (Serializable) userList);
                 bundle.putSerializable("listOfRoles", (Serializable) roleList);
-                //TODO: tu isto poslati objekte i onda slati dalje
+                bundle.putSerializable("listOfObjects", (Serializable) objectList);
                 bundle.putSerializable("currentUser", user);
                 userFragment.setArguments(bundle);
 

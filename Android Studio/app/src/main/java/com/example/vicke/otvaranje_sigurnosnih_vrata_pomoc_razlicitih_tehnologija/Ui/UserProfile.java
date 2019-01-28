@@ -16,7 +16,6 @@ public class UserProfile extends AppCompatActivity {
     TextView firstName;
     TextView lastName;
     TextView email;
-    TextView role;
 
     Button profileBack;
 
@@ -33,12 +32,10 @@ public class UserProfile extends AppCompatActivity {
         firstName = findViewById(R.id.profileFirstName);
         lastName = findViewById(R.id.profileLastName);
         email = findViewById(R.id.profileEmail);
-        role = findViewById(R.id.profileRole);
 
         firstName.setText(user.getFirstName());
         lastName.setText(user.getLastName());
         email.setText(user.getEmail());
-        //role.setText(user.getRole());
 
         profileBack = findViewById(R.id.profileBack);
 

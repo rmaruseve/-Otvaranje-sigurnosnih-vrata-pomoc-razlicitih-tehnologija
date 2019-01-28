@@ -18,6 +18,7 @@ import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologij
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.AllUser;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.Role;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.facilityObject;
 
 import java.util.ArrayList;
 
@@ -33,6 +34,7 @@ public class UserFragment extends Fragment {
 
 
     User user;
+    ArrayList<facilityObject> listOfObjects = new ArrayList<>();
 
     private OnFragmentInteractionListener mListener;
 
@@ -57,6 +59,7 @@ public class UserFragment extends Fragment {
 
         ArrayList<AllUser> listOfUsers = new ArrayList<>();
         ArrayList<Role> listOfRoles = new ArrayList<>();
+
         final ListView listView = v.findViewById(R.id.adminUserList);
 
         Bundle bundle = this.getArguments();
@@ -64,6 +67,8 @@ public class UserFragment extends Fragment {
         if(bundle != null){
             listOfUsers = (ArrayList)bundle.getSerializable("listOfUsers");
             listOfRoles = (ArrayList)bundle.getSerializable("listOfRoles");
+            listOfObjects = (ArrayList<facilityObject>) bundle.getSerializable("listOfObjects");
+
             user = (User)bundle.getSerializable("currentUser");
         }
 
@@ -81,6 +86,7 @@ public class UserFragment extends Fragment {
                 Intent i = new Intent(getContext(), CrudUser.class);
                 i.putExtra("userRole", finalListOfRoles);
                 i.putExtra("user", user);
+                i.putExtra("listOfObjects", listOfObjects);
                 startActivity(i);
             }
         });
@@ -94,6 +100,7 @@ public class UserFragment extends Fragment {
                 Intent i = new Intent(getContext(), CrudUser.class);
                 i.putExtra("userRole", finalListOfRoles);
                 i.putExtra("currentUser", clickedUser);
+                i.putExtra("listOfObjects", listOfObjects);
                 i.putExtra("user", user);
                 startActivity(i);
             }

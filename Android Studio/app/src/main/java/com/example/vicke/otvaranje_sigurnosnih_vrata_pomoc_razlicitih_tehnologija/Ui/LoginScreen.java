@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
@@ -36,6 +37,8 @@ public class LoginScreen extends AppCompatActivity {
     Button login;
     User logedUser = new User();
 
+    ProgressBar progressBar;
+
     Retrofit.Builder builder = new Retrofit.Builder()
             .baseUrl(ApiInterface.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create());
@@ -48,6 +51,9 @@ public class LoginScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_screen);
+
+        progressBar = findViewById(R.id.loginAnim);
+
 
         OkHttpClient.Builder client = new OkHttpClient.Builder();
         client.readTimeout(180, TimeUnit.SECONDS);
@@ -79,6 +85,8 @@ public class LoginScreen extends AppCompatActivity {
             final Login login = new Login(usrEmail, loginPassword);
             Call<User> call = apiInterface.login(login);
 
+            progressBar.setVisibility(View.VISIBLE);
+
             call.enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
@@ -92,6 +100,8 @@ public class LoginScreen extends AppCompatActivity {
                         logedUser.setToken("Bearer "+response.body().getToken());
                         logedUser.setRole(response.body().getRole());
 
+                        progressBar.setVisibility(View.GONE);
+
                         Intent i = new Intent(LoginScreen.this, MainActivity.class);
                         i.putExtra("token","Bearer "+response.body().getToken());
                         i.putExtra("currentUser", logedUser);
@@ -99,13 +109,14 @@ public class LoginScreen extends AppCompatActivity {
                     }
                     else
                     {
+                        progressBar.setVisibility(View.GONE);
                         Toast.makeText(LoginScreen.this, "Response unsuccessful", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<User> call, Throwable t) {
-                    Log.d(TAG, "exception: " + t.getMessage());
+                    progressBar.setVisibility(View.GONE);
                     Toast.makeText(LoginScreen.this, "Failed connection", Toast.LENGTH_SHORT).show();
                 }
             });
