@@ -88,6 +88,11 @@ namespace restAPI.Services
             {
                 throw new AppException("Email already taken");
             }
+            
+            if (user.UsrRolId==0)
+            {
+                user.UsrRolId = (from rol in _context.AcRole where rol.RolName == "Gost" select rol.RolId).SingleOrDefault();
+            }
 
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);

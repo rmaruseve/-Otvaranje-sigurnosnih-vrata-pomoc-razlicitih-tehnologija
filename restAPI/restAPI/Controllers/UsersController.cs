@@ -123,6 +123,7 @@ namespace restAPI.Controllers
                     if (trgs.Count > 0)
                         throw new AppException("Phone number already exists.");
                     userReq.UsrEmail = "guest-" + userDto.PhoneNumber;
+                    userReq.UsrActivity = 1;
                     user = _userService.Create(userReq, newPassword);
                     _triggerService.Create(user.UsrId, "Sms", userDto.PhoneNumber, 1);
                     _triggerService.Create(user.UsrId, "Phone", userDto.PhoneNumber, 1);

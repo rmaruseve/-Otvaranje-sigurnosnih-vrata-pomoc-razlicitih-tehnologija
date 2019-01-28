@@ -53,9 +53,10 @@ namespace restAPI.Controllers
         {
             try
             {
+                Console.WriteLine(req.Count);
                 List<string> objs = _accessControl.closeAll(req);
                 var client = new HttpClient();
-                client.PostAsync("http://192.168.0.1:1880/api/close", new StringContent(JsonConvert.SerializeObject(
+                client.PostAsync("http://192.168.1.1:1880/api/close", new StringContent(JsonConvert.SerializeObject(
                         new
                         {
                             objectAccess = objs
@@ -90,7 +91,7 @@ namespace restAPI.Controllers
                 if(req.TriggerTypeName == "App")
                 {
                     var client = new HttpClient();
-                    client.PostAsync("http://192.168.0.1:1880/api/open", new StringContent(JsonConvert.SerializeObject(new
+                    client.PostAsync("http://192.168.1.1:1880/api/open", new StringContent(JsonConvert.SerializeObject(new
                     {
                         objectAccess = objs
                     }), 
