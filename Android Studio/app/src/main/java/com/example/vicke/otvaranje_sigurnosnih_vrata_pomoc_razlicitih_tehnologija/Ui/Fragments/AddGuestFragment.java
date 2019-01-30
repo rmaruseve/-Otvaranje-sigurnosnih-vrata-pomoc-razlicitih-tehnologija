@@ -231,18 +231,18 @@ public class AddGuestFragment extends Fragment {
 
 
         objectDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                                     @Override
-                                                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                                         selectedObject = null;
-                                                         selectedObject = (facilityObject) parent.getSelectedItem();
-                                                         objectId = selectedObject.getObjId();
-                                                     }
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedObject = null;
+                selectedObject = (facilityObject) parent.getSelectedItem();
+                objectId = selectedObject.getObjId();
+            }
 
-                                                     @Override
-                                                     public void onNothingSelected(AdapterView<?> parent) {
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-                                                     }
-                                                 });
+            }
+        });
 
 
 
@@ -253,7 +253,7 @@ public class AddGuestFragment extends Fragment {
 
                 phoneNumberStr = phoneNumber.getText().toString();
 
-                if (phoneNumberStr != "" && objectId !=0  )
+                if (phoneNumberStr != "" && objectId !=0  ) //dodati za datum
                 {
                     guestData = new GuestData();
                     guestData.setObjectId(objectId);
@@ -266,13 +266,15 @@ public class AddGuestFragment extends Fragment {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             phoneNumberStr = "";
-                            dateFromStr = "";
-                            dateToStr = "";
-                            objectId = 0;
                             phoneNumber.setText("");
-                            objectDropdown.setSelection(0);
+
+                            dateFromStr = "";
                             dateFromText.setText("");
+
+                            dateToStr = "";
                             dateToText.setText("");
+
+                            objectDropdown.setSelection(0);
 
                             Toast.makeText(getActivity(), "Guest added" , Toast.LENGTH_SHORT).show();
                         }
@@ -282,6 +284,10 @@ public class AddGuestFragment extends Fragment {
 
                         }
                     });
+                }
+                else
+                {
+                    Toast.makeText(getActivity(), "Missing arguments" , Toast.LENGTH_SHORT).show();
                 }
             }
         });

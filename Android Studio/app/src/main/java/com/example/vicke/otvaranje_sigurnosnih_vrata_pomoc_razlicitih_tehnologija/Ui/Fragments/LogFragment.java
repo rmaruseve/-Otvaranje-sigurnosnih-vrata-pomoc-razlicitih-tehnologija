@@ -97,8 +97,9 @@ public class LogFragment extends Fragment {
                 {
 
                     String tempString = item.getUserName() + " " + item.getUserSurname();
+                    String tempStringObjectName = item.getObjectName();
 
-                    if (tempString.contains(newText))
+                    if (tempString.toLowerCase().contains(newText.toLowerCase()) || tempStringObjectName.toLowerCase().contains(newText.toLowerCase()))
                     {
                         tempList.add(item);
                     }

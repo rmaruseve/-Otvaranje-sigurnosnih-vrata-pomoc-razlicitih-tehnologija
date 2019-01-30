@@ -46,5 +46,7 @@ public class UserProfile extends AppCompatActivity {
             }
         });
 
+        //TODO: log list za tog usera
+
     }
 }
