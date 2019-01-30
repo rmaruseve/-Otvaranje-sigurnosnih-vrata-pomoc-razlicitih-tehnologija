@@ -11,7 +11,7 @@ namespace restAPI.Services
     public interface IAccessService
     {
         List<AcAccess> checkAccess(int? userId, int objId);
-        List<AcAccess> GetByUser(int id);
+        List<AccessDto> GetByUser(int id);
         AcAccess Create(AccessDto acs);
         AcAccess Update(AccessDto acs);
         void Delete(int id);
@@ -37,12 +37,21 @@ namespace restAPI.Services
             return access;
         }
 
-        public List<AcAccess> GetByUser(int id)
+        public List<AccessDto> GetByUser(int id)
         {
-            List<AcAccess> acss = (
+            List<AccessDto> acss = (
                 from acs in _context.AcAccess
                 where acs.AcsUsrId == id
-                select acs
+                select new AccessDto
+                {
+                    UsrId = acs.AcsUsrId,
+                    ObjId = acs.AcsObjId,
+                    AcsId = acs.AcsId,
+                    Counter = acs.AcsOpeningCounter,
+                    ProId = acs.AcsProId,
+                    ValidFrom = acs.AcsValidFrom,
+                    ValidTo = acs.AcsValidTo
+                }
             ).ToList();
             return acss;
         }
@@ -60,6 +69,8 @@ namespace restAPI.Services
             };
             _context.AcAccess.Add(acsNew);
             _context.SaveChanges();
+            acsNew.AcsObj = (from obj in _context.AcObject where obj.ObjId == acsNew.AcsObjId select obj)
+                .SingleOrDefault();
             return acsNew;
         }
 

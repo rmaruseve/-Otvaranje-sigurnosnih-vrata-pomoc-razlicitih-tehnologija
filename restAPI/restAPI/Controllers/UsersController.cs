@@ -123,6 +123,7 @@ namespace restAPI.Controllers
                     if (trgs.Count > 0)
                         throw new AppException("Phone number already exists.");
                     userReq.UsrEmail = "guest-" + userDto.PhoneNumber;
+                    userReq.UsrName = "guest-" + userDto.PhoneNumber;
                     userReq.UsrActivity = 1;
                     user = _userService.Create(userReq, newPassword);
                     _triggerService.Create(user.UsrId, "Sms", userDto.PhoneNumber, 1);
@@ -134,7 +135,7 @@ namespace restAPI.Controllers
                         ValidFrom = userDto.guestValidFrom,
                         ValidTo = userDto.guestValidTo
                     });
-                    _mailService.SendSMS(userDto.PhoneNumber, "Dodan vam je pristup objektu: " + acs.AcsObj.ObjName);
+                    _mailService.SendSMS(userDto.PhoneNumber, "You were added access to following object: " + acs.AcsObj.ObjName);
                     // send sms
                 }
                 return Ok(user.UsrId);
@@ -212,12 +213,19 @@ namespace restAPI.Controllers
         {
             // map dto to entity and set id
             var userReq = _mapper.Map<AcUser>(userDto);
+            string newPassword;
+            if (userDto.GenPassword) newPassword = Functions.RandString(8);
+            else newPassword = userDto.LoginPassword;
             try
             {
                 //check if admin
                 // save 
-                _userService.Update(userReq, userDto.LoginPassword);
-                return Ok();
+                if (!userDto.UsrEmail.StartsWith("guest") && userDto.GenPassword)
+                {
+                    _mailService.Send(userReq.UsrEmail, "Your password is: " + newPassword, "Mobilisis User Account");
+                }
+                _userService.Update(userReq, newPassword);
+                return Ok(200);
             }
             catch (AppException ex)
             {

@@ -56,6 +56,7 @@ namespace restAPI.Controllers
         /// <summary>
         /// Create Access for user.
         /// </summary>
+        /// <param name="trgDto"></param>
         /// <response code="400">return error message if there was an exception</response>  
         [HttpPost]
         public IActionResult Create([FromBody]AccessDto trgDto)
@@ -64,11 +65,7 @@ namespace restAPI.Controllers
             {
                 // if admin
                 AcAccess acs = _accessService.Create(trgDto);
-                if(_userService.GetRole(trgDto.UsrId) == "Guest")
-                {
-
-                }
-                return Ok();
+                return Ok(acs.AcsId);
             }
             catch (AppException ex)
             {
@@ -88,8 +85,8 @@ namespace restAPI.Controllers
             try
             {
                 // save 
-                _accessService.Update(acs);
-                return Ok();
+                AcAccess acsNew = _accessService.Update(acs);
+                return Ok(acsNew.AcsId);
             }
             catch (AppException ex)
             {

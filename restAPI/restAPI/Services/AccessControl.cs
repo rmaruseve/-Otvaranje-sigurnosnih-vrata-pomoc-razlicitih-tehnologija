@@ -43,7 +43,7 @@ namespace restAPI.Services
                 List<AcObject> objs = _objectService.getObjects(inputs[i].TriggerTypeName, inputs[i].ObjectName);
                 foreach (AcObject obj in objs)
                 {
-                    _logger.InsertEventLog(inputs[i].Value, usTrg.TrgtId, obj.ObjId, 6, usTrg.UsrId);
+                    _logger.InsertEventLog(inputs[i].Value, usTrg.TrgtId, obj.ObjId, 11, usTrg.UsrId);
                     objectIOs.Add(obj.ObjAction);
                 }
             }

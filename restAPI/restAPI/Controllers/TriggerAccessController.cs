@@ -56,7 +56,7 @@ namespace restAPI.Controllers
                 Console.WriteLine(req.Count);
                 List<string> objs = _accessControl.closeAll(req);
                 var client = new HttpClient();
-                client.PostAsync("http://192.168.1.1:1880/api/close", new StringContent(JsonConvert.SerializeObject(
+                client.PostAsync("http://192.168.0.1:1880/api/close", new StringContent(JsonConvert.SerializeObject(
                         new
                         {
                             objectAccess = objs
@@ -76,7 +76,7 @@ namespace restAPI.Controllers
     
 
 
-    /// <summary>
+        /// <summary>
         /// Request to open object.
         /// </summary>
         /// <response code="400">return error message if there was an exception</response>  
@@ -91,7 +91,7 @@ namespace restAPI.Controllers
                 if(req.TriggerTypeName == "App")
                 {
                     var client = new HttpClient();
-                    client.PostAsync("http://192.168.1.1:1880/api/open", new StringContent(JsonConvert.SerializeObject(new
+                    client.PostAsync("http://192.168.0.1:1880/api/open", new StringContent(JsonConvert.SerializeObject(new
                     {
                         objectAccess = objs
                     }), 
@@ -112,38 +112,5 @@ namespace restAPI.Controllers
             }
         }
 
-        // POST api/values
-        /*[HttpPost]
-        public ActionResult<string> Post([FromBody] TriggerAccess req)
-        {
-            int hasAccess = 0;
-            List<string> objectsHasAcces = new List<string>();
-            AcUser user = this.getUserByTriggerType(req.Value, req.TriggerTypeName);
-            if (user != null)
-            {
-                Console.WriteLine(user.UsrName);
-                hasAccess = 1;
-            } else
-            {
-                Console.WriteLine("Not found");
-            }
-            List<AcObject> objects = this.getObjectsByTrigger(req.TriggerTypeName, req.Text);
-            if (objects.Count > 0)
-            {
-                foreach (AcObject currentObject in objects)
-                {
-                    objectsHasAcces.Add(currentObject.ObjAction);
-                }
-            } else
-            {
-                Console.WriteLine("Not found");
-                hasAccess = 0;
-            }
-            return JsonConvert.SerializeObject(new
-            {
-                access = hasAccess,
-                objectAccess = objectsHasAcces
-            });
-        }*/
     }
 }

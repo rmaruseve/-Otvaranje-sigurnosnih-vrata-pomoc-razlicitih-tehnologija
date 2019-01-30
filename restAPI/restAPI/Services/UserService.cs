@@ -119,7 +119,8 @@ namespace restAPI.Services
             if (userParam.UsrEmail != user.UsrEmail)
             {
                 // username has changed so check if the new username is already taken
-                if (_context.AcUser.Any(x => x.UsrEmail == userParam.UsrEmail))
+                //if (_context.AcUser.Any(x => x.UsrEmail == userParam.UsrEmail))
+                if ((from usr in _context.AcUser where usr.UsrEmail == userParam.UsrEmail select usr).SingleOrDefault() != null)
                     throw new AppException("Username " + userParam.UsrEmail + " is already taken");
             }
 

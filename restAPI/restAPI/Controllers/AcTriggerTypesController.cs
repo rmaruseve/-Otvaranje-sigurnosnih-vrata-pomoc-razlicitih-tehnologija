@@ -20,6 +20,10 @@ namespace restAPI.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Get All Trigger Types Profile
+        /// </summary>
+        /// <returns></returns>
         // GET: api/AcTriggerTypes
         [HttpGet]
         public IEnumerable<AcTriggerType> GetAcTriggerType()
@@ -27,6 +31,12 @@ namespace restAPI.Controllers
             return _context.AcTriggerType;
         }
 
+
+        /// <summary>
+        /// Get Trigger Type By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET: api/AcTriggerTypes/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAcTriggerType([FromRoute] int id)
@@ -46,6 +56,12 @@ namespace restAPI.Controllers
             return Ok(acTriggerType);
         }
 
+        /// <summary>
+        /// Update Trigger Type
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="acTriggerType"></param>
+        /// <returns></returns>
         // PUT: api/AcTriggerTypes/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAcTriggerType([FromRoute] int id, [FromBody] AcTriggerType acTriggerType)
@@ -81,6 +97,11 @@ namespace restAPI.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Create Trigger Type
+        /// </summary>
+        /// <param name="acTriggerType"></param>
+        /// <returns></returns>
         // POST: api/AcTriggerTypes
         [HttpPost]
         public async Task<IActionResult> PostAcTriggerType([FromBody] AcTriggerType acTriggerType)
@@ -96,6 +117,11 @@ namespace restAPI.Controllers
             return CreatedAtAction("GetAcTriggerType", new { id = acTriggerType.TrtId }, acTriggerType);
         }
 
+        /// <summary>
+        /// Delete Trigger Type
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // DELETE: api/AcTriggerTypes/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAcTriggerType([FromRoute] int id)

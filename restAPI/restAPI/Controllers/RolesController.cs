@@ -22,6 +22,10 @@ namespace restAPI.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Get all roles
+        /// </summary>
+        /// <returns></returns>
         // GET: api/AcRoles
         [AllowAnonymous]
         [HttpGet]
@@ -30,6 +34,11 @@ namespace restAPI.Controllers
             return _context.AcRole;
         }
 
+        /// <summary>
+        /// Get role by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET: api/AcRoles/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAcRole([FromRoute] int id)
@@ -49,6 +58,12 @@ namespace restAPI.Controllers
             return Ok(acRole);
         }
 
+        /// <summary>
+        /// Update role
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="acRole"></param>
+        /// <returns></returns>
         // PUT: api/AcRoles/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAcRole([FromRoute] int id, [FromBody] AcRole acRole)
@@ -84,6 +99,11 @@ namespace restAPI.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Create role
+        /// </summary>
+        /// <param name="acRole"></param>
+        /// <returns></returns>
         // POST: api/AcRoles
         [HttpPost]
         public async Task<IActionResult> PostAcRole([FromBody] AcRole acRole)
@@ -99,6 +119,11 @@ namespace restAPI.Controllers
             return CreatedAtAction("GetAcRole", new { id = acRole.RolId }, acRole);
         }
 
+        /// <summary>
+        /// Delete role
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // DELETE: api/AcRoles/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAcRole([FromRoute] int id)

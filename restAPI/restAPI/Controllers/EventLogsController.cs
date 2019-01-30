@@ -58,6 +58,12 @@ namespace restAPI.Controllers
             return Ok(_eventLogService.getEventLogs(id));
         }
 
+        /// <summary>
+        /// Update event
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="acEventLog"></param>
+        /// <returns></returns>
         // PUT: api/EventLogs/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAcEventLog([FromRoute] int id, [FromBody] AcEventLog acEventLog)
@@ -93,6 +99,11 @@ namespace restAPI.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Create event
+        /// </summary>
+        /// <param name="acEventLog"></param>
+        /// <returns></returns>
         // POST: api/EventLogs
         [HttpPost]
         public async Task<IActionResult> PostAcEventLog([FromBody] AcEventLog acEventLog)
@@ -108,6 +119,11 @@ namespace restAPI.Controllers
             return CreatedAtAction("GetAcEventLog", new { id = acEventLog.EvlId }, acEventLog);
         }
 
+        /// <summary>
+        /// Delete event
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // DELETE: api/EventLogs/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAcEventLog([FromRoute] int id)

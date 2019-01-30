@@ -19,7 +19,11 @@ namespace restAPI.Controllers
         {
             _context = context;
         }
-
+        /// <summary>
+        /// Get User Profiles
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="200">If user is updated</response>
         // GET: api/AcProfils
         [HttpGet]
         public IEnumerable<AcProfil> GetAcProfil()
@@ -27,6 +31,12 @@ namespace restAPI.Controllers
             return _context.AcProfil;
         }
 
+        /// <summary>
+        /// Get Profile by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <response code="200">If user is updated</response>
         // GET: api/AcProfils/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAcProfil([FromRoute] int id)
@@ -46,6 +56,13 @@ namespace restAPI.Controllers
             return Ok(acProfil);
         }
 
+        /// <summary>
+        /// Update User Profile
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="acProfil"></param>
+        /// <returns></returns>
+        /// <response code="200">If user is updated</response>
         // PUT: api/AcProfils/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAcProfil([FromRoute] int id, [FromBody] AcProfil acProfil)
@@ -81,6 +98,12 @@ namespace restAPI.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Create User Profile
+        /// </summary>
+        /// <param name="acProfil"></param>
+        /// <returns></returns>
+        /// <response code="200">If user is updated</response>
         // POST: api/AcProfils
         [HttpPost]
         public async Task<IActionResult> PostAcProfil([FromBody] AcProfil acProfil)
@@ -96,6 +119,12 @@ namespace restAPI.Controllers
             return CreatedAtAction("GetAcProfil", new { id = acProfil.ProId }, acProfil);
         }
 
+        /// <summary>
+        /// Delete User Profile
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <response code="200">If user is updated</response>
         // DELETE: api/AcProfils/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAcProfil([FromRoute] int id)
