@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -28,8 +27,8 @@ import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologij
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -153,6 +152,9 @@ public class CrudProfileSecondary extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dateFromStr = "";
+                dateFrom.setText("");
+                dateToStrShow = "";
+
                 Calendar calFromDate = Calendar.getInstance();
                 int year = calFromDate.get(Calendar.YEAR);
                 int month = calFromDate.get(Calendar.MONTH);
@@ -163,6 +165,7 @@ public class CrudProfileSecondary extends AppCompatActivity {
                         android.R.style.Theme_Holo_Light_Dialog_MinWidth,
                         dateFromListener,
                         year, month, day);
+
                 dialogFromDate.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialogFromDate.show();
             }
@@ -171,8 +174,9 @@ public class CrudProfileSecondary extends AppCompatActivity {
         dateFromListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                dateFromStr += year + "-" + month + "-" + dayOfMonth + "T";
-                dateFromStrShow += year + "" + month + " " + dayOfMonth;
+
+                dateFromStr = String.format(Locale.getDefault(), "%04d-%02d-%02dT", year, month + 1, dayOfMonth);
+                dateFromStrShow = String.format(Locale.getDefault(), "%04d.%02d.%02d", year, month + 1, dayOfMonth);
 
 
                 Calendar calFromTime = Calendar.getInstance();
@@ -194,10 +198,11 @@ public class CrudProfileSecondary extends AppCompatActivity {
         timeFromListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                dateFromStr += hourOfDay +":"+ minute + ":00.0";
-                dateFromStrShow += " " + hourOfDay + " " + minute;
-                dateFrom.setText(dateFromStrShow);
 
+                dateFromStr = String.format(Locale.getDefault(), dateFromStr + "%02d:%02d:00.0", hourOfDay, minute);
+                dateFromStrShow = String.format(Locale.getDefault(), dateFromStrShow + " %02d:%02d", hourOfDay, minute);
+
+                dateFrom.setText(dateFromStrShow);
             }
         };
 
@@ -205,6 +210,10 @@ public class CrudProfileSecondary extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dateToStr = "";
+                dateTo.setText("");
+                dateToStrShow = "";
+
+
                 Calendar calToDate = Calendar.getInstance();
                 int year = calToDate.get(Calendar.YEAR);
                 int month = calToDate.get(Calendar.MONTH);
@@ -223,8 +232,8 @@ public class CrudProfileSecondary extends AppCompatActivity {
         dateToListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                dateToStr += year + "-" + month + "-" + dayOfMonth + "T";
-                dateToStrShow += year + "" + month + " " + dayOfMonth;
+                dateToStr = String.format(Locale.getDefault(), "%04d-%02d-%02dT", year, month + 1, dayOfMonth);
+                dateToStrShow = String.format(Locale.getDefault(), "%04d.%02d.%02d", year, month + 1, dayOfMonth);
 
                 Calendar calToTime = Calendar.getInstance();
                 int hour = calToTime.get(Calendar.HOUR_OF_DAY);
@@ -245,8 +254,8 @@ public class CrudProfileSecondary extends AppCompatActivity {
         timeToListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                dateToStr += hourOfDay +":"+ minute + ":00.0";
-                dateToStrShow += " " + hourOfDay + " " + minute;
+                dateToStr = String.format(Locale.getDefault(), dateToStr + "%02d:%02d:00.0", hourOfDay, minute);
+                dateToStrShow = String.format(Locale.getDefault(), dateToStrShow + " %02d:%02d", hourOfDay, minute);
                 dateTo.setText(dateToStrShow);
             }
         };

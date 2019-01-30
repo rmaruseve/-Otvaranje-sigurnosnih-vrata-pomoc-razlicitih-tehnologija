@@ -32,6 +32,7 @@ import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologij
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -128,6 +129,8 @@ public class AddGuestFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 dateFromStr = "";
+                dateFromStrShow = "";
+                dateFromText.setText("");
                 Calendar calFromDate = Calendar.getInstance();
                 int year = calFromDate.get(Calendar.YEAR);
                 int month = calFromDate.get(Calendar.MONTH);
@@ -146,8 +149,8 @@ public class AddGuestFragment extends Fragment {
         dateFromListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                dateFromStr += year + "-" + month + "-" + dayOfMonth + "T";
-                dateFromStrShow += year + "" + month + " " + dayOfMonth;
+                dateFromStr = String.format(Locale.getDefault(), "%04d-%02d-%02dT", year, month + 1, dayOfMonth);
+                dateFromStrShow = String.format(Locale.getDefault(), "%04d.%02d.%02d", year, month + 1, dayOfMonth);
 
 
                 Calendar calFromTime = Calendar.getInstance();
@@ -169,8 +172,8 @@ public class AddGuestFragment extends Fragment {
         timeFromListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                dateFromStr += hourOfDay +":"+ minute + ":00.0";
-                dateFromStrShow += " " + hourOfDay + " " + minute;
+                dateFromStr = String.format(Locale.getDefault(), dateFromStr + "%02d:%02d:00.0", hourOfDay, minute);
+                dateFromStrShow = String.format(Locale.getDefault(), dateFromStrShow + " %02d:%02d", hourOfDay, minute);
                 dateFromText.setText(dateFromStrShow);
 
             }
@@ -180,6 +183,8 @@ public class AddGuestFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 dateToStr = "";
+                dateToText.setText("");
+                dateToStrShow = "";
                 Calendar calToDate = Calendar.getInstance();
                 int year = calToDate.get(Calendar.YEAR);
                 int month = calToDate.get(Calendar.MONTH);
@@ -198,8 +203,8 @@ public class AddGuestFragment extends Fragment {
         dateToListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                dateToStr += year + "-" + month + "-" + dayOfMonth + "T";
-                dateToStrShow += year + "" + month + " " + dayOfMonth;
+                dateToStr = String.format(Locale.getDefault(), "%04d-%02d-%02dT", year, month + 1, dayOfMonth);
+                dateToStrShow = String.format(Locale.getDefault(), "%04d.%02d.%02d", year, month + 1, dayOfMonth);
 
                 Calendar calToTime = Calendar.getInstance();
                 int hour = calToTime.get(Calendar.HOUR_OF_DAY);
@@ -220,8 +225,8 @@ public class AddGuestFragment extends Fragment {
         timeToListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                dateToStr += hourOfDay +":"+ minute + ":00.0";
-                dateToStrShow += " " + hourOfDay + " " + minute;
+                dateToStr = String.format(Locale.getDefault(), dateToStr + "%02d:%02d:00.0", hourOfDay, minute);
+                dateToStrShow = String.format(Locale.getDefault(), dateToStrShow + " %02d:%02d", hourOfDay, minute);
                 dateToText.setText(dateToStrShow);
             }
         };

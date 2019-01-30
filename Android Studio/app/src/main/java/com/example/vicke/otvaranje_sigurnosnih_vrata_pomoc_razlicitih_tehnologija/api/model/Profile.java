@@ -1,6 +1,8 @@
 package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model;
 
-public class Profile {
+import java.io.Serializable;
+
+public class Profile implements Serializable {
 
     private int proId;
     private String proName;
