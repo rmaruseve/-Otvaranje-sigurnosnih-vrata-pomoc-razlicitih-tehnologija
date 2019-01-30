@@ -1,11 +1,13 @@
 package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
@@ -41,6 +43,8 @@ public class AdminMenu extends AppCompatActivity implements LogFragment.OnFragme
 
     ProgressBar progressBar;
 
+    Button back;
+
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(ApiInterface.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -61,6 +65,15 @@ public class AdminMenu extends AppCompatActivity implements LogFragment.OnFragme
             objectDataListCopy = (ArrayList<facilityObject>) extras.getSerializable("objectList");
         }
 
+        back = findViewById(R.id.adminBack);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(AdminMenu.this, MainActivity.class);
+                i.putExtra("currentUser",currentUser);
+                startActivity(i);
+            }
+        });
 
         progressBar.setVisibility(View.VISIBLE);
         Call<List<AllUser>> call = apiInterface.getUsers(currentUser.getToken());

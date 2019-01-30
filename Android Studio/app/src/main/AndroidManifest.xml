@@ -33,24 +33,24 @@
             android:screenOrientation="portrait"
             />
         <activity android:name=".Ui.AdminMenu"
-            android:noHistory="true"
+
             android:screenOrientation="portrait"/>
         <activity android:name=".Ui.CrudUser"
-            android:noHistory="true"
+
             android:screenOrientation="portrait"/>
         <activity android:name=".Ui.CrudTrigger"
-            android:noHistory="true"
+
             android:screenOrientation="portrait"></activity>
         <activity android:name=".Ui.CrudProfile"
-            android:noHistory="true"
+
             android:screenOrientation="portrait"></activity>
         <activity android:name=".Ui.CrudProfileSecondary"
-            android:noHistory="true"
+
             android:screenOrientation="portrait"></activity>
         <activity android:name=".Ui.UserProfile"
             android:screenOrientation="portrait"></activity>
         <activity android:name=".Ui.CrudTriggerSecondary"
-            android:noHistory="true"
+
             android:screenOrientation="portrait"></activity>
     </application>
 
