@@ -19,7 +19,8 @@
         <service android:name="org.eclipse.paho.android.service.MqttService" />
 
         <activity android:name=".Ui.LoginScreen"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,13 +30,22 @@
         <activity
             android:name=".Ui.MainActivity"
             android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
             />
-        <activity android:name=".Ui.AdminMenu" />
-        <activity android:name=".Ui.CrudUser" />
-        <activity android:name=".Ui.CrudTrigger"></activity>
-        <activity android:name=".Ui.CrudProfile"></activity>
-        <activity android:name=".Ui.UserProfile"></activity>
-        <activity android:name=".Ui.CrudTriggerSecondary"></activity>
+        <activity android:name=".Ui.AdminMenu"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Ui.CrudUser"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Ui.CrudTrigger"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".Ui.CrudProfile"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".Ui.CrudProfileSecondary"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".Ui.UserProfile"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".Ui.CrudTriggerSecondary"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

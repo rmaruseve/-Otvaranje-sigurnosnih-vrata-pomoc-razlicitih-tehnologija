@@ -19,8 +19,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.core.CoreClass;
-import com.example.core.CoreInterface;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.Adapters.ObjectListAdapter;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.Fragments.ObjectListShow;
@@ -250,7 +248,7 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_map)
         {
-            //TODO: modularnost putem slike
+            //TODO: activity sa slikom za otvaranje
         }
         else if (id == R.id.nav_admin_options)
         {

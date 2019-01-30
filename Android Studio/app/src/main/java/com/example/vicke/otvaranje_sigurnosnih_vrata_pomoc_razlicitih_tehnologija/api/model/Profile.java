@@ -2,41 +2,41 @@ package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologi
 
 public class Profile {
 
-    private int profileId;
-    private String profileName;
-    private int profileActivity;
+    private int proId;
+    private String proName;
+    private int proActivity;
 
     public Profile()
     {
 
     }
 
-    public int getProfileId() {
-        return profileId;
+    public int getProId() {
+        return proId;
     }
 
-    public void setProfileId(int profileId) {
-        this.profileId = profileId;
+    public void setProId(int proId) {
+        this.proId = proId;
     }
 
-    public String getProfileName() {
-        return profileName;
+    public String getProName() {
+        return proName;
     }
 
-    public void setProfileName(String profileName) {
-        this.profileName = profileName;
+    public void setProName(String proName) {
+        this.proName = proName;
     }
 
-    public int getProfileActivity() {
-        return profileActivity;
+    public int getProActivity() {
+        return proActivity;
     }
 
-    public void setProfileActivity(int profileActivity) {
-        this.profileActivity = profileActivity;
+    public void setProActivity(int proActivity) {
+        this.proActivity = proActivity;
     }
 
     @Override
     public String toString() {
-        return profileName;
+        return proName;
     }
 }

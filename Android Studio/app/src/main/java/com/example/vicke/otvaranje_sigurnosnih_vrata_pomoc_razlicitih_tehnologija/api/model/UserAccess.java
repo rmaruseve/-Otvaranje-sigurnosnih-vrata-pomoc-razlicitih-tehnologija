@@ -4,72 +4,71 @@ import java.io.Serializable;
 
 public class UserAccess implements Serializable {
 
-    private int accessId;
-    private String dateFrom;
-    private String dateTo;
-    private int openingCounter;
-    private int userId;
-    private int profileId;
-    private int objectId;
+    private int acsId;
+    private String validFrom;
+    private String validTo;
+    private int counter;
+    private int usrId;
+    private int proId;
+    private int objId;
 
     public UserAccess() {
 
     }
 
-    public int getAccessId() {
-        return accessId;
+    public int getAcsId() {
+        return acsId;
     }
 
-    public void setAccessId(int accessId) {
-        this.accessId = accessId;
+    public void setAcsId(int acsId) {
+        this.acsId = acsId;
     }
 
-    public String getDateFrom() {
-        return dateFrom;
+    public String getValidFrom() {
+        return validFrom;
     }
 
-    public void setDateFrom(String dateFrom) {
-        this.dateFrom = dateFrom;
+    public void setValidFrom(String validFrom) {
+        this.validFrom = validFrom;
     }
 
-    public String getDateTo() {
-        return dateTo;
+    public String getValidTo() {
+        return validTo;
     }
 
-    public void setDateTo(String dateTo) {
-        this.dateTo = dateTo;
+    public void setValidTo(String validTo) {
+        this.validTo = validTo;
     }
 
-    public int getOpeningCounter() {
-        return openingCounter;
+    public int getCounter() {
+        return counter;
     }
 
-    public void setOpeningCounter(int openingCounter) {
-        this.openingCounter = openingCounter;
+    public void setCounter(int counter) {
+        this.counter = counter;
     }
 
-    public int getUserId() {
-        return userId;
+    public int getUsrId() {
+        return usrId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUsrId(int usrId) {
+        this.usrId = usrId;
     }
 
-    public int getProfileId() {
-        return profileId;
+    public int getProId() {
+        return proId;
     }
 
-    public void setProfileId(int profileId) {
-        this.profileId = profileId;
+    public void setProId(int proId) {
+        this.proId = proId;
     }
 
-    public int getObjectId() {
-        return objectId;
+    public int getObjId() {
+        return objId;
     }
 
-    public void setObjectId(int objectId) {
-        this.objectId = objectId;
+    public void setObjId(int objId) {
+        this.objId = objId;
     }
-
 }

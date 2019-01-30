@@ -76,12 +76,24 @@ public interface ApiInterface {
 
 
     @GET("api/Neke")
-    Call<ArrayList<UserAccess>> getAccess(@Header("Authorization") String authToken);
+    Call<ArrayList<UserAccess>> getAccess(@Header("Authorization") String authToken, @Query("id") int userID);
+
+    @GET("api/Neke")
+    Call<ArrayList<Profile>> getProfiles(@Header("Authorization") String authToken);
+
+    @POST("api/Neke")
+    Call<Integer> crudProfileNew(@Header("Authorization") String authToken, @Body UserAccess userAccess);
+
+    @POST("api/Neke/update")
+    Call<Integer> crudProfile(@Header("Authorization") String authToken, @Body UserAccess userAccess);
 
 
 
     @GET("/api/EventLogs")
     Call<List<EventLogData>> getEventLogData(@Header("Authorization") String authToken);
+
+    @GET("api/EventLogs")
+    Call<ArrayList<EventLogData>> getUserLog(@Header("Authorization") String authToken, @Query("id") int userID);
 
 
 
