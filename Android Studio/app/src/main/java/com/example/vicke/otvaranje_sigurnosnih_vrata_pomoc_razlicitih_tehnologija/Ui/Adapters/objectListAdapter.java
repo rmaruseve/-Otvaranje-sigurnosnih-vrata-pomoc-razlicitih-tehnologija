@@ -128,6 +128,9 @@ public class ObjectListAdapter extends BaseExpandableListAdapter {
 
                 ObjectOpen objectOpen = new ObjectOpen(activeUser.getEmail(), header_titles.get(groupPosition));
 
+                /**
+                 * Open object with slider
+                 */
                 Call<ResponseBody> call = apiInterface.openObject(activeUser.getToken(),objectOpen);
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
