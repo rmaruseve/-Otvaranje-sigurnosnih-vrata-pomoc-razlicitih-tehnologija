@@ -261,7 +261,7 @@ public class AddGuestFragment extends Fragment {
 
                 phoneNumberStr = phoneNumber.getText().toString();
 
-                if (phoneNumberStr != "" && objectId !=0  && dateFromStr != "" && dateToStr != "")
+                if (!phoneNumberStr.equals("")  && objectId !=0  && !dateFromStr.equals("")  && !dateToStr.equals(""))
                 {
                     guestData = new GuestData();
                     guestData.setObjectId(objectId);

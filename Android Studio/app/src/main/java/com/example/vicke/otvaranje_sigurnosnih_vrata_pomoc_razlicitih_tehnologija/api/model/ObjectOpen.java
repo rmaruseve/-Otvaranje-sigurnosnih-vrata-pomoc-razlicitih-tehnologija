@@ -18,7 +18,7 @@ public class ObjectOpen {
     }
 
     public void setTriggerTypeName(String triggerTypeName) {
-        triggerTypeName = triggerTypeName;
+        this.triggerTypeName = triggerTypeName;
     }
 
     public String getValue() {
@@ -26,7 +26,7 @@ public class ObjectOpen {
     }
 
     public void setValue(String value) {
-        value = value;
+        this.value = value;
     }
 
     public String getObjectName() {
@@ -34,6 +34,6 @@ public class ObjectOpen {
     }
 
     public void setObjectName(String objectName) {
-        objectName = objectName;
+        this.objectName = objectName;
     }
 }
