@@ -83,6 +83,9 @@ public class LogFragment extends Fragment {
         listViewLog.setAdapter(arrayAdapter);
 
 
+        /**
+         * Listener for list view filter
+         */
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

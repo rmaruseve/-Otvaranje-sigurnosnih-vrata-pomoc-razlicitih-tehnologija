@@ -148,6 +148,9 @@ public class CrudProfileSecondary extends AppCompatActivity {
         });
 
 
+        /**
+         * Listener for date start picker
+         */
         dateFrom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -206,6 +209,9 @@ public class CrudProfileSecondary extends AppCompatActivity {
             }
         };
 
+        /**
+         * Listener for date end picker
+         */
         dateTo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -309,6 +315,9 @@ public class CrudProfileSecondary extends AppCompatActivity {
         });
     }
 
+    /**
+     * Disable back button
+     */
     @Override
     public void onBackPressed() {
         Toast.makeText(this, "You can't go back", Toast.LENGTH_SHORT).show();

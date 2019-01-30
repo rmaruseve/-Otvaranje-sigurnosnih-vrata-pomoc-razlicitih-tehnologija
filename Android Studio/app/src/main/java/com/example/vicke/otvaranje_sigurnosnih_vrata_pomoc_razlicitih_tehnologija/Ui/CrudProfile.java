@@ -141,6 +141,12 @@ public class CrudProfile extends AppCompatActivity {
         });
     }
 
+    /**
+     * Method for fetching data after profile is created or modified
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

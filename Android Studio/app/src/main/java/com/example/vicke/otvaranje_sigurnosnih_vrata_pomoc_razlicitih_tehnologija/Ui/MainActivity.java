@@ -259,6 +259,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Method that dials the number of Mobilisis info center
+     * @param phoneNumber
+     */
     private void dialNumber(String phoneNumber) {
 
         Intent intent = new Intent(Intent.ACTION_CALL);

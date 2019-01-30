@@ -125,6 +125,9 @@ public class AddGuestFragment extends Fragment {
         adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
         objectDropdown.setAdapter(adapter);
 
+        /**
+         * Pick start date
+         */
         dateFromText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,6 +182,9 @@ public class AddGuestFragment extends Fragment {
             }
         };
 
+        /**
+         * Pick end date
+         */
         dateToText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -230,6 +236,7 @@ public class AddGuestFragment extends Fragment {
                 dateToText.setText(dateToStrShow);
             }
         };
+
 
         objectDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

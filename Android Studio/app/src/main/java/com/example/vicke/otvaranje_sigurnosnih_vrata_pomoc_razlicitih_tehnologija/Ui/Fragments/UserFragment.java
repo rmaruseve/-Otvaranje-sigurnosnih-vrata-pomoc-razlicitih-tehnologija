@@ -110,6 +110,9 @@ public class UserFragment extends Fragment {
             }
         });
 
+        /**
+         * Query for user listView filter
+         */
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

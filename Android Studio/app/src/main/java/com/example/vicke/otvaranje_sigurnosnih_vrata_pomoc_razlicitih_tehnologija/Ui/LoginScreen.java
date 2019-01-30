@@ -80,7 +80,12 @@ public class LoginScreen extends AppCompatActivity {
             });
         }
 
-        private void Login(String usrEmail, String loginPassword)
+    /**
+     * Login method
+     * @param usrEmail
+     * @param loginPassword
+     */
+    private void Login(String usrEmail, String loginPassword)
         {
             final Login login = new Login(usrEmail, loginPassword);
             Call<User> call = apiInterface.login(login);
@@ -122,6 +127,12 @@ public class LoginScreen extends AppCompatActivity {
             });
         }
 
+    /**
+     * Method for premission check
+     * @param context
+     * @param premissions
+     * @return
+     */
         public static boolean hasPremission(Context context, String... premissions){
 
             if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M && context != null && premissions != null)
