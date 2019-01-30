@@ -246,10 +246,6 @@ public class MainActivity extends AppCompatActivity
             startActivity(i);
 
         }
-        else if (id == R.id.nav_map)
-        {
-            //TODO: activity sa slikom za otvaranje
-        }
         else if (id == R.id.nav_admin_options)
         {
             Intent i = new Intent(MainActivity.this, AdminMenu.class);
