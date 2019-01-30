@@ -32,6 +32,7 @@ import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologij
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -50,8 +51,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class AddGuestFragment extends Fragment {
 
-    //TODO: popraviti datume
-
     DatePickerDialog.OnDateSetListener dateFromListener;
     DatePickerDialog.OnDateSetListener dateToListener;
 
@@ -63,6 +62,10 @@ public class AddGuestFragment extends Fragment {
 
     String dateFromStr = "";
     String dateToStr = "";
+
+    String dateFromStrShow = "";
+    String dateToStrShow = "";
+
     String phoneNumberStr = "";
     int objectId = 0;
 
@@ -122,10 +125,15 @@ public class AddGuestFragment extends Fragment {
         adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
         objectDropdown.setAdapter(adapter);
 
+        /**
+         * Pick start date
+         */
         dateFromText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dateFromStr = "";
+                dateFromStrShow = "";
+                dateFromText.setText("");
                 Calendar calFromDate = Calendar.getInstance();
                 int year = calFromDate.get(Calendar.YEAR);
                 int month = calFromDate.get(Calendar.MONTH);
@@ -144,8 +152,8 @@ public class AddGuestFragment extends Fragment {
         dateFromListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                dateFromStr += year + "-" + month + "-" + dayOfMonth + "T";
-
+                dateFromStr = String.format(Locale.getDefault(), "%04d-%02d-%02dT", year, month + 1, dayOfMonth);
+                dateFromStrShow = String.format(Locale.getDefault(), "%04d.%02d.%02d", year, month + 1, dayOfMonth);
 
 
                 Calendar calFromTime = Calendar.getInstance();
@@ -161,26 +169,28 @@ public class AddGuestFragment extends Fragment {
                 );
                 dialogFromTime.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialogFromTime.show();
+            }
+        };
 
-                timeFromListener = new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        dateFromStr += hourOfDay +":"+ minute;
-                        //dateFromText.setText(dateFromStr);
-                        Toast.makeText(getActivity(), dateFromStr , Toast.LENGTH_SHORT).show();
-                    }
-                };
-
+        timeFromListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                dateFromStr = String.format(Locale.getDefault(), dateFromStr + "%02d:%02d:00.0", hourOfDay, minute);
+                dateFromStrShow = String.format(Locale.getDefault(), dateFromStrShow + " %02d:%02d", hourOfDay, minute);
+                dateFromText.setText(dateFromStrShow);
 
             }
         };
 
-
-
+        /**
+         * Pick end date
+         */
         dateToText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dateToStr = "";
+                dateToText.setText("");
+                dateToStrShow = "";
                 Calendar calToDate = Calendar.getInstance();
                 int year = calToDate.get(Calendar.YEAR);
                 int month = calToDate.get(Calendar.MONTH);
@@ -199,8 +209,8 @@ public class AddGuestFragment extends Fragment {
         dateToListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                dateToStr += year + "-" + month + "-" + dayOfMonth + "T";
-
+                dateToStr = String.format(Locale.getDefault(), "%04d-%02d-%02dT", year, month + 1, dayOfMonth);
+                dateToStrShow = String.format(Locale.getDefault(), "%04d.%02d.%02d", year, month + 1, dayOfMonth);
 
                 Calendar calToTime = Calendar.getInstance();
                 int hour = calToTime.get(Calendar.HOUR_OF_DAY);
@@ -215,34 +225,32 @@ public class AddGuestFragment extends Fragment {
                 );
                 dialogToTime.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialogToTime.show();
+            }
+        };
 
-                timeToListener = new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        dateToStr += hourOfDay +":"+ minute;
-                        //dateToText.setText(dateToStr);
-                        Toast.makeText(getActivity(), dateToStr , Toast.LENGTH_SHORT).show();
-                    }
-                };
-
+        timeToListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                dateToStr = String.format(Locale.getDefault(), dateToStr + "%02d:%02d:00.0", hourOfDay, minute);
+                dateToStrShow = String.format(Locale.getDefault(), dateToStrShow + " %02d:%02d", hourOfDay, minute);
+                dateToText.setText(dateToStrShow);
             }
         };
 
 
-
         objectDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                                     @Override
-                                                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                                         selectedObject = null;
-                                                         selectedObject = (facilityObject) parent.getSelectedItem();
-                                                         objectId = selectedObject.getObjId();
-                                                     }
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedObject = null;
+                selectedObject = (facilityObject) parent.getSelectedItem();
+                objectId = selectedObject.getObjId();
+            }
 
-                                                     @Override
-                                                     public void onNothingSelected(AdapterView<?> parent) {
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-                                                     }
-                                                 });
+            }
+        });
 
 
 
@@ -253,26 +261,30 @@ public class AddGuestFragment extends Fragment {
 
                 phoneNumberStr = phoneNumber.getText().toString();
 
-                if (phoneNumberStr != "" && objectId !=0  )
+                if (phoneNumberStr != "" && objectId !=0  && dateFromStr != "" && dateToStr != "")
                 {
                     guestData = new GuestData();
                     guestData.setObjectId(objectId);
                     guestData.setPhoneNumber(phoneNumberStr);
                     guestData.setGenPassword(true);
-                    //guestData.setDateFrom(dateFromStr);
-                    //guestData.setDateTo(dateToStr);
+                    guestData.setDateFrom(dateFromStr);
+                    guestData.setDateTo(dateToStr);
                     Call<ResponseBody> call = apiInterface.setGuest(user.getToken(), guestData);
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             phoneNumberStr = "";
-                            dateFromStr = "";
-                            dateToStr = "";
-                            objectId = 0;
                             phoneNumber.setText("");
-                            objectDropdown.setSelection(0);
+
+                            dateFromStr = "";
+                            dateFromStrShow = "";
                             dateFromText.setText("");
+
+                            dateToStr = "";
+                            dateToStrShow = "";
                             dateToText.setText("");
+
+                            objectDropdown.setSelection(0);
 
                             Toast.makeText(getActivity(), "Guest added" , Toast.LENGTH_SHORT).show();
                         }
@@ -282,6 +294,10 @@ public class AddGuestFragment extends Fragment {
 
                         }
                     });
+                }
+                else
+                {
+                    Toast.makeText(getActivity(), "Missing arguments" , Toast.LENGTH_SHORT).show();
                 }
             }
         });

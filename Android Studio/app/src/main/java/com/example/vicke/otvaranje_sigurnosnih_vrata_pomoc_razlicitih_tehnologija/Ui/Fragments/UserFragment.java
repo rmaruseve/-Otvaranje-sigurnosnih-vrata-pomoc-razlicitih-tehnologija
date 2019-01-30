@@ -12,10 +12,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.CrudUser;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.AllUser;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.EventLogData;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.Role;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.facilityObject;
@@ -36,6 +38,11 @@ public class UserFragment extends Fragment {
     User user;
     ArrayList<facilityObject> listOfObjects = new ArrayList<>();
 
+    ArrayList<AllUser> listOfUsers = new ArrayList<>();
+    ArrayList<Role> listOfRoles = new ArrayList<>();
+
+    SearchView searchView;
+
     private OnFragmentInteractionListener mListener;
 
     public UserFragment() {
@@ -55,10 +62,7 @@ public class UserFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_user, container, false);
 
-
-
-        ArrayList<AllUser> listOfUsers = new ArrayList<>();
-        ArrayList<Role> listOfRoles = new ArrayList<>();
+        searchView = v.findViewById(R.id.searchUser);
 
         final ListView listView = v.findViewById(R.id.adminUserList);
 
@@ -103,6 +107,37 @@ public class UserFragment extends Fragment {
                 i.putExtra("listOfObjects", listOfObjects);
                 i.putExtra("user", user);
                 startActivity(i);
+            }
+        });
+
+        /**
+         * Query for user listView filter
+         */
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                ArrayList<AllUser> tempList = new ArrayList<>();
+
+                for (AllUser item: listOfUsers)
+                {
+
+                    String tempString = item.getUsrName() + " " + item.getUsrSurname();
+
+                    if (tempString.toLowerCase().contains(newText.toLowerCase()))
+                    {
+                        tempList.add(item);
+                    }
+                }
+
+                ArrayAdapter<AllUser> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.admin_user_list_item, R.id.adminUserListItem, tempList);
+                listView.setAdapter(arrayAdapter);
+
+                return true;
             }
         });
 

@@ -28,7 +28,7 @@ import retrofit2.http.Query;
 
 public interface ApiInterface {
 
-    String BASE_URL = "http://192.168.43.113:5000";
+    String BASE_URL = "http://192.168.137.130:5000";
 
     @GET("/api/AvailableObjects/lastOpened")
     Call<List<facilityObject>> getObjects(@Header("Authorization") String authToken);
@@ -75,13 +75,25 @@ public interface ApiInterface {
 
 
 
-    @GET("api/Neke")
-    Call<ArrayList<UserAccess>> getAccess(@Header("Authorization") String authToken);
+    @GET("api/Access")
+    Call<ArrayList<UserAccess>> getAccess(@Header("Authorization") String authToken, @Query("id") int userID);
+
+    @GET("api/AcProfils")
+    Call<ArrayList<Profile>> getProfiles(@Header("Authorization") String authToken);
+
+    @POST("api/Access")
+    Call<Integer> crudProfileNew(@Header("Authorization") String authToken, @Body UserAccess userAccess);
+
+    @POST("api/Access/update")
+    Call<Integer> crudProfile(@Header("Authorization") String authToken, @Body UserAccess userAccess);
 
 
 
     @GET("/api/EventLogs")
     Call<List<EventLogData>> getEventLogData(@Header("Authorization") String authToken);
+
+    @GET("api/EventLogs")
+    Call<ArrayList<EventLogData>> getUserLog(@Header("Authorization") String authToken, @Query("id") int userID);
 
 
 

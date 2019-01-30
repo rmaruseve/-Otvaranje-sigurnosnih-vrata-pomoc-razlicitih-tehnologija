@@ -168,6 +168,11 @@ public class CrudUser extends AppCompatActivity {
                         {
                             crudUser.setUsrId(response.body());
                         }
+                        Intent i = new Intent(getBaseContext(), CrudTrigger.class);
+                        i.putExtra("user", user);
+                        i.putExtra("listOfObjects", listOfObjects);
+                        i.putExtra("editUser", crudUser);
+                        startActivity(i);
                     }
 
                     @Override
@@ -175,11 +180,7 @@ public class CrudUser extends AppCompatActivity {
 
                     }
                 });
-                Intent i = new Intent(getBaseContext(), CrudTrigger.class);
-                i.putExtra("user", user);
-                i.putExtra("listOfObjects", listOfObjects);
-                i.putExtra("editUser", crudUser);
-                startActivity(i);
+
             }
         });
     }

@@ -83,6 +83,9 @@ public class LogFragment extends Fragment {
         listViewLog.setAdapter(arrayAdapter);
 
 
+        /**
+         * Listener for list view filter
+         */
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -96,9 +99,9 @@ public class LogFragment extends Fragment {
                 for (EventLogData item: eventLogData)
                 {
 
-                    String tempString = item.getUserName() + " " + item.getUserSurname();
+                    String tempString = (item.getUserName() + " " + item.getUserSurname()).toLowerCase();
 
-                    if (tempString.contains(newText))
+                    if (tempString.contains(newText.toLowerCase()))
                     {
                         tempList.add(item);
                     }

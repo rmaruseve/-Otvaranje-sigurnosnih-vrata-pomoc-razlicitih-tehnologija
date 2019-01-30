@@ -71,6 +71,12 @@ public class ObjectListShow extends Fragment {
 
     }
 
+    /**
+     * Populate headerList with names of objects
+     * @param headerList
+     * @param nameList
+     * @return
+     */
     private List<String> addHeaderName(List<String> headerList, List<facilityObject> nameList)
     {
 
