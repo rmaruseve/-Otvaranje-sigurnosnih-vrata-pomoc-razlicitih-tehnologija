@@ -22,10 +22,8 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TimePicker;
 
+import com.example.core.api.model.EventLogData;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
-import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.AdminMenu;
-import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.MainActivity;
-import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.EventLogData;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;

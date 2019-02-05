@@ -1,8 +1,8 @@
 package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -11,18 +11,17 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.core.api.model.AllUser;
+import com.example.core.api.model.CrudUserDataClass;
+import com.example.core.api.model.Role;
+import com.example.core.api.model.User;
+import com.example.core.api.model.facilityObject;
+import com.example.core.api.service.ApiInterface;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
-import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.AllUser;
-import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.CrudUserDataClass;
-import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.Role;
-import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.User;
-import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.model.facilityObject;
-import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.api.service.ApiInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -81,7 +80,7 @@ public class CrudUser extends AppCompatActivity {
         cancel = findViewById(R.id.btnCancel);
 
         Bundle bundle = getIntent().getExtras();
-        listOfRoles = (List<Role>)bundle.getSerializable("userRole");
+        listOfRoles = (List<Role>) bundle.getSerializable("userRole");
         listOfObjects = (ArrayList<facilityObject>) bundle.getSerializable("listOfObjects");
 
 
@@ -110,13 +109,12 @@ public class CrudUser extends AppCompatActivity {
             }
         });
 
-        if (bundle.getSerializable("currentUser") != null)
-        {
+        if (bundle.getSerializable("currentUser") != null) {
             passedUser = (AllUser) bundle.getSerializable("currentUser"); //ovo je kliknuti user za kojeg se uređuju stvari
             firstName.setText(passedUser.getUsrName());
             lastName.setText(passedUser.getUsrSurname());
             email.setText(passedUser.getUsrEmail());
-            dropdown.setSelection(passedUser.getUsrRolId()-1);
+            dropdown.setSelection(passedUser.getUsrRolId() - 1);
             generatePassword.setChecked(false);
             crudUser.setUsrId(passedUser.getUsrId());
             isNewUser = false;
@@ -131,41 +129,29 @@ public class CrudUser extends AppCompatActivity {
                 crudUser.setUsrName(firstName.getText().toString());
                 crudUser.setUsrSurname(lastName.getText().toString());
                 crudUser.setUsrEmail(email.getText().toString());
-                if (generatePassword.isChecked())
-                {
+                if (generatePassword.isChecked()) {
                     crudUser.setGeneratePassword(true);
-                }
-                else
-                {
+                } else {
                     crudUser.setGeneratePassword(false);
                 }
                 crudUser.setUsrRolId(role.getRolId());
-                if (isActive.isChecked())
-                {
+                if (isActive.isChecked()) {
                     crudUser.setActivity(1);
-                }
-                else
-                {
+                } else {
                     crudUser.setActivity(0);
                 }
 
 
-
-
-                if (isNewUser)
-                {
+                if (isNewUser) {
                     call = apiInterface.crudUsersNew(user.getToken(), crudUser);
-                }
-                else
-                {
+                } else {
                     call = apiInterface.crudUsers(user.getToken(), crudUser);
                 }
 
                 call.enqueue(new Callback<Integer>() {
                     @Override
                     public void onResponse(Call<Integer> call, Response<Integer> response) {
-                        if (isNewUser)
-                        {
+                        if (isNewUser) {
                             crudUser.setUsrId(response.body());
                         }
                         Intent i = new Intent(getBaseContext(), CrudTrigger.class);
