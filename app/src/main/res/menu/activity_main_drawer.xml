@@ -15,8 +15,9 @@
             android:visible="false"/>
     </group>
     <group>
-        <item android:id="@+id/nav_add_guest"
-            android:icon="@drawable/profile"
-            android:title="@string/add_guest"/>
+        <item android:id="@+id/nav_open_example"
+            android:icon="@drawable/password"
+            android:title="@string/open_example"/>
+
     </group>
 </menu>

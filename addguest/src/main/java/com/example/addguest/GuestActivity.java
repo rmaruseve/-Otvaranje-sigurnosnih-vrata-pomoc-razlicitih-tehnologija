@@ -18,6 +18,8 @@ public class GuestActivity extends AppCompatActivity implements Module, AddGuest
         return new Intent(callingActivity, GuestActivity.class);
     }
 
+    private ApiInterface mApiInterface;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +36,7 @@ public class GuestActivity extends AppCompatActivity implements Module, AddGuest
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, AddGuestFragment.newInstance())
+                .replace(R.id.fragment_container, AddGuestFragment.newInstance(mApiInterface))
                 .commit();
     }
 
@@ -55,17 +57,18 @@ public class GuestActivity extends AppCompatActivity implements Module, AddGuest
     }
 
     @Override
-    public String getModuleName() {
-        return getResources().getString(R.string.add_guest);
+    public String getModuleName(Context context) {
+        return context.getResources().getString(R.string.add_guest);
     }
 
     @Override
-    public Drawable getModuleIcon() {
-        return getResources().getDrawable(R.drawable.nav_add_guest, null);
+    public Drawable getModuleIcon(Context context) {
+        int source = R.drawable.nav_add_guest;
+        return context.getResources().getDrawable(source, null);
     }
 
     @Override
     public void ApiModule(ApiInterface apiInterface) {
-
+        this.mApiInterface = apiInterface;
     }
 }

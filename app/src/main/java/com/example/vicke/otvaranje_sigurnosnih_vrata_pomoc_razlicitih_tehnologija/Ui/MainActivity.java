@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.addguest.GuestActivity;
+import com.example.core.Module;
 import com.example.core.api.model.ObjectOpen;
 import com.example.core.api.model.User;
 import com.example.core.api.model.facilityObject;
@@ -41,6 +42,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private Menu mMenu;
 
     User currentUser;
     NavigationView navigationView;
@@ -140,10 +143,13 @@ public class MainActivity extends AppCompatActivity
 
         slideToActView = findViewById(R.id.slide_to_close_all);
 
+        navigationView = findViewById(R.id.nav_view);
+        mMenu = navigationView.getMenu();
+
+        setupNavigationItems();
+
         if (currentUser.getRole() == 1) {
-            navigationView = findViewById(R.id.nav_view);
-            Menu nav_Menu = navigationView.getMenu();
-            nav_Menu.findItem(R.id.nav_admin_options).setVisible(true);
+            mMenu.findItem(R.id.nav_admin_options).setVisible(true);
 
             slideToActView.setVisibility(View.VISIBLE);
 
@@ -202,6 +208,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+
         menu.clear();
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -223,6 +230,10 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    private void setupNavigationItems() {
+
+    }
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -238,8 +249,8 @@ public class MainActivity extends AppCompatActivity
             i.putExtra("currentUser", currentUser);
             i.putExtra("objectList", (Serializable) objectDataListCopy);
             startActivity(i);
-        } else if (id == R.id.nav_add_guest) {
-            Intent intent = GuestActivity.getIntent(this);
+        } else if (id == R.id.nav_open_example) {
+            Intent intent = new Intent(this, MainMenuActivity.class);
             startActivity(intent);
         }
 

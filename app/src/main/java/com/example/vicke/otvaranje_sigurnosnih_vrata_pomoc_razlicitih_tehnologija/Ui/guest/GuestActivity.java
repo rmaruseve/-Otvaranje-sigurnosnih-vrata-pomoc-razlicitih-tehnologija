@@ -57,12 +57,12 @@ public class GuestActivity extends AppCompatActivity implements Module, AddGuest
     }
 
     @Override
-    public String getModuleName() {
+    public String getModuleName(Context context) {
         return getResources().getString(R.string.add_guest);
     }
 
     @Override
-    public Drawable getModuleIcon() {
+    public Drawable getModuleIcon(Context context) {
         return getResources().getDrawable(R.drawable.nav_add_guest, null);
     }
 

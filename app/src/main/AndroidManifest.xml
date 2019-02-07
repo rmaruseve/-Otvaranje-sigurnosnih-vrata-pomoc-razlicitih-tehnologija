@@ -53,7 +53,8 @@
         <activity
             android:name=".Ui.CrudTriggerSecondary"
             android:screenOrientation="portrait" />
-        <activity android:name=".Ui.guest.GuestActivity"></activity>
+        <activity android:name=".Ui.guest.GuestActivity" />
+        <activity android:name=".Ui.MainMenuActivity"></activity>
     </application>
 
 </manifest>

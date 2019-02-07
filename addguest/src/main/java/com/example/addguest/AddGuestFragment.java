@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.core.Module;
 import com.example.core.api.model.GuestData;
 import com.example.core.api.model.User;
 import com.example.core.api.model.facilityObject;
@@ -34,8 +36,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,7 +45,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Use the {@link AddGuestFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddGuestFragment extends Fragment {
+public class AddGuestFragment extends Fragment implements Module {
 
     DatePickerDialog.OnDateSetListener dateFromListener;
     DatePickerDialog.OnDateSetListener dateToListener;
@@ -76,13 +76,7 @@ public class AddGuestFragment extends Fragment {
 
     ArrayList<facilityObject> listOfObjects = new ArrayList<>();
 
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(ApiInterface.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-
-    ApiInterface apiInterface = retrofit.create(ApiInterface.class);
-
+    private ApiInterface mApiInterface;
 
     private OnFragmentInteractionListener mListener;
 
@@ -90,8 +84,10 @@ public class AddGuestFragment extends Fragment {
 
     }
 
-    public static AddGuestFragment newInstance() {
-        return new AddGuestFragment();
+    public static AddGuestFragment newInstance(ApiInterface mApiInterface) {
+        AddGuestFragment fragment = new AddGuestFragment();
+
+        return fragment;
     }
 
     @Override
@@ -270,7 +266,7 @@ public class AddGuestFragment extends Fragment {
                     guestData.setDateFrom(dateFromStr);
                     guestData.setDateTo(dateToStr);
 
-                    Call<ResponseBody> call = apiInterface.setGuest(user.getToken(), guestData);
+                    Call<ResponseBody> call = mApiInterface.setGuest(user.getToken(), guestData);
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -305,7 +301,7 @@ public class AddGuestFragment extends Fragment {
                     guestData.setDateFrom(dateFromEditText.getText().toString());
                     guestData.setDateTo(dateToEditText.getText().toString());
 
-                    Call<ResponseBody> call = apiInterface.setGuest(user.getToken(), guestData);
+                    Call<ResponseBody> call = mApiInterface.setGuest(user.getToken(), guestData);
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -384,6 +380,21 @@ public class AddGuestFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public String getModuleName(Context context) {
+        return "Add guest";
+    }
+
+    @Override
+    public Drawable getModuleIcon(Context context) {
+        return context.getDrawable(R.drawable.nav_add_guest);
+    }
+
+    @Override
+    public void ApiModule(ApiInterface apiInterface) {
+        mApiInterface = apiInterface;
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -394,6 +405,7 @@ public class AddGuestFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
+
     public interface OnFragmentInteractionListener {
 
         void onFragmentInteraction(Uri uri);
