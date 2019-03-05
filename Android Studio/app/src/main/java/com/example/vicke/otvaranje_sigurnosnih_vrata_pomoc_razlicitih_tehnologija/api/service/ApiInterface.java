@@ -28,7 +28,7 @@ import retrofit2.http.Query;
 
 public interface ApiInterface {
 
-    String BASE_URL = "http://192.168.137.130:5000";
+    String BASE_URL = "http://172.16.0.200:5000";
 
     @GET("/api/AvailableObjects/lastOpened")
     Call<List<facilityObject>> getObjects(@Header("Authorization") String authToken);
