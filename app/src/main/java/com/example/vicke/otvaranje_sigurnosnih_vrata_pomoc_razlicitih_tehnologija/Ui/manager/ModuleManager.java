@@ -1,15 +1,15 @@
 package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.manager;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.addguest.AddGuestFragment;
+import com.example.addguest.DatePickerModule;
+import com.example.addguest.DateTextInputModule;
 import com.example.core.Module;
-import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
-import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.Fragments.UserFragment;
 
 import java.util.LinkedList;
 
@@ -19,6 +19,8 @@ public class ModuleManager {
     public static final int MENU_ITEM_MAIN_FRAGMENT = 2;
     private static ModuleManager sInstance;
 
+
+    private int container;
     private Menu mMenu;
 
     private LinkedList<Module> listOfModules = new LinkedList<>();
@@ -41,9 +43,10 @@ public class ModuleManager {
 
     public void setDrawerDependencies(
             AppCompatActivity activity,
-            Menu menu) {
+            Menu menu, int container) {
         this.mActivity = activity;
         this.mMenu = menu;
+        this.container = container;
 
         setupDrawer();
     }
@@ -58,7 +61,7 @@ public class ModuleManager {
         FragmentManager mFragmentManager = mActivity.getSupportFragmentManager();
         mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         mFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, module.getModuleFragment(mActivity))
+                .replace(container, module.getModuleFragment(mActivity))
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
         //DataManager.getInstance().sendData(module);
@@ -92,7 +95,20 @@ public class ModuleManager {
     private void setupListOfModules() {
 
         //TODO add real modules
-        listOfModules.add(AddGuestFragment.newInstance(null));
-        listOfModules.add(UserFragment.newInstance());
+        //listOfModules.add(AddGuestFragment.newInstance(null));
+        //listOfModules.add(UserFragment.newInstance());
+
+        listOfModules.add(DatePickerModule.newInstance());
+        listOfModules.add(DateTextInputModule.newInstance());
+    }
+
+    public FragmentManager getFragmentManager() {
+        return mActivity.getSupportFragmentManager();
+    }
+
+    public Module getCurrentModule() {
+        LinkedList<Fragment> fragments = new LinkedList<>(mActivity.getSupportFragmentManager().getFragments());
+
+        return (Module) fragments.getLast();
     }
 }

@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -45,13 +46,15 @@ import retrofit2.Response;
  * Use the {@link AddGuestFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddGuestFragment extends Fragment implements Module {
+public class AddGuestFragment extends Fragment {
 
     DatePickerDialog.OnDateSetListener dateFromListener;
     DatePickerDialog.OnDateSetListener dateToListener;
 
     TimePickerDialog.OnTimeSetListener timeFromListener;
     TimePickerDialog.OnTimeSetListener timeToListener;
+
+    private FrameLayout mDatePickerHolder;
 
     TextView dateFromText;
     TextView dateToText;
@@ -109,17 +112,12 @@ public class AddGuestFragment extends Fragment implements Module {
         final EditText phoneNumber = v.findViewById(R.id.inputGuestPhone);
         final Spinner objectDropdown = v.findViewById(R.id.objectDropdown);
         Button save = v.findViewById(R.id.btnGuestSave);
-        final Button changeInputMode = v.findViewById(R.id.change_input_mode);
+
+        //v.findViewById(R.id.date_input_holder);
 
         dateFromEditText = v.findViewById(R.id.date_from_edit_text);
         dateToEditText = v.findViewById(R.id.date_to_edit_text);
 
-        changeInputMode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeInputMode();
-            }
-        });
 
         ArrayAdapter<facilityObject> adapter = new ArrayAdapter<facilityObject>(getContext(), android.R.layout.simple_spinner_dropdown_item, listOfObjects);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -334,35 +332,6 @@ public class AddGuestFragment extends Fragment implements Module {
         return v;
     }
 
-    private void changeInputMode() {
-
-        if (dateFromEditText.getVisibility() == View.GONE) {
-            dateFromEditText.setVisibility(View.VISIBLE);
-            dateToEditText.setVisibility(View.VISIBLE);
-
-            dateFromText.setVisibility(View.GONE);
-            dateToText.setVisibility(View.GONE);
-
-            dateFromEditText.setText(dateFromStr);
-            dateToEditText.setText(dateToStr);
-
-            dateFromStr = "";
-            dateToStr = "";
-        } else if (dateFromEditText.getVisibility() == View.VISIBLE) {
-            dateFromEditText.setVisibility(View.GONE);
-            dateToEditText.setVisibility(View.GONE);
-
-            dateFromText.setVisibility(View.VISIBLE);
-            dateToText.setVisibility(View.VISIBLE);
-
-            dateFromStr = dateFromEditText.getText().toString();
-            dateToStr = dateToEditText.getText().toString();
-
-            dateFromText.setText(dateFromStr);
-            dateToText.setText(dateToStr);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -374,32 +343,39 @@ public class AddGuestFragment extends Fragment implements Module {
         }
     }
 
+    private void initModuleManager() {
+
+
+    }
+
+
+
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
-    @Override
-    public String getModuleName(Context context) {
-        return "Add guest";
-    }
-
-    @Override
-    public Drawable getModuleIcon(Context context) {
-        return context.getDrawable(R.drawable.nav_add_guest);
-    }
-
-    @Override
-    public Fragment getModuleFragment(Context context) {
-
-        return this;
-    }
-
-    @Override
-    public void ApiModule(ApiInterface apiInterface) {
-        mApiInterface = apiInterface;
-    }
+//    @Override
+//    public String getModuleName(Context context) {
+//        return "Add guest";
+//    }
+//
+//    @Override
+//    public Drawable getModuleIcon(Context context) {
+//        return context.getDrawable(R.drawable.nav_add_guest);
+//    }
+//
+//    @Override
+//    public Fragment getModuleFragment(Context context) {
+//
+//        return this;
+//    }
+//
+//    @Override
+//    public void ApiModule(ApiInterface apiInterface) {
+//        mApiInterface = apiInterface;
+//    }
 
     /**
      * This interface must be implemented by activities that contain this

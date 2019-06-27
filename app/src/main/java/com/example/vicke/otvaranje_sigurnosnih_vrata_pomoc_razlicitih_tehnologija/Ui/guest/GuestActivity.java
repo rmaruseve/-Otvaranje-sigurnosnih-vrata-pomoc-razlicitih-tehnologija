@@ -15,7 +15,7 @@ import com.example.core.api.service.ApiInterface;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.Fragments.AddGuestFragment;
 
-public class GuestActivity extends AppCompatActivity implements Module, AddGuestFragment.OnFragmentInteractionListener {
+public class GuestActivity extends AppCompatActivity implements Module {
 
     public static Intent getIntent(Context callingActivity) {
         return new Intent(callingActivity, GuestActivity.class);
@@ -50,11 +50,6 @@ public class GuestActivity extends AppCompatActivity implements Module, AddGuest
         }
 
         return false;
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-        //NOP
     }
 
     @Override

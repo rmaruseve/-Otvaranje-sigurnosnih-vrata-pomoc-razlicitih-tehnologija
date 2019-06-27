@@ -2,50 +2,41 @@ package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologi
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.addguest.DateModule;
+import com.example.core.Module;
 import com.example.core.api.model.GuestData;
 import com.example.core.api.model.User;
 import com.example.core.api.model.facilityObject;
 import com.example.core.api.service.ApiInterface;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.manager.ModuleManager;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link AddGuestFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link AddGuestFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AddGuestFragment extends Fragment {
 
     DatePickerDialog.OnDateSetListener dateFromListener;
@@ -53,6 +44,8 @@ public class AddGuestFragment extends Fragment {
 
     TimePickerDialog.OnTimeSetListener timeFromListener;
     TimePickerDialog.OnTimeSetListener timeToListener;
+
+    private FrameLayout mDatePickerHolder;
 
     TextView dateFromText;
     TextView dateToText;
@@ -77,22 +70,28 @@ public class AddGuestFragment extends Fragment {
 
     ArrayList<facilityObject> listOfObjects = new ArrayList<>();
 
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(ApiInterface.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
+    private ApiInterface mApiInterface;
+    private ModuleManager mModuleManager;
 
-    ApiInterface apiInterface = retrofit.create(ApiInterface.class);
-
-
-    private OnFragmentInteractionListener mListener;
+    private Menu mMenu;
 
     public AddGuestFragment() {
 
     }
 
     public static AddGuestFragment newInstance() {
-        return new AddGuestFragment();
+        AddGuestFragment fragment = new AddGuestFragment();
+
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        initModuleManager();
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -114,17 +113,12 @@ public class AddGuestFragment extends Fragment {
         final EditText phoneNumber = v.findViewById(R.id.inputGuestPhone);
         final Spinner objectDropdown = v.findViewById(R.id.objectDropdown);
         Button save = v.findViewById(R.id.btnGuestSave);
-        final Button changeInputMode = v.findViewById(R.id.change_input_mode);
+
+        mDatePickerHolder = v.findViewById(R.id.date_input_holder);
 
         dateFromEditText = v.findViewById(R.id.date_from_edit_text);
         dateToEditText = v.findViewById(R.id.date_to_edit_text);
 
-        changeInputMode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeInputMode();
-            }
-        });
 
         ArrayAdapter<facilityObject> adapter = new ArrayAdapter<facilityObject>(getContext(), android.R.layout.simple_spinner_dropdown_item, listOfObjects);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -133,114 +127,114 @@ public class AddGuestFragment extends Fragment {
         /**
          * Pick start date
          */
-        dateFromText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dateFromStr = "";
-                dateFromStrShow = "";
-                dateFromText.setText("");
-                Calendar calFromDate = Calendar.getInstance();
-                int year = calFromDate.get(Calendar.YEAR);
-                int month = calFromDate.get(Calendar.MONTH);
-                int day = calFromDate.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog dialogFromDate = new DatePickerDialog(
-                        getContext(),
-                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                        dateFromListener,
-                        year, month, day);
-                dialogFromDate.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialogFromDate.show();
-            }
-        });
-
-        dateFromListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                dateFromStr = String.format(Locale.getDefault(), "%04d-%02d-%02dT", year, month + 1, dayOfMonth);
-                dateFromStrShow = String.format(Locale.getDefault(), "%04d.%02d.%02d", year, month + 1, dayOfMonth);
-
-
-                Calendar calFromTime = Calendar.getInstance();
-                int hour = calFromTime.get(Calendar.HOUR_OF_DAY);
-                int minute = calFromTime.get(Calendar.MINUTE);
-
-                // Launch Time Picker Dialog
-                TimePickerDialog dialogFromTime = new TimePickerDialog(
-                        getContext(),
-                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                        timeFromListener,
-                        hour, minute, true
-                );
-                dialogFromTime.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialogFromTime.show();
-            }
-        };
-
-        timeFromListener = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                dateFromStr = String.format(Locale.getDefault(), dateFromStr + "%02d:%02d:00.0", hourOfDay, minute);
-                dateFromStrShow = String.format(Locale.getDefault(), dateFromStrShow + " %02d:%02d", hourOfDay, minute);
-                dateFromText.setText(dateFromStrShow);
-
-            }
-        };
-
-        /**
-         * Pick end date
-         */
-        dateToText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dateToStr = "";
-                dateToText.setText("");
-                dateToStrShow = "";
-                Calendar calToDate = Calendar.getInstance();
-                int year = calToDate.get(Calendar.YEAR);
-                int month = calToDate.get(Calendar.MONTH);
-                int day = calToDate.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog dialogToDate = new DatePickerDialog(
-                        getContext(),
-                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                        dateToListener,
-                        year, month, day);
-                dialogToDate.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialogToDate.show();
-            }
-        });
-
-        dateToListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                dateToStr = String.format(Locale.getDefault(), "%04d-%02d-%02dT", year, month + 1, dayOfMonth);
-                dateToStrShow = String.format(Locale.getDefault(), "%04d.%02d.%02d", year, month + 1, dayOfMonth);
-
-                Calendar calToTime = Calendar.getInstance();
-                int hour = calToTime.get(Calendar.HOUR_OF_DAY);
-                int minute = calToTime.get(Calendar.MINUTE);
-
-                // Launch Time Picker Dialog
-                TimePickerDialog dialogToTime = new TimePickerDialog(
-                        getContext(),
-                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                        timeToListener,
-                        hour, minute, true
-                );
-                dialogToTime.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialogToTime.show();
-            }
-        };
-
-        timeToListener = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                dateToStr = String.format(Locale.getDefault(), dateToStr + "%02d:%02d:00.0", hourOfDay, minute);
-                dateToStrShow = String.format(Locale.getDefault(), dateToStrShow + " %02d:%02d", hourOfDay, minute);
-                dateToText.setText(dateToStrShow);
-            }
-        };
+//        dateFromText.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dateFromStr = "";
+//                dateFromStrShow = "";
+//                dateFromText.setText("");
+//                Calendar calFromDate = Calendar.getInstance();
+//                int year = calFromDate.get(Calendar.YEAR);
+//                int month = calFromDate.get(Calendar.MONTH);
+//                int day = calFromDate.get(Calendar.DAY_OF_MONTH);
+//
+//                DatePickerDialog dialogFromDate = new DatePickerDialog(
+//                        getContext(),
+//                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+//                        dateFromListener,
+//                        year, month, day);
+//                dialogFromDate.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//                dialogFromDate.show();
+//            }
+//        });
+//
+//        dateFromListener = new DatePickerDialog.OnDateSetListener() {
+//            @Override
+//            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+//                dateFromStr = String.format(Locale.getDefault(), "%04d-%02d-%02dT", year, month + 1, dayOfMonth);
+//                dateFromStrShow = String.format(Locale.getDefault(), "%04d.%02d.%02d", year, month + 1, dayOfMonth);
+//
+//
+//                Calendar calFromTime = Calendar.getInstance();
+//                int hour = calFromTime.get(Calendar.HOUR_OF_DAY);
+//                int minute = calFromTime.get(Calendar.MINUTE);
+//
+//                // Launch Time Picker Dialog
+//                TimePickerDialog dialogFromTime = new TimePickerDialog(
+//                        getContext(),
+//                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+//                        timeFromListener,
+//                        hour, minute, true
+//                );
+//                dialogFromTime.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//                dialogFromTime.show();
+//            }
+//        };
+//
+//        timeFromListener = new TimePickerDialog.OnTimeSetListener() {
+//            @Override
+//            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+//                dateFromStr = String.format(Locale.getDefault(), dateFromStr + "%02d:%02d:00.0", hourOfDay, minute);
+//                dateFromStrShow = String.format(Locale.getDefault(), dateFromStrShow + " %02d:%02d", hourOfDay, minute);
+//                dateFromText.setText(dateFromStrShow);
+//
+//            }
+//        };
+//
+//        /**
+//         * Pick end date
+//         */
+//        dateToText.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dateToStr = "";
+//                dateToText.setText("");
+//                dateToStrShow = "";
+//                Calendar calToDate = Calendar.getInstance();
+//                int year = calToDate.get(Calendar.YEAR);
+//                int month = calToDate.get(Calendar.MONTH);
+//                int day = calToDate.get(Calendar.DAY_OF_MONTH);
+//
+//                DatePickerDialog dialogToDate = new DatePickerDialog(
+//                        getContext(),
+//                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+//                        dateToListener,
+//                        year, month, day);
+//                dialogToDate.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//                dialogToDate.show();
+//            }
+//        });
+//
+//        dateToListener = new DatePickerDialog.OnDateSetListener() {
+//            @Override
+//            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+//                dateToStr = String.format(Locale.getDefault(), "%04d-%02d-%02dT", year, month + 1, dayOfMonth);
+//                dateToStrShow = String.format(Locale.getDefault(), "%04d.%02d.%02d", year, month + 1, dayOfMonth);
+//
+//                Calendar calToTime = Calendar.getInstance();
+//                int hour = calToTime.get(Calendar.HOUR_OF_DAY);
+//                int minute = calToTime.get(Calendar.MINUTE);
+//
+//                // Launch Time Picker Dialog
+//                TimePickerDialog dialogToTime = new TimePickerDialog(
+//                        getContext(),
+//                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+//                        timeToListener,
+//                        hour, minute, true
+//                );
+//                dialogToTime.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//                dialogToTime.show();
+//            }
+//        };
+//
+//        timeToListener = new TimePickerDialog.OnTimeSetListener() {
+//            @Override
+//            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+//                dateToStr = String.format(Locale.getDefault(), dateToStr + "%02d:%02d:00.0", hourOfDay, minute);
+//                dateToStrShow = String.format(Locale.getDefault(), dateToStrShow + " %02d:%02d", hourOfDay, minute);
+//                dateToText.setText(dateToStrShow);
+//            }
+//        };
 
 
         objectDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -260,53 +254,22 @@ public class AddGuestFragment extends Fragment {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Module module = mModuleManager.getCurrentModule();
+
+                DateModule mModule = (DateModule) module;
 
                 phoneNumberStr = phoneNumber.getText().toString();
 
-                if (!phoneNumberStr.equals("") && objectId != 0 && !dateFromStr.equals("") && !dateToStr.equals("")) {
+                if (!phoneNumberStr.equals("") && objectId != 0 && !mModule.getDateFrom().equals("")
+                        && !mModule.getDateTo().equals("")) {
                     guestData = new GuestData();
                     guestData.setObjectId(objectId);
                     guestData.setPhoneNumber(phoneNumberStr);
                     guestData.setGenPassword(true);
-                    guestData.setDateFrom(dateFromStr);
-                    guestData.setDateTo(dateToStr);
+                    guestData.setDateFrom(mModule.getDateFrom());
+                    guestData.setDateTo(mModule.getDateTo());
 
-                    Call<ResponseBody> call = apiInterface.setGuest(user.getToken(), guestData);
-                    call.enqueue(new Callback<ResponseBody>() {
-                        @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            phoneNumberStr = "";
-                            phoneNumber.setText("");
-
-                            dateFromStr = "";
-                            dateFromStrShow = "";
-                            dateFromText.setText("");
-
-                            dateToStr = "";
-                            dateToStrShow = "";
-                            dateToText.setText("");
-
-                            objectDropdown.setSelection(0);
-
-                            Toast.makeText(getActivity(), "Guest added", Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                        }
-                    });
-                } else if (!phoneNumberStr.equals("") && objectId != 0 &&
-                        !dateFromEditText.getText().toString().equals("") &&
-                        !dateToEditText.getText().toString().equals("")) {
-                    guestData = new GuestData();
-                    guestData.setObjectId(objectId);
-                    guestData.setPhoneNumber(phoneNumberStr);
-                    guestData.setGenPassword(true);
-                    guestData.setDateFrom(dateFromEditText.getText().toString());
-                    guestData.setDateTo(dateToEditText.getText().toString());
-
-                    Call<ResponseBody> call = apiInterface.setGuest(user.getToken(), guestData);
+                    Call<ResponseBody> call = mApiInterface.setGuest(user.getToken(), guestData);
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -339,64 +302,51 @@ public class AddGuestFragment extends Fragment {
         return v;
     }
 
-    private void changeInputMode() {
-
-        if (dateFromEditText.getVisibility() == View.GONE) {
-            dateFromEditText.setVisibility(View.VISIBLE);
-            dateToEditText.setVisibility(View.VISIBLE);
-
-            dateFromText.setVisibility(View.GONE);
-            dateToText.setVisibility(View.GONE);
-
-            dateFromEditText.setText(dateFromStr);
-            dateToEditText.setText(dateToStr);
-
-            dateFromStr = "";
-            dateToStr = "";
-        } else if (dateFromEditText.getVisibility() == View.VISIBLE) {
-            dateFromEditText.setVisibility(View.GONE);
-            dateToEditText.setVisibility(View.GONE);
-
-            dateFromText.setVisibility(View.VISIBLE);
-            dateToText.setVisibility(View.VISIBLE);
-
-            dateFromStr = dateFromEditText.getText().toString();
-            dateToStr = dateToEditText.getText().toString();
-
-            dateFromText.setText(dateFromStr);
-            dateToText.setText(dateToStr);
-        }
+    private void initModuleManager() {
+        mModuleManager = ModuleManager.getInstance();
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        getActivity().getMenuInflater().inflate(R.menu.module_list_menu, menu);
+        mMenu = menu;
+
+        mModuleManager.setDrawerDependencies((AppCompatActivity) requireActivity(), menu, mDatePickerHolder.getId());
+        mModuleManager.startMainModule();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+            getActivity().finish();
+            return true;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            return mModuleManager.selectNavigationItem(item);
         }
+
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-
-        void onFragmentInteraction(Uri uri);
-    }
+//    @Override
+//    public String getModuleName(Context context) {
+//        return "Add guest";
+//    }
+//
+//    @Override
+//    public Drawable getModuleIcon(Context context) {
+//        return context.getDrawable(R.drawable.nav_add_guest);
+//    }
+//
+//    @Override
+//    public Fragment getModuleFragment(Context context) {
+//
+//        return this;
+//    }
+//
+//    @Override
+//    public void ApiModule(ApiInterface apiInterface) {
+//        mApiInterface = apiInterface;
+//    }
 }

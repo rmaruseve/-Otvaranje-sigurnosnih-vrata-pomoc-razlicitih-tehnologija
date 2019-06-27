@@ -38,43 +38,49 @@
             android:layout_marginBottom="16dp"
             android:spinnerMode="dropdown"></Spinner>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical">
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="16dp"-->
+        <!--android:orientation="vertical">-->
 
-            <TextView
-                android:id="@+id/dateFromText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Date from"
-                android:paddingBottom="32dp" />
+        <!--<TextView-->
+        <!--android:id="@+id/dateFromText"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:hint="Date from"-->
+        <!--android:paddingBottom="32dp" />-->
 
-            <EditText
-                android:id="@+id/date_from_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Date from"
-                android:paddingBottom="32dp"
-                android:visibility="gone" />
+        <!--<EditText-->
+        <!--android:id="@+id/date_from_edit_text"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:hint="Date from"-->
+        <!--android:paddingBottom="32dp"-->
+        <!--android:visibility="gone" />-->
 
-            <TextView
-                android:id="@+id/dateToText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Date to" />
+        <!--<TextView-->
+        <!--android:id="@+id/dateToText"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:hint="Date to" />-->
 
-            <EditText
-                android:id="@+id/date_to_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Date to"
-                android:visibility="gone" />
+        <!--<EditText-->
+        <!--android:id="@+id/date_to_edit_text"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:hint="Date to"-->
+        <!--android:visibility="gone" />-->
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
 
         <!-- Next Button -->
+
+        <FrameLayout
+            android:id="@+id/date_input_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btnGuestSave"
             style="@style/Widget.AppCompat.Button.Colored"
@@ -86,13 +92,13 @@
             android:padding="12dp"
             android:text="Save" />
 
-        <Button
-            android:id="@+id/change_input_mode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="12dp"
-            android:text="@string/change_input_mode" />
+        <!--<Button-->
+        <!--android:id="@+id/change_input_mode"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:padding="12dp"-->
+        <!--android:text="@string/change_input_mode" />-->
 
 
     </LinearLayout>

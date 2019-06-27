@@ -1,4 +1,7 @@
 <resources>
     <string name="add_guest">Dodaj gosta</string>
     <string name="change_input_mode">Promjeni način unosa</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
