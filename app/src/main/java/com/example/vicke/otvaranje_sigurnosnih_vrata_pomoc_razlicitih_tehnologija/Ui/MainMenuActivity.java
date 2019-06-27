@@ -8,13 +8,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.addguest.AddGuestFragment;
-import com.example.core.Module;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
+import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.Fragments.UserFragment;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.manager.ModuleManager;
 
-import java.util.LinkedList;
-
-public class MainMenuActivity extends AppCompatActivity implements AddGuestFragment.OnFragmentInteractionListener {
+public class MainMenuActivity extends AppCompatActivity implements UserFragment.OnFragmentInteractionListener, AddGuestFragment.OnFragmentInteractionListener {
 
     private ModuleManager mModuleManager;
     private Menu mMenu;
@@ -45,17 +43,10 @@ public class MainMenuActivity extends AppCompatActivity implements AddGuestFragm
         getMenuInflater().inflate(R.menu.module_list_menu, menu);
         mMenu = menu;
 
-        setupModulesList();
+        mModuleManager.setDrawerDependencies(this, menu);
+        mModuleManager.startMainModule();
 
         return true;
-    }
-
-    private void setupModulesList() {
-        LinkedList<Module> listOfModules = mModuleManager.getListOfModules();
-
-        for (Module module : listOfModules) {
-            mMenu.add(module.getModuleName(this));
-        }
     }
 
     @Override
@@ -64,6 +55,8 @@ public class MainMenuActivity extends AppCompatActivity implements AddGuestFragm
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
+        } else {
+            if (mModuleManager.selectNavigationItem(item)) return true;
         }
 
         return false;

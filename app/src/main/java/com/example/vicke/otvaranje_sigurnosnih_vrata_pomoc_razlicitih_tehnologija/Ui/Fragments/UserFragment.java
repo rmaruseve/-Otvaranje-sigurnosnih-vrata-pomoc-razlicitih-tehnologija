@@ -2,6 +2,7 @@ package com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologi
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,10 +15,12 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.example.core.Module;
 import com.example.core.api.model.AllUser;
 import com.example.core.api.model.Role;
 import com.example.core.api.model.User;
 import com.example.core.api.model.facilityObject;
+import com.example.core.api.service.ApiInterface;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.R;
 import com.example.vicke.otvaranje_sigurnosnih_vrata_pomoc_razlicitih_tehnologija.Ui.CrudUser;
 
@@ -31,7 +34,7 @@ import java.util.ArrayList;
  * Use the {@link UserFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UserFragment extends Fragment {
+public class UserFragment extends Fragment implements Module {
 
 
     User user;
@@ -144,20 +147,29 @@ public class UserFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public String getModuleName(Context context) {
+        return context.getString(R.string.user_fragment);
+    }
+
+    @Override
+    public Drawable getModuleIcon(Context context) {
+        return context.getDrawable(R.drawable.profile);
+    }
+
+    @Override
+    public Fragment getModuleFragment(Context context) {
+        return this;
+    }
+
+    @Override
+    public void ApiModule(ApiInterface apiInterface) {
+
     }
 
     /**

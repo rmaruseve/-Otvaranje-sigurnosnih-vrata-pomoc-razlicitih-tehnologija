@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -64,6 +65,12 @@ public class GuestActivity extends AppCompatActivity implements Module, AddGuest
     @Override
     public Drawable getModuleIcon(Context context) {
         return getResources().getDrawable(R.drawable.nav_add_guest, null);
+    }
+
+    @Override
+    public Fragment getModuleFragment(Context context) {
+
+        return null;
     }
 
     @Override

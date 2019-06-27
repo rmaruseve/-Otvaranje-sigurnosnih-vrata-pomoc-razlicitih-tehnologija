@@ -391,6 +391,12 @@ public class AddGuestFragment extends Fragment implements Module {
     }
 
     @Override
+    public Fragment getModuleFragment(Context context) {
+
+        return this;
+    }
+
+    @Override
     public void ApiModule(ApiInterface apiInterface) {
         mApiInterface = apiInterface;
     }
